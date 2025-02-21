@@ -42,6 +42,13 @@ pub struct Vec2 {
     pub y: u32,
 }
 
+#[derive(Serde, Drop, Introspect)]
+pub enum RewardType {
+    Tokens,
+    Item,
+    Experience,
+}
+
 
 impl DirectionIntoFelt252 of Into<Direction, felt252> {
     fn into(self: Direction) -> felt252 {
