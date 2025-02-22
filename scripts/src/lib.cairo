@@ -5,8 +5,8 @@ mod systems {
     mod actions;
 }
 
-mod models {
-    mod model;
+pub mod models {
+    pub mod model;
 }
 
 mod types {

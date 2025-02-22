@@ -42,7 +42,6 @@ pub struct Vec2 {
     pub y: u32,
 }
 
-
 impl DirectionIntoFelt252 of Into<Direction, felt252> {
     fn into(self: Direction) -> felt252 {
         match self {
