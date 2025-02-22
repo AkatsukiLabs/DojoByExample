@@ -26,6 +26,17 @@ pub struct Position {
     pub vec: Vec2,
 }
 
+#[derive(Copy, Drop, Serde, Debug)]
+#[dojo::model]
+pub struct Food {
+    #[key]
+    pub player: ContractAddress,
+    #[key]
+    pub id: u8,
+    pub amount: u8,
+    pub healt_points: u8
+}
+
 
 #[derive(Serde, Copy, Drop, Introspect, PartialEq, Debug)]
 pub enum Direction {
@@ -92,3 +103,4 @@ mod tests {
         assert(position.is_equal(Vec2 { x: 420, y: 0 }), 'not equal');
     }
 }
+
