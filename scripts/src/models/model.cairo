@@ -35,6 +35,18 @@ pub enum Direction {
     Down,
 }
 
+#[derive(Copy, Drop, Serde, IntrospectPacked, Debug)]
+pub enum Beast {
+    Fire,
+    Water,
+    Earth,
+    Electric,
+    Dragon,
+    Ice,
+    Magic,
+    Rock,
+}
+
 
 #[derive(Copy, Drop, Serde, IntrospectPacked, Debug)]
 pub struct Vec2 {
