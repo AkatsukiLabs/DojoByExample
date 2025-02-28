@@ -36,19 +36,6 @@ pub enum Direction {
 }
 
 #[derive(Copy, Drop, Serde, IntrospectPacked, Debug)]
-pub enum Beast {
-    Fire,
-    Water,
-    Earth,
-    Electric,
-    Dragon,
-    Ice,
-    Magic,
-    Rock,
-}
-
-
-#[derive(Copy, Drop, Serde, IntrospectPacked, Debug)]
 pub struct Vec2 {
     pub x: u32,
     pub y: u32,

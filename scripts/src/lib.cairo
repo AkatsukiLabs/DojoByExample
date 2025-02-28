@@ -10,12 +10,10 @@ mod models {
 }
 
 mod types {
-    
+    mod beast_type;
 }
 
-mod utils {
-    
-}
+mod utils {}
 
 pub mod tests {
     mod test_world;
