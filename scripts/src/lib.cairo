@@ -7,15 +7,12 @@ mod systems {
 
 mod models {
     mod model;
+    mod tournament;
 }
 
-mod types {
-    
-}
+mod types {}
 
-mod utils {
-    
-}
+mod utils {}
 
 pub mod tests {
     mod test_world;
