@@ -18,6 +18,7 @@ mod systems {
 
 mod types {
     mod beast_type;
+    mod reward_type;
 }
 
 mod utils {}
