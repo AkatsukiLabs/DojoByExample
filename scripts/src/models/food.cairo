@@ -26,3 +26,22 @@ pub impl FoodImpl of FoodTrait {
         food
     }
 }
+
+
+#[cfg(test)]
+mod tests {
+
+    use dojo_starter::{models::{food::FoodTrait}};
+    use starknet::{get_caller_address};
+
+    #[test]
+    fn test_new_food() {
+        let player = get_caller_address();
+        let food_id = 1;
+
+        let food = FoodTrait::new_food(food_id, player);
+
+        assert_eq!(food.player, player, "The game id should be the expected");
+
+    }
+}
