@@ -10,6 +10,7 @@ pub enum BeastType {
     Ice,
     Magic,
     Rock,
+    Undefined,
 }
 
 impl IntoBeastTypeFelt252 of Into<BeastType, felt252> {
@@ -53,7 +54,7 @@ impl IntoU8BeastType of Into<u8, BeastType> {
             6_u8 => BeastType::Ice,
             7_u8 => BeastType::Magic,
             8_u8 => BeastType::Rock,
-            _ => BeastType::Fire // Default case, could be handled differently if needed
+            _ => BeastType::Undefined,
         }
     }
 }
