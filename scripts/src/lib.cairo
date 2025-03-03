@@ -7,6 +7,7 @@ mod systems {
 
 mod models {
     mod model;
+    mod beast;
 }
 
 mod types {
