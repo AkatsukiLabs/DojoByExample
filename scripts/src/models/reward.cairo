@@ -7,5 +7,5 @@ pub struct Reward {
     pub amount: u256,
     pub description: ByteArray,
     pub associated_event: u256,
-    pub issued_at: u64
+    pub issued_at: u64,
 }
