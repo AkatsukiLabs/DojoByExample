@@ -17,7 +17,7 @@ mod systems {
 }
 
 mod types {
-    mod beast_type;
+    pub mod beast_type;
 }
 
 mod utils {}

@@ -8,6 +8,6 @@ pub struct Beast {
     pub beast_id: u256,
     #[key]
     pub player: ContractAddress,
-    pub beast_type: BeastType
+    pub beast_type: BeastType,
 }
 

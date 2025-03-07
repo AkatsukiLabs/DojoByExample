@@ -16,14 +16,15 @@ pub enum BeastType {
 impl IntoBeastTypeFelt252 of Into<BeastType, felt252> {
     fn into(self: BeastType) -> felt252 {
         match self {
-            BeastType::Fire => 1,
-            BeastType::Water => 2,
-            BeastType::Earth => 3,
-            BeastType::Electric => 4,
-            BeastType::Dragon => 5,
-            BeastType::Ice => 6,
-            BeastType::Magic => 7,
-            BeastType::Rock => 8,
+            BeastType::Fire => 'Fire',
+            BeastType::Water => 'Water',
+            BeastType::Earth => 'Earth',
+            BeastType::Electric => 'Electric',
+            BeastType::Dragon => 'Dragon',
+            BeastType::Ice => 'Ice',
+            BeastType::Magic => 'Magic',
+            BeastType::Rock => 'Rock',
+            BeastType::Undefined => 'Undefined',
         }
     }
 }
@@ -31,14 +32,15 @@ impl IntoBeastTypeFelt252 of Into<BeastType, felt252> {
 impl IntoBeastTypeU8 of Into<BeastType, u8> {
     fn into(self: BeastType) -> u8 {
         match self {
-            BeastType::Fire => 1_u8,
-            BeastType::Water => 2_u8,
-            BeastType::Earth => 3_u8,
-            BeastType::Electric => 4_u8,
-            BeastType::Dragon => 5_u8,
-            BeastType::Ice => 6_u8,
-            BeastType::Magic => 7_u8,
-            BeastType::Rock => 8_u8,
+            BeastType::Fire => 0,
+            BeastType::Water => 1,
+            BeastType::Earth => 2,
+            BeastType::Electric => 3,
+            BeastType::Dragon => 4,
+            BeastType::Ice => 5,
+            BeastType::Magic => 6,
+            BeastType::Rock => 7,
+            BeastType::Undefined => 8,
         }
     }
 }
@@ -46,14 +48,14 @@ impl IntoBeastTypeU8 of Into<BeastType, u8> {
 impl IntoU8BeastType of Into<u8, BeastType> {
     fn into(self: u8) -> BeastType {
         match self {
-            1_u8 => BeastType::Fire,
-            2_u8 => BeastType::Water,
-            3_u8 => BeastType::Earth,
-            4_u8 => BeastType::Electric,
-            5_u8 => BeastType::Dragon,
-            6_u8 => BeastType::Ice,
-            7_u8 => BeastType::Magic,
-            8_u8 => BeastType::Rock,
+            0 => BeastType::Fire,
+            1 => BeastType::Water,
+            2 => BeastType::Earth,
+            3 => BeastType::Electric,
+            4 => BeastType::Dragon,
+            5 => BeastType::Ice,
+            6 => BeastType::Magic,
+            7 => BeastType::Rock,
             _ => BeastType::Undefined,
         }
     }

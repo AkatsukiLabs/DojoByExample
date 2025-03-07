@@ -48,6 +48,7 @@ pub trait TournamentTrait {
 pub impl TournamentImpl of TournamentTrait {
     fn new(id: u256, init_params: TournamentParams) -> Tournament {
         let mut tournament: Tournament = Default::default();
+        tournament.id = id;
         tournament.name = init_params.name;
         tournament.creator = init_params.creator;
         tournament.description = init_params.description;
@@ -100,8 +101,9 @@ pub impl TournamentImpl of TournamentTrait {
 
 #[cfg(test)]
 mod tests {
+    use super::TournamentTrait;
     use super::*;
-    use starknet::{testing, get_block_timestamp, contract_address_const};
+    use starknet::{contract_address_const};
 
     fn USER1() -> ContractAddress {
         contract_address_const::<'USER1'>()
@@ -134,9 +136,87 @@ mod tests {
     }
 
     #[test]
-    fn test_tournament_start_success() {}
+    fn test_tournament_should_add_participants_successfully() {
+        let mut tournament = init_default_tournament();
+        let participants = array![USER1(), USER1()];
+
+        tournament.add_participants(participants.clone());
+        assert(tournament.total_participants == 2, 'FIRST FAILED');
+
+        tournament.add_participants(participants);
+        assert(tournament.total_participants == 4, 'SECOND FAILED');
+    }
+
+    #[test]
+    fn test_tournament_start_success() {
+        let mut tournament = init_default_tournament();
+        let participants = array![USER1(), USER1()];
+        tournament.add_participants(participants);
+        tournament.start();
+
+        assert(tournament.status == TournamentStatus::In_Progress, 'START FAILED');
+    }
 
     #[test]
     #[should_panic]
-    fn test_tournament_should_panic_on_invalid_number_of_participants() {}
+    fn test_tournament_should_panic_on_invalid_number_of_participants() {
+        let mut tournament = init_default_tournament();
+        let participants = array![USER1()];
+        tournament.add_participants(participants);
+        tournament.start();
+    }
+
+    #[test]
+    #[should_panic(expected: "TOURNAMENT ALREADY IN PROGRESS.")]
+    fn test_tournament_should_panic_on_start_already_in_progress() {
+        let mut tournament = init_default_tournament();
+        let participants = array![USER1(), USER1()];
+        tournament.add_participants(participants);
+        tournament.start();
+
+        // start tournament again
+        tournament.start();
+    }
+
+    #[test]
+    fn test_tournament_should_end_successfully() {
+        let mut tournament = init_default_tournament();
+        tournament.end();
+
+        assert(tournament.status == TournamentStatus::Finished, 'END FAILED');
+    }
+
+    #[test]
+    #[should_panic(expected: "TOURNAMENT ALREADY ENDED.")]
+    fn test_tournament_should_panic_on_restarting_of_finished_tournament() {
+        let mut tournament = init_default_tournament();
+        let participants = array![USER1(), USER1()];
+        tournament.add_participants(participants);
+        tournament.start();
+        tournament.end();
+
+        tournament.start();
+    }
+
+    #[test]
+    #[should_panic(expected: "CANNOT ADD PARTICIPANT. TOURNAMENT NOT PENDING.")]
+    fn test_tournament_should_panic_on_addition_of_participants_to_started_tournament() {
+        let mut tournament = init_default_tournament();
+        let participants = array![USER1(), USER1()];
+        tournament.add_participants(participants.clone());
+        tournament.start();
+
+        tournament.add_participants(participants);
+    }
+
+    #[test]
+    fn test_tournament_should_add_matchups_successfully() {
+        let mut tournament = init_default_tournament();
+        let participants = array![USER1(), USER1()];
+        tournament.add_participants(participants.clone());
+        let matchups = array![1, 2];
+        tournament.add_matchups(matchups);
+
+        tournament.start();
+    }
 }
