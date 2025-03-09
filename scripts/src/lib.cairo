@@ -1,12 +1,19 @@
 mod constants;
 mod store;
 
-mod systems {
-    mod actions;
-}
-
 mod models {
     mod model;
+    mod beast;
+    mod food;
+    mod player;
+    mod tournament;
+    mod playerstats;
+    mod matchup;
+    mod reward;
+}
+
+mod systems {
+    mod actions;
 }
 
 mod types {
