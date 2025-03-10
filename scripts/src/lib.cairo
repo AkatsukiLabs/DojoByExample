@@ -2,7 +2,7 @@ mod constants;
 mod store;
 
 mod models {
-    mod model;
+    pub mod model;
     mod beast;
     mod food;
     mod player;
@@ -13,11 +13,11 @@ mod models {
 }
 
 mod systems {
-    mod actions;
+    pub mod actions;
 }
 
 mod types {
-    mod beast_type;
+    pub mod beast_type;
     mod reward_type;
 }
 

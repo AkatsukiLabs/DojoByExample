@@ -1,7 +1,6 @@
-use starknet::ContractAddress;
-
-#[derive(Copy, Drop, Serde, IntrospectPacked, Debug, PartialEq)]
+#[derive(Copy, Drop, Serde, Debug, Introspect, PartialEq)]
 pub enum BeastType {
+    Undefined,
     Fire,
     Water,
     Earth,
@@ -10,12 +9,12 @@ pub enum BeastType {
     Ice,
     Magic,
     Rock,
-    Undefined,
 }
 
 impl IntoBeastTypeFelt252 of Into<BeastType, felt252> {
     fn into(self: BeastType) -> felt252 {
         match self {
+            BeastType::Undefined => 0,
             BeastType::Fire => 1,
             BeastType::Water => 2,
             BeastType::Earth => 3,
@@ -31,6 +30,7 @@ impl IntoBeastTypeFelt252 of Into<BeastType, felt252> {
 impl IntoBeastTypeU8 of Into<BeastType, u8> {
     fn into(self: BeastType) -> u8 {
         match self {
+            BeastType::Undefined => 0_u8,
             BeastType::Fire => 1_u8,
             BeastType::Water => 2_u8,
             BeastType::Earth => 3_u8,
@@ -46,6 +46,7 @@ impl IntoBeastTypeU8 of Into<BeastType, u8> {
 impl IntoU8BeastType of Into<u8, BeastType> {
     fn into(self: u8) -> BeastType {
         match self {
+            0_u8 => BeastType::Undefined,
             1_u8 => BeastType::Fire,
             2_u8 => BeastType::Water,
             3_u8 => BeastType::Earth,
