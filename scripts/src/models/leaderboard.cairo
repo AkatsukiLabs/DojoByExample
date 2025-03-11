@@ -1,23 +1,9 @@
 use starknet::ContractAddress;
 use dojo_starter::models::player::Player;
 use dojo_starter::types::{
-    leaderboard_type::LeaderboardType, time_period::TimePeriod
+    leaderboard_type::LeaderboardType, time_period_type::TimePeriod, ranking_criteria_type::RankingCriteria
 }
 
-//
-// Ranking Criteria enum
-//
-#[derive(Copy, Drop, Serde, Debug, PartialEq)]
-pub enum RankingCriteria {
-    Wins,
-    WinRatio,
-    Points,
-    BattlesWon,
-    BeastsDefeated,
-    TournamentsWon,
-    AverageScore,
-    Custom,
-}
 
 //
 // Player Ranking entry
