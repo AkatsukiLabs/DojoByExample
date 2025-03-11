@@ -10,6 +10,7 @@ mod models {
     mod playerstats;
     mod matchup;
     mod reward;
+    mod achievement;
 }
 
 mod systems {
