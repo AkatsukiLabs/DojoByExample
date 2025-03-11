@@ -66,8 +66,8 @@
 //             // Retrieve the player's current position and moves data from the world.
 //             let position: Position = world.read_model(player);
 //             let mut moves: Moves = world.read_model(player);
-//             // if player hasn't spawn, read returns model default values. This leads to sub overflow
-//             // afterwards.
+//             // if player hasn't spawn, read returns model default values. This leads to sub
+//             overflow // afterwards.
 //             // Plus it's generally considered as a good pratice to fast-return on matching
 //             // conditions.
 //             if !moves.can_move {
