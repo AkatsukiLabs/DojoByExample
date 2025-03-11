@@ -1,21 +1,6 @@
 use dojo_starter::models::beast::Beast;
 
 //
-// Status Condition enum
-//
-#[derive(Copy, Drop, Serde, Debug, PartialEq)]
-pub enum StatusCondition {
-    None,
-    Poisoned,
-    Paralyzed,
-    Asleep,
-    Confused,
-    Burned,
-    Frozen,
-    Cursed,
-}
-
-//
 // Stat Modifier struct to track temporary stat changes during battle
 //
 #[derive(Copy, Drop, Serde, Debug, Default)]
