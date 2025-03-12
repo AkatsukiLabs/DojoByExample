@@ -1,4 +1,4 @@
-use dojo_starter::models::player::Player;
+use starknet::ContractAddress;
 use dojo_starter::types::beast_type::BeastType;
 
 #[derive(Copy, Drop, Serde, Debug, PartialEq)]
@@ -7,7 +7,7 @@ pub struct Beast {
     #[key]
     pub beast_id: u256,
     #[key]
-    pub player: Player,
-    pub beast_type: BeastType
+    pub player: ContractAddress,
+    pub beast_type: BeastType,
 }
 
