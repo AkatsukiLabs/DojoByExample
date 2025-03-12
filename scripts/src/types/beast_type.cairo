@@ -1,7 +1,6 @@
-use starknet::ContractAddress;
-
-#[derive(Copy, Drop, Serde, IntrospectPacked, Debug, PartialEq)]
+#[derive(Copy, Drop, Serde, Debug, Introspect, PartialEq)]
 pub enum BeastType {
+    Undefined,
     Fire,
     Water,
     Earth,
@@ -10,7 +9,6 @@ pub enum BeastType {
     Ice,
     Magic,
     Rock,
-    Undefined,
 }
 
 impl IntoBeastTypeFelt252 of Into<BeastType, felt252> {
