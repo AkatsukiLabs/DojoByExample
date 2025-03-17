@@ -1,5 +1,3 @@
-use starknet::ContractAddress;
-
 #[derive(Copy, Drop, Serde, IntrospectPacked, Debug, PartialEq)]
 pub enum BeastType {
     Fire,
