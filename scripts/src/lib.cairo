@@ -4,9 +4,11 @@ mod store;
 mod models {
     mod model;
     mod beast;
+    mod beaststats;
     mod food;
     mod player;
     pub mod tournament;
+    pub mod battle;
     mod playerstats;
     mod matchup;
     mod reward;

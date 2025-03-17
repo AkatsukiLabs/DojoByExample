@@ -38,14 +38,7 @@ pub struct TournamentParams {
     pub available_rewards: Array<u256>,
 }
 
-pub trait TournamentTrait {
-    fn new(id: u256, init_params: TournamentParams) -> Tournament;
-    fn start(ref self: Tournament);
-    fn end(ref self: Tournament);
-    fn add_participants(ref self: Tournament, participants: Array<ContractAddress>);
-    fn add_matchups(ref self: Tournament, matchups: Array<u256>);
-}
-
+#[generate_trait]
 pub impl TournamentImpl of TournamentTrait {
     fn new(id: u256, init_params: TournamentParams) -> Tournament {
         let mut tournament: Tournament = Default::default();

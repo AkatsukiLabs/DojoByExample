@@ -12,12 +12,11 @@ pub struct Food {
     pub name: felt252,
     pub healing_value: u8,
     pub stamina_recovery: u8,
-    pub duration: u8
+    pub duration: u8,
 }
 
 #[cfg(test)]
 mod tests {
-
     use super::Food;
     use starknet::{ContractAddress, contract_address_const};
 
@@ -26,15 +25,15 @@ mod tests {
     fn test_food_initialization() {
         let player_address: ContractAddress = contract_address_const::<0x0>();
 
-        let food = Food { 
+        let food = Food {
             player: player_address,
             id: 1_u8,
             amount: 5_u8,
             healt_points: 5_u8,
-            name:'Apple',
+            name: 'Apple',
             healing_value: 5_u8,
             stamina_recovery: 5_u8,
-            duration: 10_u8
+            duration: 10_u8,
         };
 
         assert_eq!(food.player, player_address, "Player address should match");
