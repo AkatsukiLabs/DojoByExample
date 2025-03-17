@@ -95,4 +95,8 @@ pub impl BattleImpl of BattleTrait {
             beast2 = beast;
         }
     }
+
+    fn start(ref self: Battle) {
+        
+    }
 }
