@@ -6,7 +6,7 @@ mod models {
     mod beast;
     mod food;
     mod player;
-    mod tournament;
+    pub mod tournament;
     mod playerstats;
     mod matchup;
     mod reward;
@@ -18,11 +18,12 @@ mod systems {
 }
 
 mod types {
-    mod beast_type;
+    pub mod beast_type;
 }
 
 mod utils {}
 
 pub mod tests {
     mod test_world;
+    mod test_tournament;
 }
