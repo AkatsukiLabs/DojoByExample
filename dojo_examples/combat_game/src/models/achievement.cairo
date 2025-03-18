@@ -1,6 +1,4 @@
-use core::dict::Felt252Dict;
-
-#[derive(Default, Drop, Serde, Debug)]
+#[derive(Drop, Serde, Debug)]
 #[dojo::model]
 pub struct Achievement {
     #[key]
