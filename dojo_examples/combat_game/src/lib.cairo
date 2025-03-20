@@ -3,6 +3,7 @@ mod store;
 
 mod models {
     mod model;
+    pub mod battle;
     mod beast;
     mod food;
     mod player;
