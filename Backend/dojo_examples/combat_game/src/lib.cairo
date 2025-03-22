@@ -10,6 +10,7 @@ mod models {
     mod reward;
     mod achievement;
     mod beast_stats;
+    mod bag;
 }
 
 mod systems {
