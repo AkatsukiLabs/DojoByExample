@@ -23,7 +23,7 @@ export default defineConfig({
   editLink: {
     text: "Contribute",
     pattern:
-      "https://github.com/NethermindEth/StarknetByExample/edit/dev/pages/:path",
+      "https://github.com/AkatsukiLabs/DojoByExample",
   },
   socials: [
     {
@@ -46,9 +46,9 @@ export default defineConfig({
       items: [
         [
           {
-            name: "Nethermind",
-            link: "https://www.nethermind.io/",
-            image: "/collaborators/Nethermind.svg",
+            name: "Cartridge",
+            link: "https://docs.cartridge.gg/",
+            image: "/collaborators/cartridge.svg",
           },
         ],
         [
@@ -70,26 +70,36 @@ export default defineConfig({
       items: [
         [
           {
-            name: "Voyager",
-            link: "https://voyager.online",
-            image: "/collaborators/Voyager.svg",
+            name: "Dojo",
+            link: "https://book.dojoengine.org/",
+            image: "/collaborators/DojoLogo.svg",
           },
         ],
         [
           {
-            name: "Starknet RPC",
-            link: "https://data.voyager.online",
-            image: "/collaborators/Starknet_RPC.svg",
+            name: "Katana",
+            link: "https://book.dojoengine.org/toolchain/katana",
+            image: "/collaborators/KatanaLogo.svg",
           },
           {
-            name: "Juno",
-            link: "https://github.com/NethermindEth/juno",
-            image: "/collaborators/Juno.svg",
+            name: "Sozo",
+            link: "https://book.dojoengine.org/toolchain/sozo",
+            image: "/collaborators/SozoLogo.svg",
           },
           {
-            name: "Starknet Remix Plugin",
-            link: "https://remix.ethereum.org/?#activate=Starknet",
-            image: "/collaborators/Starknet_Remix_Plugin.svg",
+            name: "Torii",
+            link: "https://book.dojoengine.org/toolchain/torii",
+            image: "/collaborators/ToriiLogo.svg",
+          },
+          {
+            name: "Origami",
+            link: "https://book.dojoengine.org/libraries/origami",
+            image: "/collaborators/OrigamiLogo.svg",
+          },
+          {
+            name: "Saya",
+            link: "https://book.dojoengine.org/toolchain/saya",
+            image: "/collaborators/SayaLogo.svg",
           },
         ],
       ],
