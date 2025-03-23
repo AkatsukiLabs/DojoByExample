@@ -1,0 +1,15 @@
+[package]
+name = "hash_solidity_compatible"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+starknet.workspace = true
+
+[dev-dependencies]
+cairo_test.workspace = true
+
+[scripts]
+test.workspace = true
+
+[[target.starknet-contract]]

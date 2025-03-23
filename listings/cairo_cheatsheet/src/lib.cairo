@@ -1,0 +1,12 @@
+mod array_example;
+mod mapping_example;
+mod felt_example;
+mod loop_example;
+mod while_example;
+mod enum_example;
+mod match_example;
+mod struct_example;
+mod type_casting_example;
+mod while_let_example;
+mod if_let_example;
+mod dict_example;

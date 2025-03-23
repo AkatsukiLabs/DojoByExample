@@ -1,0 +1,57 @@
+import { Sponsors } from "vocs/components";
+import { ThemeImage } from "../components/ThemeImage";
+
+<div className="flex justify-center">
+  <ThemeImage
+    light="/svg/Vertical_Light.svg"
+    dark="/svg/Vertical_Dark.svg"
+    alt="Starknet By Example"
+  />
+</div>
+
+# Introduction
+
+Starknet By Example provides practical examples for building smart contracts on Starknet using the Cairo programming language.
+
+Starknet is a permissionless Validity-Rollup that operates as an Ethereum layer-2 scaling solution. It leverages STARK cryptographic proofs to achieve high security and scalability while maintaining Ethereum's security guarantees.
+
+Smart contracts on Starknet are written in Cairo, a Turing-complete programming language specifically designed for creating provable programs. Cairo abstracts away the complexity of zk-STARK proofs, allowing developers to focus on writing smart contract logic.
+
+:::warning
+⚠️ _These examples are for educational purposes and have not been audited. Do not use this code in production. The authors are not liable for any damages resulting from the use of this code._
+
+Found an error or have a suggestion? Open an issue on our [GitHub repository](https://github.com/NethermindEth/StarknetByExample/issues). We welcome all contributions!
+:::
+
+## Who is this for?
+
+This guide is designed for developers with basic programming and blockchain knowledge who want to learn Starknet smart contract development using Cairo.
+
+The content is structured progressively - early chapters cover Cairo and Starknet fundamentals, while later chapters explore advanced topics and complex smart contract patterns.
+
+## How to use this book?
+
+Each chapter is self-contained and focuses on a specific Starknet feature or smart contract use case. While you can jump to any topic, we recommend following the chapters in order if you're new to Starknet.
+
+Try out the examples instantly using the [Starknet Remix Plugin](https://remix.ethereum.org/?#activate=Starknet).
+
+## Further reading
+
+To deepen your knowledge:
+- [Starknet Documentation](https://docs.starknet.io/) - The official Starknet documentation
+- [Cairo Book](https://book.cairo-lang.org) - Learn more about the Cairo programming language
+- [Awesome Starknet](https://github.com/keep-starknet-strange/awesome-starknet) - Curated list of Starknet resources
+
+## Versions
+
+The current version of this book uses:
+
+```md
+cairo 2.10.1
+edition 2024_07
+sierra 1.7.0
+// .tool-versions:
+// [!include ~/.tool-versions]
+```
+
+<Sponsors />

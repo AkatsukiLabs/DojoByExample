@@ -1,0 +1,16 @@
+[package]
+name = "storing_custom_types"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+starknet.workspace = true
+
+[dev-dependencies]
+assert_macros.workspace = true
+snforge_std.workspace = true
+
+[scripts]
+test.workspace = true
+
+[[target.starknet-contract]]

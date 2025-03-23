@@ -1,0 +1,16 @@
+[package]
+name = "components_dependencies"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+starknet.workspace = true
+components = { path = "../components" }
+
+[dev-dependencies]
+cairo_test.workspace = true
+
+[scripts]
+test.workspace = true
+
+[[target.starknet-contract]]

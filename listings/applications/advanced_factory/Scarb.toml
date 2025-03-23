@@ -1,0 +1,19 @@
+[package]
+name = "advanced_factory"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+starknet.workspace = true
+components.workspace = true
+crowdfunding = { path = "../crowdfunding" }
+
+[dev-dependencies]
+assert_macros.workspace = true
+snforge_std.workspace = true
+
+[scripts]
+test.workspace = true
+
+[[target.starknet-contract]]
+build-external-contracts = ["crowdfunding::campaign::Campaign"]
