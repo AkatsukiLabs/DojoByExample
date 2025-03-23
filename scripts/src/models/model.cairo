@@ -90,3 +90,4 @@ mod tests {
         assert(position.is_equal(Vec2 { x: 420, y: 0 }), 'not equal');
     }
 }
+

@@ -1,5 +1,5 @@
 use starknet::ContractAddress;
-use dojo_starter::types::beast_type::BeastType;
+use combat_game::types::beast::BeastType;
 
 #[derive(Copy, Drop, Serde, Debug, PartialEq)]
 #[dojo::model]
