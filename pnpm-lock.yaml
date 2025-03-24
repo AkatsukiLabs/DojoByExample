@@ -43,9 +43,21 @@ importers:
         specifier: 1.0.0-alpha.62
         version: 1.0.0-alpha.62(patch_hash=7wumpnts656yvepr4seo2mjn34)(@types/node@22.13.1)(@types/react-dom@18.3.5(@types/react@19.0.12))(@types/react@19.0.12)(acorn@8.14.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(rollup@4.34.6)(typescript@5.8.2)
     devDependencies:
+      '@types/babel__core':
+        specifier: ^7.20.5
+        version: 7.20.5
+      '@types/babel__generator':
+        specifier: ^7.6.8
+        version: 7.6.8
+      '@types/ms':
+        specifier: ^2.1.0
+        version: 2.1.0
       '@types/react-dom':
         specifier: ^18.3.1
         version: 18.3.5(@types/react@19.0.12)
+      '@types/unist':
+        specifier: ^3.0.3
+        version: 3.0.3
       autoprefixer:
         specifier: ^10.4.20
         version: 10.4.20(postcss@8.5.1)
