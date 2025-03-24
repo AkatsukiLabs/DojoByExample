@@ -7,6 +7,6 @@ pub struct Matchup {
     pub id: u256,
     pub alias: felt252,
     pub players: Array<ContractAddress>,
-    pub current_score: u256,
+    pub current_score: u32,
     pub total_rewards: Array<u256>,
 }

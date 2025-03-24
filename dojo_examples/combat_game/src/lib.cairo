@@ -7,19 +7,24 @@ mod models {
     mod beast;
     mod food;
     mod player;
-    pub mod tournament;
-    mod playerstats;
+    mod tournament;
     mod matchup;
     mod reward;
     mod achievement;
+    mod beast_stats;
 }
 
 mod systems {
-    mod actions;
+    mod battle;
 }
 
 mod types {
-    pub mod beast_type;
+    pub mod beast;
+    pub mod food;
+    pub mod leaderboard;
+    pub mod ranking_criteria;
+    pub mod status_condition;
+    pub mod time_period;
 }
 
 mod utils {}
