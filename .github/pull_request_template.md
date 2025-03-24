@@ -1,15 +1,41 @@
-**Issue**: Close #issue-number
+# Pull Request Overview
 
-### Description
+## 📝 Summary
+Provide a brief overview of what this PR accomplishes.
 
-<!-- Please provide a brief description of the changes made in this pull request and how they address the related issue. -->
+### Related Issues
+- Closes #(issue number) Replace with actual issue number.
 
-<!-- Before submitting this PR, please make sure that you read our [Contributing Guidelines](https://github.com/NethermindEth/StarknetByExample/blob/main/CONTRIBUTING.md). Here are some things to check:
+### Type of Change
+Mark with an `x` all the checkboxes that apply (like `[x]`).
+- [ ] 📝 Documentation (updates to README, docs, or comments)
+- [ ] 🐛 Bug fix (non-breaking change which fixes an issue)
+- [ ] 👌 Enhancement (non-breaking change which adds functionality)
+- [ ] 💥 Breaking change (fix or feature that would cause existing functionality to change)
 
-- **CI Verifier:** Run `./scripts/cairo_programs_verifier.sh` successfully
-- **Cairo programs**: All snippets should be added under `/listings` directory as a scarb project
-- **Markdown files**: All markdown files should be added under `/pages` directory
-- **New examples**: If you are adding a new example
-    - make sure to add the link in the `routes.ts` file
-    - check that the `Scarb.toml` file has the correct package name, version and only use workspace dependencies
-- **Contract Tests:** Added tests to cover the changes -->
+## 🔄 Changes Made
+### What's Changed
+Provide a clear and concise description of what you changed and why.
+
+### Implementation Details
+Describe how you implemented the changes.
+
+### Technical Notes
+Include any technical details that reviewers should be aware of.
+
+## 🔧 Tests Results
+Describe the tests you performed to verify your changes.
+
+### Test Coverage
+- [ ] Unit Tests
+- [ ] Integration Tests
+- [ ] Manual Testing
+
+### Evidence
+Provide relevant evidence of testing (screenshots, test outputs, etc.).
+
+### Testing Notes
+Include any special testing considerations or edge cases checked.
+
+## 🔜 Next Steps
+Indicate actions or improvements to be taken after this PR, if applicable.
