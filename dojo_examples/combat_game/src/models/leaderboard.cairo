@@ -1,8 +1,9 @@
 use starknet::ContractAddress;
 use dojo_starter::models::player::Player;
 use dojo_starter::types::{
-    leaderboard_type::LeaderboardType, time_period_type::TimePeriod, ranking_criteria_type::RankingCriteria
-}
+    leaderboard_type::LeaderboardType, time_period_type::TimePeriod,
+    ranking_criteria_type::RankingCriteria,
+};
 
 
 //
@@ -33,7 +34,7 @@ pub struct Leaderboard {
     pub start_timestamp: u64, // When this leaderboard period started
     pub end_timestamp: u64, // When this leaderboard period ends (0 for ongoing)
     pub rankings: Array<PlayerRanking>, // List of ranked players with their scores
-    pub last_updated: u64, // Timestamp of when the leaderboard was last updated
+    pub last_updated: u64 // Timestamp of when the leaderboard was last updated
 }
 
 //
