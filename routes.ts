@@ -79,7 +79,7 @@ const config: Sidebar = [
       },
       {
         text: "Sepolia",
-        link: "/deployments/sepoli",
+        link: "/deployments/sepolia",
       },
       {
         text: "Mainnet",
@@ -110,8 +110,8 @@ const config: Sidebar = [
     collapsed: true,
     items: [
       {
-        text: "Gas Optimisations",
-        link: "/advanced-concepts/gas_optimisations",
+        text: "Gas Optimization",
+        link: "/advanced-concepts/gas_optimizations",
       },
       {
         text: "Traditional Smart Contracts vs Dojo Contracts",
@@ -125,19 +125,19 @@ const config: Sidebar = [
     items: [
       {
         text: "React",
-        link: "/integrations/felt",
+        link: "/integrations/react",
       },
       {
         text: "Telegram",
-        link: "/integrations/mapping",
+        link: "/integrations/telegram",
       },
       {
         text: "Discord",
-        link: "/integrations/arrays",
+        link: "/integrations/discord",
       },
       {
         text: "Unity",
-        link: "/integrations/loop",
+        link: "/integrations/unity",
       },
       {
         text: "AI Agents",
