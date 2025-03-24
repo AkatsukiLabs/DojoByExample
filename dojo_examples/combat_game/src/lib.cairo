@@ -2,7 +2,6 @@ mod constants;
 mod store;
 
 mod models {
-    mod model;
     pub mod battle;
     mod beast;
     mod food;
@@ -29,8 +28,4 @@ mod types {
 
 mod utils {}
 
-pub mod tests {
-    mod test_world;
-    mod test_tournament;
-    mod test_battle;
-}
+pub mod tests {}
