@@ -13,122 +13,87 @@ const config: Sidebar = [
         link: "/getting-started/env_setup",
       },
       {
-        text: "Basics of a Starknet contract",
+        text: "Basics of Dojo",
+        collapsed: true,
         items: [
           {
-            text: "Storage",
-            link: "/getting-started/basics/storage",
+            text: "Models",
+            link: "/getting-started/basics/models",
           },
           {
-            text: "Interfaces, Visibility and Mutability",
-            link: "/getting-started/basics/visibility-mutability",
+            text: "Enums",
+            link: "/getting-started/basics/enums",
           },
           {
-            text: "Variables",
-            link: "/getting-started/basics/variables",
+            text: "Systems",
+            link: "/getting-started/basics/systems",
           },
           {
-            text: "Constructor",
-            link: "/getting-started/basics/constructor",
+            text: "World",
+            link: "/getting-started/basics/world",
           },
           {
-            text: "Counter Example",
-            link: "/getting-started/basics/counter",
+            text: "Store",
+            link: "/getting-started/basics/store",
           },
           {
-            text: "Errors",
-            link: "/getting-started/basics/errors",
+            text: "Constants",
+            link: "/getting-started/basics/constants",
+          },
+          {
+            text: "Helpers",
+            link: "/getting-started/basics/helpers",
           },
           {
             text: "Events",
             link: "/getting-started/basics/events",
           },
           {
-            text: "Storing Custom Types",
-            link: "/getting-started/basics/storing_custom_types",
-          },
-          {
-            text: "Custom Types in Entrypoints",
-            link: "/getting-started/basics/custom-types-in-entrypoints",
-          },
-          {
-            text: "Mappings",
-            link: "/getting-started/basics/mappings",
-          },
-          {
-            text: "Documentation",
-            link: "/getting-started/basics/documentation",
+            text: "Testing",
+            items: [
+              {
+                text: "Unit Testing",
+                link: "/getting-started/basics/testing/unit_testing",
+              },
+              {
+                text: "Integration Testing",
+                link: "/getting-started/basics/testing/integration_testing",
+              },
+            ],
           },
         ],
-      },
-      {
-        text: "Deploy and interact with contracts",
-        items: [
-          {
-            text: "How to deploy",
-            link: "/getting-started/interacting/how_to_deploy",
-          },
-          {
-            text: "Calling other contracts",
-            link: "/getting-started/interacting/calling_other_contracts",
-          },
-          {
-            text: "Factory pattern",
-            link: "/getting-started/interacting/factory",
-          },
-        ],
-      },
-      {
-        text: "Testing contracts",
-        link: "/getting-started/testing/",
-        items: [
-          {
-            text: "With Snforge",
-            link: "/getting-started/testing/testing-snforge",
-          },
-          {
-            text: "With Cairo Test",
-            link: "/getting-started/testing/testing-cairo-test",
-          },
-        ],
-      },
-      {
-        text: "Syscalls Reference",
-        link: "/getting-started/syscalls",
       },
     ],
   },
   {
-    text: "Components",
+    text: "Deployments",
+    collapsed: true,
     items: [
       {
-        text: "Components How-To",
-        link: "/components/how_to",
+        text: "Katana",
+        link: "/deployments/katana",
       },
       {
-        text: "Components Dependencies",
-        link: "/components/dependencies",
+        text: "Slot",
+        link: "/deployments/slot",
       },
       {
-        text: "Storage Collisions",
-        link: "/components/collisions",
+        text: "Sepolia",
+        link: "/deployments/sepoli",
       },
       {
-        text: "Ownable",
-        link: "/components/ownable",
+        text: "Mainnet",
+        link: "/deployments/mainnet",
       },
     ],
   },
   {
     text: "Applications",
+    collapsed: true,
     items: [
       {
-        text: " Upgradeable Contract",
-        link: "/applications/upgradeable_contract",
-      },
-      {
-        text: "Defi Vault",
-        link: "/applications/simple_vault",
+        text: "Cartridge Controller",
+        link: "/applications/cartridge_controller",
       },
       {
         text: "ERC20 Token",
@@ -138,166 +103,74 @@ const config: Sidebar = [
         text: "ERC721 NFT",
         link: "/applications/erc721",
       },
-      {
-        text: "NFT Dutch Auction",
-        link: "/applications/nft_dutch_auction",
-      },
-      {
-        text: "Constant Product AMM",
-        link: "/applications/constant-product-amm",
-      },
-      {
-        text: "TimeLock",
-        link: "/applications/timelock",
-      },
-      {
-        text: "Staking",
-        link: "/applications/staking",
-      },
-      {
-        text: "Merkle Tree",
-        link: "/applications/merkle_tree",
-      },
-      {
-        text: "Simple Storage with Starknet-js",
-        link: "/applications/simple_storage_starknetjs",
-      },
-      {
-        text: "Crowdfunding Campaign",
-        link: "/applications/crowdfunding",
-      },
-      {
-        text: "AdvancedFactory: Crowdfunding",
-        link: "/applications/advanced_factory",
-      },
-      {
-        text: "Random Number Generator",
-        link: "/applications/random_number_generator",
-      },
-      {
-        text: "L1 <> L2 Token Bridge",
-        link: "/applications/l1_l2_token_bridge",
-      },
     ],
   },
   {
     text: "Advanced concepts",
-    items: [
-      {
-        text: "Writing to any storage slot",
-        link: "/advanced-concepts/write_to_any_slot",
-      },
-      {
-        text: "Struct as mapping key",
-        link: "/advanced-concepts/struct-mapping-key",
-      },
-      {
-        text: "Hashing",
-        link: "/advanced-concepts/hashing",
-      },
-      // Hidden until #123 is solved
-      // {
-      //   text: "Hash Solidity Compatible",
-      //   link: "/advanced-concepts/hash-solidity-compatible"
-      // },
-      {
-        text: "Optimisations",
-        items: [
-          {
-            text: "Storage Optimisations",
-            link: "/advanced-concepts/optimisations/store_using_packing",
-          },
-        ],
-      },
-      // Hidden as the content is not 100% correct
-      // {
-      //   text: "Account Abstraction",
-      //   items: [
-      //     {
-      //       text: "AA on Starknet",
-      //       link: "/advanced-concepts/account_abstraction",
-      //     },
-      //     {
-      //       text: "Account Contract",
-      //       link: "/advanced-concepts/account_abstraction/account_contract",
-      //     },
-      //   ],
-      // },
-      {
-        text: "Library Calls",
-        link: "/advanced-concepts/library_calls",
-      },
-      {
-        text: "Plugins",
-        link: "/advanced-concepts/plugins",
-      },
-      {
-        text: "Signature Verification",
-        link: "/advanced-concepts/signature_verification",
-      },
-      {
-        text: "Sierra IR",
-        link: "/advanced-concepts/sierra_ir",
-      }
-    ],
-  },
-  {
-    text: "Cairo cheatsheet",
     collapsed: true,
     items: [
       {
-        text: "Felt",
-        link: "/cairo_cheatsheet/felt",
+        text: "Gas Optimisations",
+        link: "/advanced-concepts/gas_optimisations",
       },
       {
-        text: "Map",
-        link: "/cairo_cheatsheet/mapping",
-      },
-      {
-        text: "Arrays",
-        link: "/cairo_cheatsheet/arrays",
-      },
-      {
-        text: "loop",
-        link: "/cairo_cheatsheet/loop",
-      },
-      {
-        text: "while",
-        link: "/cairo_cheatsheet/while",
-      },
-      {
-        text: "if let",
-        link: "/cairo_cheatsheet/if_let",
-      },
-      {
-        text: "while let",
-        link: "/cairo_cheatsheet/while_let",
-      },
-      {
-        text: "Enums",
-        link: "/cairo_cheatsheet/enums",
-      },
-      {
-        text: "Match",
-        link: "/cairo_cheatsheet/match",
-      },
-      {
-        text: "Tuples",
-        link: "/cairo_cheatsheet/tuples",
-      },
-      {
-        text: "Struct",
-        link: "/cairo_cheatsheet/struct",
-      },
-      {
-        text: "Type casting",
-        link: "/cairo_cheatsheet/type_casting",
-      },
-      {
-        text: "Dict",
-        link: "/cairo_cheatsheet/dict",
+        text: "Traditional Smart Contracts vs Dojo Contracts",
+        link: "/advanced-concepts/contracts",
       },
     ],
+  },
+  {
+    text: "Dojo Integrations",
+    collapsed: true,
+    items: [
+      {
+        text: "React",
+        link: "/integrations/felt",
+      },
+      {
+        text: "Telegram",
+        link: "/integrations/mapping",
+      },
+      {
+        text: "Discord",
+        link: "/integrations/arrays",
+      },
+      {
+        text: "Unity",
+        link: "/integrations/loop",
+      },
+      {
+        text: "AI Agents",
+        items: [
+          {
+            text: "Daydreams",
+            link: "/integrations/ai/daydreams",
+          },
+          {
+            text: "Eliza",
+            link: "/integrations/ai/eliza",
+          },
+          {
+            text: "OpenAI",
+            link: "/integrations/ai/openai",
+          },
+          {
+            text: "OpenRouter",
+            link: "/integrations/ai/openrouter",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    text: "Dojo Use Cases",
+    collapsed: true,
+    items: [],
+  },
+  {
+    text: "Dojo Best Practices",
+    collapsed: true,
+    items: [],
   },
 ];
 

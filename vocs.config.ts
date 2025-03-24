@@ -17,7 +17,7 @@ export default defineConfig({
     light: "/svg/Horizontal_Light.svg",
     dark: "/svg/Horizontal_Dark.svg",
   },
-  title: "Starknet by Example",
+  title: "Dojo by Example",
   rootDir: ".",
   sidebar: routes,
   editLink: {
@@ -28,15 +28,15 @@ export default defineConfig({
   socials: [
     {
       icon: "github",
-      link: "https://github.com/NethermindEth/StarknetByExample",
+      link: "https://github.com/AkatsukiLabs/DojoByExample",
     },
     {
       icon: "telegram",
-      link: "https://t.me/StarknetByExample",
+      link: "https://t.me/+8T2gw4hgblowZTBh",
     },
     {
       icon: "x",
-      link: "https://x.com/nethermindstark",
+      link: "",
     },
   ],
   sponsors: [
