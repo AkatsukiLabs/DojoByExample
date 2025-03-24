@@ -18,7 +18,7 @@ impl IntoFoodTypeFelt252 of Into<FoodType, felt252> {
             FoodType::Meat => 3,
             FoodType::Fish => 4,
             FoodType::Potion => 5,
-            _ => 0, 
+            _ => 0,
         }
     }
 }
@@ -31,7 +31,7 @@ impl IntoFoodTypeU8 of Into<FoodType, u8> {
             FoodType::Meat => 3_u8,
             FoodType::Fish => 4_u8,
             FoodType::Potion => 5_u8,
-            _ => 0_u8, 
+            _ => 0_u8,
         }
     }
 }
@@ -44,14 +44,14 @@ impl IntoU8FoodType of Into<u8, FoodType> {
             3_u8 => FoodType::Meat,
             4_u8 => FoodType::Fish,
             5_u8 => FoodType::Potion,
-            _ => FoodType::Undefined, 
+            _ => FoodType::Undefined,
         }
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use starknet::{contract_address_const};
+    use super::*;
 
     #[test]
     #[available_gas(1000000)]
