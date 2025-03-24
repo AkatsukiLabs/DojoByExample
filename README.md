@@ -1,9 +1,6 @@
-# Dojo by Example
-
 <p align="center">
   <img src="public/svg/Vertical_Dark.svg" alt="Dojo by Example Logo" width="600">
 </p>
-
 
 ## 👾 Introduction
 
