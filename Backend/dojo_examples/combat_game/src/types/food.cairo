@@ -107,5 +107,5 @@ mod tests {
         assert_eq!(5_u8.into(), FoodType::Potion);
         assert_eq!(0_u8.into(), FoodType::Undefined);
         assert_eq!(99_u8.into(), FoodType::Undefined); // Edge case for unknown values
-    }
+    }
 }
