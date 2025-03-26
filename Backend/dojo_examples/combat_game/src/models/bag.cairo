@@ -8,7 +8,7 @@ pub struct Bag {
     #[key]
     pub bag_id: u256,  // Unique identifier for the bag
     #[key]
-    pub player: Player<ContractAddress>,  // The player who owns the bag
+    pub player: u256,  // The player who owns the bag
     pub item_type: ItemType,  // The type of item stored in the bag
     pub quantity: u32,  // The quantity of the item in the bag
 }
