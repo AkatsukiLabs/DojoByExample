@@ -2,6 +2,7 @@ mod constants;
 mod store;
 
 mod models {
+    pub mod battle;
     mod beast;
     mod food;
     mod player;

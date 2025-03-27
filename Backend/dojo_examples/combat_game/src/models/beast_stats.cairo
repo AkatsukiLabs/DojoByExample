@@ -9,8 +9,8 @@ pub struct BeastStats {
     pub special_attack: u16,
     pub special_defense: u16,
     pub speed: u16,
-    pub accuracy: u8, 
+    pub accuracy: u8,
     pub evasion: u8,
-    pub critical_hit_rate: u8, 
+    pub critical_hit_rate: u8,
     pub growth_rate: u8,
 }
