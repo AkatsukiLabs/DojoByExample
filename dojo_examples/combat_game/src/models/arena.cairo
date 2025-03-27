@@ -3,7 +3,6 @@ use core::debug::PrintTrait;
 use core::Default;
 use core::Zeroable;
 
-
 #[derive(Copy, Drop, Serde, Introspect)]
 #[dojo::model]
 struct Arena {
@@ -13,6 +12,7 @@ struct Arena {
     pub minimum_rank: u32,
     pub maximum_rank: u32,
     pub entry_fee: u128,
+    pub registered_players: u32,
 }
 
 #[generate_trait]
@@ -31,14 +31,20 @@ impl ArenaImpl of ArenaTrait {
             minimum_rank,
             maximum_rank,
             entry_fee,
+            registered_players: 0,
         }
     }
 
     fn register_player(ref self: Arena, player_rank: u32, fee_paid: u128) -> bool {
         if player_rank >= self.minimum_rank && player_rank <= self.maximum_rank && fee_paid == self.entry_fee {
+            self.registered_players += 1;
             return true;
         }
         return false;
+    }
+
+    fn get_registered_players(self: Arena) -> u32 {
+        self.registered_players
     }
 }
 
@@ -50,6 +56,7 @@ impl ZeroableArena of Zeroable<Arena> {
             minimum_rank: 0,
             maximum_rank: 0,
             entry_fee: 0,
+            registered_players: 0,
         }
     }
 
@@ -58,7 +65,8 @@ impl ZeroableArena of Zeroable<Arena> {
         self.name == 0 &&
         self.minimum_rank == 0 &&
         self.maximum_rank == 0 &&
-        self.entry_fee == 0
+        self.entry_fee == 0 &&
+        self.registered_players == 0
     }
 }
 
