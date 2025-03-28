@@ -11,6 +11,7 @@ mod models {
     mod achievement;
     mod beast_stats;
     mod potions;
+    mod bag;
 }
 
 mod systems {
