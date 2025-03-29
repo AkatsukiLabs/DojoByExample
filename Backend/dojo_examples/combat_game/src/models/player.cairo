@@ -39,3 +39,25 @@ impl PlayerImpl of PlayerTrait {
         *self.trophies
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::{Player, PlayerTrait};
+
+    // Helper function to create a test player
+    fn setup_player() -> Player {
+        Player {
+            address: starknet::contract_address_const::<0x0>(),
+            arena: 3,
+            current_beast: 7,
+            exists: true,
+            trophies: 99,
+        }
+    }
+
+    #[test]
+    fn test_exists() {
+        let player = setup_player();
+        assert!(player.exists(), "Player should exist but does not.");
+    }
+}
