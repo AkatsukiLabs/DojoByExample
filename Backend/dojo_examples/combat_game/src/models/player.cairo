@@ -66,5 +66,12 @@ mod tests {
         let player = setup_player();
         assert_eq!(player.get_current_arena(), 3, "Arena ID does not match expected value.");
     }
+
+
+    #[test]
+    fn test_get_current_beast() {
+        let player = setup_player();
+        assert_eq!(player.get_current_beast(), 7, "Beast ID does not match expected value.");
+    }
 }
 
