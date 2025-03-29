@@ -73,5 +73,11 @@ mod tests {
         let player = setup_player();
         assert_eq!(player.get_current_beast(), 7, "Beast ID does not match expected value.");
     }
+
+    #[test]
+    fn test_get_trophies() {
+        let player = setup_player();
+        assert_eq!(player.get_trophies(), 99, "Trophies count does not match expected value.");
+    }
 }
 
