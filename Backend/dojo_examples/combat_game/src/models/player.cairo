@@ -60,4 +60,11 @@ mod tests {
         let player = setup_player();
         assert!(player.exists(), "Player should exist but does not.");
     }
+
+    #[test]
+    fn test_get_current_arena() {
+        let player = setup_player();
+        assert_eq!(player.get_current_arena(), 3, "Arena ID does not match expected value.");
+    }
 }
+
