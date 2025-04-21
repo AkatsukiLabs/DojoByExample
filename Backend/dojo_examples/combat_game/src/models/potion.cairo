@@ -41,8 +41,8 @@ mod tests {
             power: 10,
         };
 
-        assert_eq(potion.id, id, 'Potion ID should match');
-        assert_eq(potion.name, 'Murder', 'Potion name should be Murder');
-        assert_eq(potion.power, 10, 'Power should be 10');
+        assert_eq!(potion.id, id, "Potion ID should match");
+        assert_eq!(potion.name, 'Murder', "Potion name should be Murder");
+        assert_eq!(potion.power, 10, "Power should be 10");
     }
 }

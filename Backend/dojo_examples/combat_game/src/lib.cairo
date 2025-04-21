@@ -4,14 +4,9 @@ mod store;
 mod models {
     pub mod battle;
     mod beast;
-    mod food;
     mod player;
-    mod tournament;
-    mod matchup;
-    mod reward;
-    mod achievement;
     mod beast_stats;
-    mod potions;
+    mod potion;
     mod bag;
 }
 
@@ -21,11 +16,8 @@ mod systems {
 
 mod types {
     pub mod beast;
-    pub mod food;
-    pub mod leaderboard;
-    pub mod ranking_criteria;
     pub mod status_condition;
-    pub mod time_period;
+    pub mod battle_status;
 }
 
 mod utils {}

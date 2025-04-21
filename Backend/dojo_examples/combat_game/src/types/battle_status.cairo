@@ -1,6 +1,4 @@
-
-
-#[derive(Copy, Drop, Serde)]
+#[derive(Copy, Drop, Serde, Debug, PartialEq)]
 pub enum BattleStatus {
     Waiting,
     Active,
@@ -41,6 +39,7 @@ pub impl Intou8BattleStatus of Into<u8, BattleStatus> {
             1 => BattleStatus::Active,
             2 => BattleStatus::Finished,
             3 => BattleStatus::None,
+            _ => BattleStatus::None,
         }
     }
 }

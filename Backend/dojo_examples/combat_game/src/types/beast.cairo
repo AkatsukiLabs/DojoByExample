@@ -1,4 +1,4 @@
-#[derive(Copy, Drop, Serde, IntrospectPacked, Debug, PartialEq)]
+#[derive(Copy, Drop, Serde, Debug, PartialEq)]
 pub enum BeastType {
     Fire,
     Water,
