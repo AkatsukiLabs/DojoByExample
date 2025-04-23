@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Dojo By Example
+    url: https://dojo-by-example.vercel.app/
+    about: Review our documentation and examples before creating an issue.
+  - name: Telegram group
+    url: https://t.me/+H1rKyANl3rI4OTMx
+    about: For quick questions and discussions, join our Telegram channel.
