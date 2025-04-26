@@ -6,6 +6,8 @@ use combat_game::types::status_condition::{
 mod status_condition_tests {
     use super::*; // Import everything from the parent module (combat_game)
 
+    // Tests conversion from `StatusCondition` variants to `u8`.
+    // Ensures each variant correctly maps to its corresponding numeric representation.
 
     #[test]
     fn test_status_condition_to_u8() {
@@ -19,6 +21,9 @@ mod status_condition_tests {
         assert_eq!(StatusCondition::Cursed.into(), 7_u8);
     }
 
+    //Tests conversion from `StatusCondition` variants to `felt252`.
+    // Verifies that each status correctly translates into the expected felt252 value.
+
     #[test]
     fn test_status_condition_to_felt252() {
         assert_eq!(StatusCondition::None.into(), 0_felt252);
@@ -31,6 +36,9 @@ mod status_condition_tests {
         assert_eq!(StatusCondition::Cursed.into(), 7_felt252);
     }
 
+    // Tests conversion from valid `u8` values back to `StatusCondition` variants.
+    // Ensures correct mapping for all known valid values (0 through 7).
+
     #[test]
     fn test_u8_to_status_condition_valid() {
         assert_eq!(0_u8.into(), StatusCondition::None);
@@ -42,6 +50,8 @@ mod status_condition_tests {
         assert_eq!(6_u8.into(), StatusCondition::Frozen);
         assert_eq!(7_u8.into(), StatusCondition::Cursed);
     }
+    // Tests conversion from invalid `u8` values to `StatusCondition`.
+    // Values outside the defined range should default to `StatusCondition::None`.
 
     #[test]
     fn test_u8_to_status_condition_invalid() {
