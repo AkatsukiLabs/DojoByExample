@@ -8,12 +8,12 @@ use combat_game::constants;
 #[dojo::model]
 pub struct Player {
     #[key]
-    pub address: ContractAddress, 
+    pub address: ContractAddress,
     pub current_beast_id: u16,
     pub battles_won: u16,
     pub battles_lost: u16,
     pub last_active_day: u32,
-    pub creation_day: u32
+    pub creation_day: u32,
 }
 
 #[generate_trait]
@@ -44,7 +44,7 @@ pub impl ZeroablePlayerTrait of Zero<Player> {
 
     #[inline(always)]
     fn is_zero(self: @Player) -> bool {
-       *self.address == constants::ZERO_ADDRESS()
+        *self.address == constants::ZERO_ADDRESS()
     }
 
     #[inline(always)]
@@ -76,35 +76,13 @@ mod tests {
         };
 
         assert_eq!(
-            player.address, 
-            mock_address, 
-            "Player address should match the initialized address"
+            player.address, mock_address, "Player address should match the initialized address",
         );
-        assert_eq!(
-            player.current_beast_id, 
-            initial_beast_id, 
-            "Current beast ID should be 1"
-        );
-        assert_eq!(
-            player.battles_won, 
-            0, 
-            "Battles won should be 0"
-        );
-        assert_eq!(
-            player.battles_lost, 
-            0, 
-            "Battles lost should be 0"
-        );
-        assert_eq!(
-            player.last_active_day, 
-            0, 
-            "Last active day should be 0"
-        );
-        assert_eq!(
-            player.creation_day, 
-            1, 
-            "Creation day should be 1"
-        );
+        assert_eq!(player.current_beast_id, initial_beast_id, "Current beast ID should be 1");
+        assert_eq!(player.battles_won, 0, "Battles won should be 0");
+        assert_eq!(player.battles_lost, 0, "Battles lost should be 0");
+        assert_eq!(player.last_active_day, 0, "Last active day should be 0");
+        assert_eq!(player.creation_day, 1, "Creation day should be 1");
     }
 
     #[test]
@@ -113,9 +91,9 @@ mod tests {
         let player: Player = ZeroablePlayerTrait::zero();
 
         assert_eq!(
-            player.address, 
-            constants::ZERO_ADDRESS(), 
-            "Player address should match the initialized address"
+            player.address,
+            constants::ZERO_ADDRESS(),
+            "Player address should match the initialized address",
         );
     }
 
@@ -123,7 +101,7 @@ mod tests {
     #[available_gas(1000000)]
     fn test_player_with_zero_beast() {
         let mock_address: ContractAddress = contract_address_const::<0x456>();
-        
+
         let player = Player {
             address: mock_address,
             current_beast_id: 0,
@@ -133,11 +111,7 @@ mod tests {
             creation_day: 1,
         };
 
-        assert_eq!(
-            player.current_beast_id, 
-            0, 
-            "Initial beast ID should be 0 for new player"
-        );
+        assert_eq!(player.current_beast_id, 0, "Initial beast ID should be 0 for new player");
     }
 
     #[test]
@@ -164,10 +138,7 @@ mod tests {
             creation_day: 1,
         };
 
-        assert!(
-            player1.address != player2.address, 
-            "Players should have unique addresses"
-        );
+        assert!(player1.address != player2.address, "Players should have unique addresses");
     }
 }
 

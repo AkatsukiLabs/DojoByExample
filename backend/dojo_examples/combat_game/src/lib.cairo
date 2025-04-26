@@ -22,4 +22,6 @@ mod types {
 
 mod utils {}
 
-pub mod tests {}
+pub mod tests {
+    pub mod status_condition_tests;
+}

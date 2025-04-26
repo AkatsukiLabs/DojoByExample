@@ -55,4 +55,3 @@ impl IntoU8StatusCondition of Into<u8, StatusCondition> {
         }
     }
 }
-
