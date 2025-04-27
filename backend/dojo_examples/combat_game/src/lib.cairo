@@ -16,10 +16,13 @@ mod systems {
 
 mod types {
     pub mod beast;
+    pub mod rarity;
     pub mod status_condition;
     pub mod battle_status;
 }
 
-mod utils {}
+pub mod utils {
+    pub mod string;
+}
 
 pub mod tests {}
