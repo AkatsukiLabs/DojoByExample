@@ -3,9 +3,9 @@ mod store;
 
 mod models {
     pub mod battle;
-    mod beast;
-    mod player;
-    mod beast_stats;
+    pub mod beast;
+    pub mod player;
+    pub mod beast_stats;
     mod potion;
     mod bag;
 }
