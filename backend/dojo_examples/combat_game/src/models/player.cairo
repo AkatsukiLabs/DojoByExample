@@ -1,8 +1,7 @@
-use starknet::ContractAddress;
-use core::num::traits::zero::Zero;
-
 // Constants imports
 use combat_game::constants;
+use core::num::traits::zero::Zero;
+use starknet::ContractAddress;
 
 #[derive(Copy, Drop, Serde, Debug, PartialEq)]
 #[dojo::model]
@@ -55,9 +54,9 @@ pub impl ZeroablePlayerTrait of Zero<Player> {
 
 #[cfg(test)]
 mod tests {
-    use super::{Player, ZeroablePlayerTrait};
     use combat_game::constants;
     use starknet::{ContractAddress, contract_address_const};
+    use super::{Player, ZeroablePlayerTrait};
 
     #[test]
     #[available_gas(1000000)]

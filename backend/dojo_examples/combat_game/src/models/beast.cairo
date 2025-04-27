@@ -1,45 +1,11 @@
+use core::num::traits::{SaturatingAdd, SaturatingMul};
 use starknet::ContractAddress;
 use crate::constants::{
-    FAVORED_ATTACK_MULTIPLIER, NORMAL_ATTACK_MULTIPLIER, NORMAL_EFFECTIVENESS, NOT_VERY_EFFECTIVE,
-    SUPER_EFFECTIVE,
+    BASE_LEVEL_BONUS, FAVORED_ATTACK_MULTIPLIER, NORMAL_ATTACK_MULTIPLIER, NORMAL_EFFECTIVENESS,
+    NOT_VERY_EFFECTIVE, SUPER_EFFECTIVE,
 };
-
-#[derive(Introspect, Copy, Drop, Serde, Debug, PartialEq)]
-pub enum ElementType {
-    Light,
-    Magic,
-    Shadow,
-}
-
-#[derive(Introspect, Copy, Drop, Serde, Debug, PartialEq)]
-pub enum AttackType {
-    Beam,
-    Slash,
-    Pierce,
-    Blast,
-    Freeze,
-    Burn,
-    Smash,
-    Crush,
-    Shock,
-}
-
-#[generate_trait]
-pub impl AttackTypeImpl of AttackTypeTrait {
-    fn base_damage(self: @AttackType) -> u16 {
-        match self {
-            AttackType::Beam => 10,
-            AttackType::Slash => 20,
-            AttackType::Pierce => 30,
-            AttackType::Blast => 10,
-            AttackType::Freeze => 20,
-            AttackType::Burn => 30,
-            AttackType::Smash => 10,
-            AttackType::Crush => 20,
-            AttackType::Shock => 30,
-        }
-    }
-}
+use crate::types::attack_type::{AttackType, AttackTypeTrait};
+use crate::types::beast_type::BeastType;
 
 #[derive(Copy, Drop, Serde, Debug, PartialEq)]
 #[dojo::model]
@@ -50,55 +16,53 @@ pub struct Beast {
     pub beast_id: u16,
     pub level: u8,
     pub experience: u16,
-    pub beast_type: ElementType,
+    pub beast_type: BeastType,
 }
 
 #[generate_trait]
 pub impl BeastImpl of BeastTrait {
-    fn new(player: ContractAddress, beast_id: u16, beast_type: ElementType) -> Beast {
+    fn new(player: ContractAddress, beast_id: u16, beast_type: BeastType) -> Beast {
         Beast { player, beast_id, level: 0, experience: 0, beast_type }
     }
 
-    fn is_favored_attack(attacker_type: ElementType, attack_type: AttackType) -> bool {
+    fn is_favored_attack(self: @Beast, attack_type: AttackType) -> bool {
         match attack_type {
             AttackType::Beam | AttackType::Slash |
-            AttackType::Pierce => attacker_type == ElementType::Light,
+            AttackType::Pierce => self.beast_type == @BeastType::Light,
             AttackType::Blast | AttackType::Freeze |
-            AttackType::Burn => attacker_type == ElementType::Magic,
+            AttackType::Burn => self.beast_type == @BeastType::Magic,
             AttackType::Smash | AttackType::Crush |
-            AttackType::Shock => attacker_type == ElementType::Shadow,
+            AttackType::Shock => self.beast_type == @BeastType::Shadow,
+            _ => false,
         }
     }
 
-    fn calculate_effectiveness(attacker_type: ElementType, defender_type: ElementType) -> u8 {
+    fn calculate_effectiveness(attacker_type: BeastType, defender_type: BeastType) -> u8 {
         match (attacker_type, defender_type) {
-            (ElementType::Light, ElementType::Shadow) | (ElementType::Magic, ElementType::Light) |
-            (ElementType::Shadow, ElementType::Magic) => SUPER_EFFECTIVE,
-            (ElementType::Light, ElementType::Magic) | (ElementType::Magic, ElementType::Shadow) |
-            (ElementType::Shadow, ElementType::Light) => NOT_VERY_EFFECTIVE,
+            (BeastType::Light, BeastType::Shadow) | (BeastType::Magic, BeastType::Light) |
+            (BeastType::Shadow, BeastType::Magic) => SUPER_EFFECTIVE,
+            (BeastType::Light, BeastType::Magic) | (BeastType::Magic, BeastType::Shadow) |
+            (BeastType::Shadow, BeastType::Light) => NOT_VERY_EFFECTIVE,
             _ => NORMAL_EFFECTIVENESS,
         }
     }
 
-    fn calculate_damage(
-        attacker_type: ElementType,
-        attack_type: AttackType,
-        attacker_stats: (u16, u16),
-        defender_type: ElementType,
+    fn attack(
+        self: @Beast, target: BeastType, attack_type: AttackType, attack_factor: u16,
     ) -> (u16, bool, bool) {
-        let is_favored = Self::is_favored_attack(attacker_type, attack_type);
+        let effectiveness = Self::calculate_effectiveness(*self.beast_type, target);
+        let is_favored = self.is_favored_attack(attack_type);
         let favored_multiplier = if is_favored {
             FAVORED_ATTACK_MULTIPLIER
         } else {
             NORMAL_ATTACK_MULTIPLIER
         };
-        let effectiveness = Self::calculate_effectiveness(attacker_type, defender_type);
-        let (attack_factor, level_bonus) = attacker_stats;
         let base_damage = attack_type.base_damage();
+        let level_bonus = BASE_LEVEL_BONUS.saturating_add(*self.level);
 
-        let damage: u16 = (base_damage * attack_factor / 100 + level_bonus)
-            * favored_multiplier.into()
-            * effectiveness.into();
+        let damage = (base_damage.saturating_mul(attack_factor) / 100).saturating_add(level_bonus.into());
+        let damage = damage.saturating_mul(favored_multiplier.into()) / 100;
+        let damage = damage.saturating_mul(effectiveness.into()) / 100;
 
         (damage, is_favored, effectiveness == SUPER_EFFECTIVE)
     }
