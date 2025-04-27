@@ -34,3 +34,25 @@ pub impl AttackTypeImpl of AttackTypeTrait {
         }
     }
 }
+
+
+pub impl AttackTypeDisplay of core::fmt::Display<AttackType> {
+    fn fmt(self: @AttackType, ref f: core::fmt::Formatter) -> Result<(), core::fmt::Error> {
+        let s = match self {
+            AttackType::Beam => "Beam",
+            AttackType::Slash => "Slash",
+            AttackType::Wave => "Wave",
+            AttackType::Punch => "Punch",
+            AttackType::Kick => "Kick",
+            AttackType::Pierce => "Pierce",
+            AttackType::Blast => "Blast",
+            AttackType::Freeze => "Freeze",
+            AttackType::Burn => "Burn",
+            AttackType::Smash => "Smash",
+            AttackType::Crush => "Crush",
+            AttackType::Shock => "Shock",
+        };
+        f.buffer.append(@s);
+        Result::Ok(())
+    }
+}
