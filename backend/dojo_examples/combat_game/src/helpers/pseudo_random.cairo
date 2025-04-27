@@ -4,6 +4,7 @@ pub mod PseudoRandom {
     use core::pedersen::PedersenTrait;
     use core::hash::HashStateTrait;
     use core::starknet::{get_block_timestamp, get_block_number};
+    use core::num::traits::{WrappingAdd, WrappingMul};
 
     /// Generates a pseudo-random `u8` value within a specified range `[min, max]`.
     ///
@@ -15,6 +16,8 @@ pub mod PseudoRandom {
     ///
     /// * `min`: The minimum value (inclusive) of the random number range.
     /// * `max`: The maximum value (inclusive) of the random number range.
+    /// * `unique_id`: A unique identifier used to generate entropy for randomness.
+    /// * `salt`: An additional value to modify the randomness, ensuring more variation.
     ///
     /// # Panics
     ///
@@ -23,31 +26,39 @@ pub mod PseudoRandom {
     /// # Returns
     ///
     /// A pseudo-random `u8` value within the specified range.
-    pub fn generate_random_u8(min: u8, max: u8) -> u8 {
-        // Ensure min is less than max
+    pub fn generate_random_u8(
+        unique_id: u16, 
+        salt: u16,
+        min: u8, 
+        max: u8
+    ) -> u8 {
         assert!(min < max, "min must be less than max");
+        
+        // Get entropy values
+        let block_timestamp = get_block_timestamp();
+        let block_number = get_block_number();
+        
+        // Create unique seeds with your parameters
+        let timestamp_seed: felt252 = block_timestamp.into() + salt.into();
+        let block_seed: felt252 = block_number.into() + unique_id.into();
+        let combined_seed: felt252 = timestamp_seed + (unique_id.wrapping_mul(salt)).into();
+        
+        // Hash for randomness
+        let hash_input = combined_seed + block_seed;
+        let hash_state = PedersenTrait::new(0);
+        let hash_state = hash_state.update(hash_input);
+        let hash = hash_state.finalize();
+        
+        // Convert to range
+        let range: u64 = max.into() - min.into() + 1_u64.into();
+        let hash_u256: u256 = hash.into();
+        let mod_value: u64 = (hash_u256 % range.into()).try_into().unwrap();
+        let mod_value_u8: u8 = mod_value.try_into().unwrap();
+        let random_value: u8 = mod_value_u8.wrapping_add(min);
 
-        // Get Starknet block data for entropy
-        let timestamp: felt252 = get_block_timestamp().into();
-        let block_number: felt252 = get_block_number().into();
+        assert!(random_value >= min && random_value <= max, "Random value out of range");
 
-        // Create a Pedersen hash
-        let mut state = PedersenTrait::new(timestamp);
-        state = state.update(block_number);
-        let hash: felt252 = state.finalize();
-
-        // Convert the hash to u256
-        let random_u256: u256 = hash.into();
-
-        // Calculate the range
-        let range: u256 = (max.into() - min.into() + 1_u8.into());
-        let random_in_range: u256 = random_u256 % range;
-        let random_u8: u8 = (random_in_range + min.into()).try_into().unwrap();
-
-        // Ensure the random value is within the specified range
-        assert!(random_u8 >= min && random_u8 <= max, "Random value out of range");
-
-        random_u8
+        random_value
     }
 }
 
@@ -63,7 +74,9 @@ mod tests {
     fn test_generate_random_u8() {
         let min: u8 = 5;
         let max: u8 = 10;
-        let result = generate_random_u8(min, max);
+        let unique_id: u16 = 12345;
+        let salt: u16 = 6789;
+        let result = generate_random_u8(unique_id, salt, min, max);
 
         // Assert the result is within the specified range
         assert!(result >= min && result <= max, "Random number out of range");
@@ -77,7 +90,9 @@ mod tests {
     fn test_random_in_range() {
         let min: u8 = 10;
         let max: u8 = 100;
-        let result = generate_random_u8(min, max);
+        let unique_id: u16 = 12345;
+        let salt: u16 = 6789;
+        let result = generate_random_u8(unique_id, salt, min, max);
 
         // Assert the result is within the specified range
         assert!(result >= min && result <= max, "Random u8 out of range");
@@ -92,8 +107,10 @@ mod tests {
     fn test_deterministic_output_same_block() {
         let min: u8 = 20;
         let max: u8 = 50;
-        let result1 = generate_random_u8(min, max);
-        let result2 = generate_random_u8(min, max);
+        let unique_id: u16 = 12345;
+        let salt: u16 = 6789;
+        let result1 = generate_random_u8(unique_id, salt, min, max);
+        let result2 = generate_random_u8(unique_id, salt, min, max);
 
         // Assert that the random numbers are the same within the same block
         assert!(result1 == result2, "Expected same result");
@@ -106,7 +123,7 @@ mod tests {
     #[available_gas(1000000)]
     #[should_panic(expected: "min must be less than max")]
     fn test_invalid_range_equal_min_max() {
-        let _ = generate_random_u8(50, 50); // should panic
+        let _ = generate_random_u8(12, 34, 50, 50); // should panic
     }
 
     /// Tests the `generate_random_u8` function with the full `u8` range.
@@ -117,7 +134,9 @@ mod tests {
     fn test_full_u8_range() {
         let min: u8 = 0;
         let max: u8 = 255;
-        let result = generate_random_u8(min, max);
+        let unique_id: u16 = 12345;
+        let salt: u16 = 6789;
+        let result = generate_random_u8(unique_id, salt, min, max);
 
         // Assert the result is within the full `u8` range
         assert!(result >= min && result <= max, "Value should be in [0, 255]");
