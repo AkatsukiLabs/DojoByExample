@@ -7,7 +7,7 @@ mod models {
     mod player;
     mod beast_stats;
     mod potion;
-    mod bag;
+    pub mod bag;
 }
 
 mod systems {
@@ -30,3 +30,7 @@ pub mod utils {
 }
 
 pub mod tests {}
+
+pub mod traits {
+    pub mod bag_actions;
+}
