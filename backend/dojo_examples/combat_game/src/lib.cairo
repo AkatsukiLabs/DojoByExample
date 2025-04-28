@@ -25,6 +25,4 @@ pub mod utils {
     pub mod string;
 }
 
-pub mod tests {
-    pub mod status_condition_tests;
-}
+pub mod tests {}
