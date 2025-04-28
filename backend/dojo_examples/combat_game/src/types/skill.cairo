@@ -1,5 +1,5 @@
 #[derive(Copy, Drop, Serde, Debug, PartialEq)]
-pub enum AttackType {
+pub enum SkillType {
     Slash,
     Beam,
     Wave,

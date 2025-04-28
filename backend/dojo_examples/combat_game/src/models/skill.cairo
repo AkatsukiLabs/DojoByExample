@@ -2,13 +2,12 @@ use crate::types::attack::AttackType;
 
 #[derive(Copy, Drop, Serde, Debug, PartialEq)]
 #[dojo::model]
-pub struct Attack {
+pub struct Skill {
     #[key]
-    pub beast_id: u256,
-    #[key]
-    pub attack_id: u256,
-    pub min_level_required: u8,
+    pub id: u256,
+    pub power: u16,
     pub attack_type: AttackType,
+    pub min_level_required: u8,
 }
 
 const SLASH_ATTACK_POWER: u16 = 40;
