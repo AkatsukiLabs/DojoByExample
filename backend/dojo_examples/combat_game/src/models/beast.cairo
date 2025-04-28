@@ -166,6 +166,92 @@ mod tests {
     }
 
     #[test]
-    fn test_attack() {// TODO
+    fn test_attack() {
+        let player = contract_address_const::<'bob'>();
+
+        // (attackerType, defenderType, attackerLevel, attackType, attackFactor, expectedResult)
+        let dataset = [
+            (
+                BeastType::Light,
+                BeastType::Light,
+                1_u8,
+                AttackType::Blast,
+                100_u16,
+                (61_u16, false, false),
+            ),
+            (
+                BeastType::Light,
+                BeastType::Magic,
+                1_u8,
+                AttackType::Blast,
+                100_u16,
+                (30_u16, false, false),
+            ),
+            (
+                BeastType::Light,
+                BeastType::Shadow,
+                1_u8,
+                AttackType::Blast,
+                100_u16,
+                (91_u16, false, true),
+            ),
+            (
+                BeastType::Light,
+                BeastType::Light,
+                1_u8,
+                AttackType::Beam,
+                100_u16,
+                (67_u16, true, false),
+            ),
+            (
+                BeastType::Light,
+                BeastType::Light,
+                1_u8,
+                AttackType::Blast,
+                200_u16,
+                (111_u16, false, false),
+            ),
+            (
+                BeastType::Light,
+                BeastType::Shadow,
+                5_u8,
+                AttackType::Beam,
+                300_u16,
+                (270_u16, true, true),
+            ),
+        ]
+            .span();
+
+        for (
+            attackerType,
+            defenderType,
+            attackerLevel,
+            attackType,
+            attackFactor,
+            (expectedDamage, expectedFavored, expectedEffectiveness),
+        ) in dataset {
+            let beast = Beast {
+                player,
+                beast_id: 1,
+                level: *attackerLevel,
+                experience: 0,
+                beast_type: *attackerType,
+            };
+            let (damage, favored, effectiveness) = beast
+                .attack(*defenderType, *attackType, *attackFactor);
+
+            assert!(
+                damage == *expectedDamage
+                    && favored == *expectedFavored
+                    && effectiveness == *expectedEffectiveness,
+                "Expected: ({}, {}, {}) Got: ({}, {}, {})",
+                expectedDamage,
+                expectedFavored,
+                expectedEffectiveness,
+                damage,
+                favored,
+                effectiveness,
+            );
+        }
     }
 }
