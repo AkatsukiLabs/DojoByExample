@@ -24,6 +24,10 @@ mod types {
     pub mod battle_status;
 }
 
+mod helpers {
+    pub mod pseudo_random;
+}
+
 pub mod utils {
     pub mod string;
 }
