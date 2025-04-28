@@ -2,6 +2,7 @@ mod constants;
 mod store;
 
 mod models {
+    pub mod attack;
     pub mod battle;
     mod beast;
     mod player;
@@ -15,6 +16,7 @@ mod systems {
 }
 
 mod types {
+    pub mod attack;
     pub mod beast;
     pub mod rarity;
     pub mod status_condition;
