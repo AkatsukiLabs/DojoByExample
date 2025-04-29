@@ -16,6 +16,7 @@ struct Potion {
 #[generate_trait]
 pub impl PotionImpl of PotionTrait {
     fn new_potion(potion_id: u64) -> Potion {
+
         Potion { id: potion_id, name: 'Potion', effect: 0, rarity: Rarity::Basic, power: 0 }
     }
 
@@ -49,7 +50,9 @@ mod tests {
     fn test_basic_initialization() {
         let id = 1;
 
+  
         let potion = Potion { id: 1, name: 'Murder', effect: 0, rarity: Rarity::Basic, power: 10 };
+
 
         assert_eq!(potion.id, id, "Potion ID should match");
         assert_eq!(potion.name, 'Murder', "Potion name should be Murder");

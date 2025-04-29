@@ -1,4 +1,3 @@
-
 // Starknet import
 use starknet::{ContractAddress, contract_address_const};
 
@@ -13,5 +12,4 @@ pub fn ZERO_ADDRESS() -> ContractAddress {
 
 // Seconds per day
 pub const SECONDS_PER_DAY: u64 = 86400;
-
 
