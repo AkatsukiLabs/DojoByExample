@@ -1,0 +1,43 @@
+name: Cairo-Dojo CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Install Dojo
+        run: curl -L https://install.dojoengine.org | bash
+      
+      - name: Setup Dojo
+        run: /home/runner/.config/.dojo/bin/dojoup -v nightly
+      
+      - name: Install Scarb
+        run: curl --proto '=https' --tlsv1.2 -sSf https://docs.swmansion.com/scarb/install.sh | bash
+      
+      - name: Add Scarb to PATH
+        run: echo "${HOME}/.local/bin" >> $GITHUB_PATH
+      
+      - name: Build
+        run: |
+          /home/runner/.config/.dojo/bin/sozo build
+          if [[ `git status --porcelain` ]]; then
+            echo "The git repo is dirty"
+            echo "Make sure to run 'sozo build' after changing Scarb.toml"
+            exit 1
+          fi
+      
+      - name: Run tests
+        run: /home/runner/.config/.dojo/bin/sozo test
+      
+      - name: Check formatting
+        run: scarb fmt --check
