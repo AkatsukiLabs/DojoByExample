@@ -19,6 +19,7 @@ mod types {
     pub mod rarity;
     pub mod status_condition;
     pub mod battle_status;
+    pub mod potion;
 }
 
 mod helpers {
@@ -30,7 +31,3 @@ pub mod utils {
 }
 
 pub mod tests {}
-
-pub mod traits {
-    pub mod bag_actions;
-}
