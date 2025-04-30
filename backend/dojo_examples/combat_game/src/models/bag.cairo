@@ -11,16 +11,8 @@ pub struct Bag {
     pub item: Potion,
 }
 
-
 #[generate_trait]
-pub trait BagActions<T> {
-    fn add_item(ref self: T, item: Potion);
-    fn remove_item(ref self: T, item: Potion) -> Result::<(), felt252>;
-    fn is_empty(self: @T) -> bool;
-}
-
-impl BagActionsImpl of BagActions<Bag> {
-
+impl BagActions of BagActionsTrait {
     fn add_item(ref self: Bag, item: Potion) {
         self.item = item;
     }
