@@ -1,11 +1,8 @@
 use starknet::ContractAddress;
 
-#[derive(Copy, Drop, Serde, Debug, PartialEq)]
-#[dojo::model]
+#[derive(Copy, Drop, Debug, PartialEq)]
 pub struct Bag {
-    #[key]
     pub bag_id: u256,  
-    #[key]
     pub player: ContractAddress,  
     pub quantity: u32,  
 }
@@ -13,13 +10,14 @@ pub struct Bag {
 #[cfg(test)]
 mod tests {
     use super::Bag;
+    use starknet::ContractAddress;
     
     #[test]
     #[available_gas(300000)]
     fn test_bag_initialization() {
-        let bag_id = 1;
-        let player_id = starknet::contract_address_const::<0x0>();
-        let quantity = 5;
+        let bag_id: u256 = 1_u256;
+        let player_id: ContractAddress = 0.try_into().unwrap();
+        let quantity: u32 = 5;
         
         let bag = Bag {
             bag_id: bag_id,
@@ -27,51 +25,50 @@ mod tests {
             quantity: quantity,
         };
         
-        assert_eq!(bag.bag_id, bag_id, "Bag ID should match");
-        assert_eq!(bag.player, player_id, "Player ID should match");
-        assert_eq!(bag.quantity, quantity, "Quantity should be 5");
+        assert(bag.bag_id == bag_id, 'Bag ID should match');
+        assert(bag.player == player_id, 'Player ID should match');
+        assert(bag.quantity == quantity, 'Quantity should be 5');
     }
     
     #[test]
     #[available_gas(300000)]
     fn test_bag_with_different_item_types() {
-
-        let address = starknet::contract_address_const::<0x0>();
+        let address: ContractAddress = 0.try_into().unwrap();
 
         let weapon_bag = Bag {
-            bag_id: 1,
+            bag_id: 1_u256,
             player: address,
             quantity: 1,
         };
 
         let armor_bag = Bag {
-            bag_id: 2,
+            bag_id: 2_u256,
             player: address,
             quantity: 1,
         };
 
         let potion_bag = Bag {
-            bag_id: 3,
+            bag_id: 3_u256,
             player: address,
             quantity: 5,
         };
 
-
+        assert(weapon_bag.quantity == 1, 'Weapon bag should have 1 item');
+        assert(armor_bag.quantity == 1, 'Armor bag should have 1 item');
+        assert(potion_bag.quantity == 5, 'Potion bag should have 5 items');
     }
     
     #[test]
     #[available_gas(300000)]
     fn test_zero_quantity_bag() {
-
-        let address = starknet::contract_address_const::<0x0>();
+        let address: ContractAddress = 0.try_into().unwrap();
 
         let empty_bag = Bag {
-            bag_id: 1,
+            bag_id: 1_u256,
             player: address,
             quantity: 0,
         };
 
-        assert_eq!(empty_bag.quantity, 0, "Quantity should be zero");
+        assert(empty_bag.quantity == 0, 'Quantity should be zero');
     }
-    
 }

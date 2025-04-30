@@ -1,7 +1,5 @@
-#[derive(Copy, Drop, Serde, Debug)]
-#[dojo::model]
+#[derive(Copy, Drop, Debug)]
 pub struct BeastStats {
-    #[key]
     pub beast_id: u256,
     pub max_hp: u16,
     pub current_hp: u16,

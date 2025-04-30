@@ -2,10 +2,8 @@ use core::num::traits::SaturatingAdd;
 use crate::types::rarity::{Rarity, RarityTrait};
 use crate::utils::string::stringify;
 
-#[derive(Drop, Serde, IntrospectPacked, Debug)]
-#[dojo::model]
+#[derive(Drop, Clone, Debug)]
 struct Potion {
-    #[key]
     id: u64,
     name: felt252,
     effect: u8,

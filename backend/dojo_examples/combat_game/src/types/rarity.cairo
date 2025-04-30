@@ -1,6 +1,6 @@
 use core::byte_array::ByteArrayTrait;
 
-#[derive(Drop, Serde, IntrospectPacked, Debug)]
+#[derive(Drop, Copy, Debug)]
 pub enum Rarity {
     Basic,
     Common,

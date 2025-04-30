@@ -1,6 +1,7 @@
 
 // Starknet import
-use starknet::{ContractAddress, contract_address_const};
+use starknet::ContractAddress;
+use core::traits::Into;
 
 // Status values to init a Beast
 pub const MIN_SEARCH: u8 = 1;
@@ -8,7 +9,7 @@ pub const MAX_SEARCH: u8 = 3;
 
 // Zero address
 pub fn ZERO_ADDRESS() -> ContractAddress {
-    contract_address_const::<0x0>()
+    0.into()
 }
 
 // Seconds per day

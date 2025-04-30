@@ -1,13 +1,13 @@
 use starknet::ContractAddress;
 use core::num::traits::zero::Zero;
+use core::traits::Into;
+use core::traits::Default;
 
 // Constants imports
 use combat_game::constants;
 
-#[derive(Copy, Drop, Serde, Debug, PartialEq)]
-#[dojo::model]
+#[derive(Copy, Drop, Debug, PartialEq)]
 pub struct Player {
-    #[key]
     pub address: ContractAddress, 
     pub current_beast_id: u16,
     pub battles_won: u16,
@@ -57,13 +57,15 @@ pub impl ZeroablePlayerTrait of Zero<Player> {
 mod tests {
     use super::{Player, ZeroablePlayerTrait};
     use combat_game::constants;
-    use starknet::{ContractAddress, contract_address_const};
+    use starknet::ContractAddress;
+    use core::traits::TryInto;
+    use core::traits::Into;
 
     #[test]
     #[available_gas(1000000)]
     fn test_player_initialization() {
         // Use contract_address_const to create a mock address
-        let mock_address: ContractAddress = contract_address_const::<0x123>();
+        let mock_address: ContractAddress = 1.into();
         let initial_beast_id: u16 = 1;
 
         let player = Player {
@@ -75,35 +77,29 @@ mod tests {
             creation_day: 1,
         };
 
-        assert_eq!(
-            player.address, 
-            mock_address, 
-            "Player address should match the initialized address"
+        assert(
+            player.address == mock_address, 
+            'Player address should match the initialized address'
         );
-        assert_eq!(
-            player.current_beast_id, 
-            initial_beast_id, 
-            "Current beast ID should be 1"
+        assert(
+            player.current_beast_id == initial_beast_id, 
+            'Current beast ID should be 1'
         );
-        assert_eq!(
-            player.battles_won, 
-            0, 
-            "Battles won should be 0"
+        assert(
+            player.battles_won == 0, 
+            'Battles won should be 0'
         );
-        assert_eq!(
-            player.battles_lost, 
-            0, 
-            "Battles lost should be 0"
+        assert(
+            player.battles_lost == 0, 
+            'Battles lost should be 0'
         );
-        assert_eq!(
-            player.last_active_day, 
-            0, 
-            "Last active day should be 0"
+        assert(
+            player.last_active_day == 0, 
+            'Last active day should be 0'
         );
-        assert_eq!(
-            player.creation_day, 
-            1, 
-            "Creation day should be 1"
+        assert(
+            player.creation_day == 1, 
+            'Creation day should be 1'
         );
     }
 
@@ -112,17 +108,16 @@ mod tests {
     fn test_player_initialization_zero_values() {
         let player: Player = ZeroablePlayerTrait::zero();
 
-        assert_eq!(
-            player.address, 
-            constants::ZERO_ADDRESS(), 
-            "Player address should match the initialized address"
+        assert(
+            *player.address == *constants::ZERO_ADDRESS(), 
+            'Player address should match the initialized address'
         );
     }
 
     #[test]
     #[available_gas(1000000)]
     fn test_player_with_zero_beast() {
-        let mock_address: ContractAddress = contract_address_const::<0x456>();
+        let mock_address: ContractAddress = 2.into();
         
         let player = Player {
             address: mock_address,
@@ -133,18 +128,17 @@ mod tests {
             creation_day: 1,
         };
 
-        assert_eq!(
-            player.current_beast_id, 
-            0, 
-            "Initial beast ID should be 0 for new player"
+        assert(
+            player.current_beast_id == 0, 
+            'Initial beast ID should be 0 for new player'
         );
     }
 
     #[test]
     #[available_gas(1000000)]
     fn test_player_address_uniqueness() {
-        let address1: ContractAddress = contract_address_const::<0x123>();
-        let address2: ContractAddress = contract_address_const::<0x456>();
+        let address1: ContractAddress = 1.into();
+        let address2: ContractAddress = 2.into();
 
         let player1 = Player {
             address: address1,
@@ -164,9 +158,9 @@ mod tests {
             creation_day: 1,
         };
 
-        assert!(
+        assert(
             player1.address != player2.address, 
-            "Players should have unique addresses"
+            'Players should have unique addresses'
         );
     }
 }
