@@ -2,10 +2,11 @@ mod constants;
 mod store;
 
 mod models {
+    mod bag;
     pub mod battle;
     mod beast;
-    mod player;
     mod beast_stats;
+    mod player;
     mod potion;
     pub mod bag;
 }
@@ -15,7 +16,10 @@ mod systems {
 }
 
 mod types {
+    pub mod attack_type;
+    pub mod battle_status;
     pub mod beast;
+    pub mod beast_type;
     pub mod rarity;
     pub mod status_condition;
     pub mod battle_status;
