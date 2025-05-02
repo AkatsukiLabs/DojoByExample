@@ -7,9 +7,9 @@ mod models {
     mod beast;
     pub mod beast_skill;
     mod player;
+    mod bag;
     mod beast_stats;
     mod potion;
-    mod bag;
 }
 
 mod systems {
@@ -18,10 +18,11 @@ mod systems {
 
 mod types {
     pub mod skill;
+    pub mod battle_status;
     pub mod beast;
+    pub mod beast_type;
     pub mod rarity;
     pub mod status_condition;
-    pub mod battle_status;
 }
 
 mod helpers {

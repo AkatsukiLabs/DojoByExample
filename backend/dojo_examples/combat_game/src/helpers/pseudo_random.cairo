@@ -26,29 +26,24 @@ pub mod PseudoRandom {
     /// # Returns
     ///
     /// A pseudo-random `u8` value within the specified range.
-    pub fn generate_random_u8(
-        unique_id: u16, 
-        salt: u16,
-        min: u8, 
-        max: u8
-    ) -> u8 {
+    pub fn generate_random_u8(unique_id: u16, salt: u16, min: u8, max: u8) -> u8 {
         assert!(min < max, "min must be less than max");
-        
+
         // Get entropy values
         let block_timestamp = get_block_timestamp();
         let block_number = get_block_number();
-        
+
         // Create unique seeds with your parameters
         let timestamp_seed: felt252 = block_timestamp.into() + salt.into();
         let block_seed: felt252 = block_number.into() + unique_id.into();
         let combined_seed: felt252 = timestamp_seed + (unique_id.wrapping_mul(salt)).into();
-        
+
         // Hash for randomness
         let hash_input = combined_seed + block_seed;
         let hash_state = PedersenTrait::new(0);
         let hash_state = hash_state.update(hash_input);
         let hash = hash_state.finalize();
-        
+
         // Convert to range
         let range: u64 = max.into() - min.into() + 1_u64.into();
         let hash_u256: u256 = hash.into();
@@ -66,9 +61,11 @@ pub mod PseudoRandom {
 mod tests {
     use super::PseudoRandom::generate_random_u8;
 
-    /// Tests the `generate_random_u8` function to ensure it returns a value within the specified range.
+    /// Tests the `generate_random_u8` function to ensure it returns a value within the specified
+    /// range.
     ///
-    /// This test ensures that the random value generated is always between `min` and `max`, inclusive.
+    /// This test ensures that the random value generated is always between `min` and `max`,
+    /// inclusive.
     #[test]
     #[available_gas(1000000)]
     fn test_generate_random_u8() {
@@ -98,7 +95,8 @@ mod tests {
         assert!(result >= min && result <= max, "Random u8 out of range");
     }
 
-    /// Tests the `generate_random_u8` function to ensure it produces deterministic outputs within a block.
+    /// Tests the `generate_random_u8` function to ensure it produces deterministic outputs within a
+    /// block.
     ///
     /// This test verifies that the random number generated is consistent when called multiple times
     /// within the same block (i.e., using the same timestamp and block number).

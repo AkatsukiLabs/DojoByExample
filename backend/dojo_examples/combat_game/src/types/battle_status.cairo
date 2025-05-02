@@ -8,7 +8,7 @@ pub enum BattleStatus {
 
 pub impl IntoBattleStatusFelt252 of Into<BattleStatus, felt252> {
     #[inline(always)]
-     fn into(self: BattleStatus) -> felt252 {
+    fn into(self: BattleStatus) -> felt252 {
         match self {
             BattleStatus::Waiting => 0,
             BattleStatus::Active => 1,
@@ -20,7 +20,7 @@ pub impl IntoBattleStatusFelt252 of Into<BattleStatus, felt252> {
 
 pub impl IntoBattleStatusU8 of Into<BattleStatus, u8> {
     #[inline(always)]
-     fn into(self: BattleStatus) -> u8 {
+    fn into(self: BattleStatus) -> u8 {
         match self {
             BattleStatus::Waiting => 0,
             BattleStatus::Active => 1,
@@ -32,7 +32,7 @@ pub impl IntoBattleStatusU8 of Into<BattleStatus, u8> {
 
 pub impl Intou8BattleStatus of Into<u8, BattleStatus> {
     #[inline(always)]
-     fn into(self: u8) -> BattleStatus {
+    fn into(self: u8) -> BattleStatus {
         let battle_type: u8 = self.into();
         match battle_type {
             0 => BattleStatus::Waiting,
@@ -43,6 +43,7 @@ pub impl Intou8BattleStatus of Into<u8, BattleStatus> {
         }
     }
 }
+
 
 #[cfg(test)]
 mod tests {
@@ -146,3 +147,4 @@ mod tests {
         assert_eq!(battle_status, BattleStatus::None);
     }
 }
+
