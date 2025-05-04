@@ -1,0 +1,14 @@
+services:
+  dojo-by-example-container:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+       EXAMPLE_DIR: "" # Set this to the name of the folder you want to compile from, located in /dojobyexample/backend/dojo_examples/
+    container_name: dojobyexample
+    volumes:
+      - .:/app
+    working_dir: /app
+    stdin_open: true
+    tty: true
+    mem_limit: 4g # Set the memory limit for the container; increase if builds are slow or run out of memory

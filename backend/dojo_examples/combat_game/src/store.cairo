@@ -3,7 +3,7 @@ use core::num::traits::zero::Zero;
 use combat_game::{
     constants::SECONDS_PER_DAY,
     models::{player::Player, beast::Beast, beast_stats::BeastStats, battle::Battle},
-    types::{beast::BeastType, status_condition::StatusCondition, battle_status::BattleStatus},
+    types::{beast_type::BeastType, status_condition::StatusCondition, battle_status::BattleStatus},
 };
 
 use starknet::ContractAddress;
@@ -24,19 +24,12 @@ impl StoreImpl of StoreTrait {
     // Blocked: Attacks are not implemented
     fn init_beast_attacks(ref self: Store, beast_type: BeastType) {
         match beast_type {
-            BeastType::Fire => {},
-            BeastType::Water => {},
-            BeastType::Earth => {},
-            BeastType::Electric => {},
-            BeastType::Dragon => {},
-            BeastType::Ice => {},
+            BeastType::Light => {},
             BeastType::Magic => {},
-            BeastType::Rock => {},
-            BeastType::Undefined => {
+            BeastType::Shadow => {},
+            _ => {
                 panic!(
-                    "[ Store ] - BeastType `Undefined (id {})` cannot be initialize.",
-                    Into::<BeastType, u8>::into(beast_type),
-                );
+                    "[Store] - BeastType `{}` cannot be initialize.", beast_type);
             },
         }
     }
@@ -70,7 +63,7 @@ impl StoreImpl of StoreTrait {
             beast_id,
             level: 1,
             experience: Zero::zero(),
-            beast_type: Into::<BeastType, u8>::into(beast_type),
+            beast_type: beast_type,
         };
         self.world.write_model(@beast);
         beast
