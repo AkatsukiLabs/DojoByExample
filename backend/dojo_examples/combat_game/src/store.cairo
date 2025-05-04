@@ -1,10 +1,15 @@
 use dojo::{model::ModelStorage, world::WorldStorage};
 use core::num::traits::zero::Zero;
 use combat_game::{
-    helpers::pseudo_random::PseudoRandom::generate_random_u8,
-    constants::SECONDS_PER_DAY,
-    models::{player::Player, beast::Beast, skill::Skill, beast_skill::BeastSkill, beast_stats::BeastStats, battle::Battle},
-    types::{beast_type::BeastType, skill::SkillType, status_condition::StatusCondition, battle_status::BattleStatus},
+    helpers::pseudo_random::PseudoRandom::generate_random_u8, constants::SECONDS_PER_DAY,
+    models::{
+        player::Player, beast::Beast, skill, skill::{Skill, SkillTrait}, beast_skill::BeastSkill,
+        beast_stats::BeastStats, battle::Battle,
+    },
+    types::{
+        beast_type::BeastType, skill::SkillType, status_condition::StatusCondition,
+        battle_status::BattleStatus,
+    },
 };
 
 use starknet::ContractAddress;
@@ -27,16 +32,93 @@ impl StoreImpl of StoreTrait {
             BeastType::Light => {},
             BeastType::Magic => {},
             BeastType::Shadow => {},
-            _ => {
-                panic!(
-                    "[Store] - BeastType `{}` cannot be initialize.", beast_type);
-            },
+            _ => { panic!("[Store] - BeastType `{}` cannot be initialize.", beast_type); },
         }
     }
 
-    // Implementation includes initialization methods
-    // Suggestion: Since time will be handled as u64 because the standard, maybe we should change
-    // the type of `last_active_day` and `creation_date` to u64
+    // TODO: Define `min_level_required` for every skill
+    fn init_skills(ref self: Store) {
+        self
+            .world
+            .write_models(
+                array![
+                    @Skill {
+                        id: skill::SLASH_SKILL_ID,
+                        power: SkillTrait::base_damage(SkillType::Slash),
+                        skill_type: SkillType::Slash,
+                        min_level_required: 1,
+                    },
+                    @Skill {
+                        id: skill::BEAM_SKILL_ID,
+                        power: SkillTrait::base_damage(SkillType::Beam),
+                        skill_type: SkillType::Beam,
+                        min_level_required: 1,
+                    },
+                    @Skill {
+                        id: skill::WAVE_SKILL_ID,
+                        power: SkillTrait::base_damage(SkillType::Wave),
+                        skill_type: SkillType::Wave,
+                        min_level_required: 1,
+                    },
+                    @Skill {
+                        id: skill::PUNCH_SKILL_ID,
+                        power: SkillTrait::base_damage(SkillType::Punch),
+                        skill_type: SkillType::Punch,
+                        min_level_required: 1,
+                    },
+                    @Skill {
+                        id: skill::KICK_SKILL_ID,
+                        power: SkillTrait::base_damage(SkillType::Kick),
+                        skill_type: SkillType::Kick,
+                        min_level_required: 1,
+                    },
+                    @Skill {
+                        id: skill::BLAST_SKILL_ID,
+                        power: SkillTrait::base_damage(SkillType::Blast),
+                        skill_type: SkillType::Blast,
+                        min_level_required: 1,
+                    },
+                    @Skill {
+                        id: skill::PIERCE_SKILL_ID,
+                        power: SkillTrait::base_damage(SkillType::Pierce),
+                        skill_type: SkillType::Pierce,
+                        min_level_required: 1,
+                    },
+                    @Skill {
+                        id: skill::SMASH_SKILL_ID,
+                        power: SkillTrait::base_damage(SkillType::Smash),
+                        skill_type: SkillType::Smash,
+                        min_level_required: 1,
+                    },
+                    @Skill {
+                        id: skill::BURN_SKILL_ID,
+                        power: SkillTrait::base_damage(SkillType::Burn),
+                        skill_type: SkillType::Burn,
+                        min_level_required: 1,
+                    },
+                    @Skill {
+                        id: skill::FREEZE_SKILL_ID,
+                        power: SkillTrait::base_damage(SkillType::Freeze),
+                        skill_type: SkillType::Freeze,
+                        min_level_required: 1,
+                    },
+                    @Skill {
+                        id: skill::SHOCK_SKILL_ID,
+                        power: SkillTrait::base_damage(SkillType::Shock),
+                        skill_type: SkillType::Shock,
+                        min_level_required: 1,
+                    },
+                    @Skill {
+                        id: skill::DEFAULT_SKILL_ID,
+                        power: SkillTrait::base_damage(SkillType::Default),
+                        skill_type: SkillType::Default,
+                        min_level_required: 1,
+                    },
+                ]
+                    .span(),
+            );
+    }
+
     fn new_player(ref self: Store) -> Player {
         let player = Player {
             address: starknet::get_caller_address(),
@@ -52,13 +134,10 @@ impl StoreImpl of StoreTrait {
         player
     }
 
-    fn new_skill(ref self: Store, id: u256, power: u16, skill_type: SkillType, min_level_required: u8) -> Skill {
-        let skill = Skill {
-            id,
-            power,
-            skill_type,
-            min_level_required
-        };
+    fn new_skill(
+        ref self: Store, id: u256, power: u16, skill_type: SkillType, min_level_required: u8,
+    ) -> Skill {
+        let skill = Skill { id, power, skill_type, min_level_required };
         self.world.write_model(@skill);
         skill
     }
@@ -103,8 +182,6 @@ impl StoreImpl of StoreTrait {
         beast_stats
     }
 
-    // I think that BattleType enum is missing
-    // TODO: Use pseudo-random for initial turn
     fn new_battle(
         ref self: Store,
         battle_id: u256,
@@ -117,7 +194,13 @@ impl StoreImpl of StoreTrait {
             id: battle_id,
             player1,
             player2,
-            current_turn: *players.at(generate_random_u8(battle_id.try_into().unwrap(), 0, 0, players.len().try_into().unwrap()).into()),,
+            current_turn: *players
+                .at(
+                    generate_random_u8(
+                        battle_id.try_into().unwrap(), 0, 0, players.len().try_into().unwrap(),
+                    )
+                        .into(),
+                ),
             status: Into::<BattleStatus, u8>::into(BattleStatus::Waiting),
             winner_id: Zero::zero(),
             battle_type: battle_type,
@@ -129,12 +212,18 @@ impl StoreImpl of StoreTrait {
     fn create_rematch(ref self: Store, battle_id: u256) -> Battle {
         let battle = self.read_battle(battle_id);
         let players = array![battle.player1, battle.player2];
-        
+
         let rematch = Battle {
             id: battle_id,
             player1: battle.player1,
             player2: battle.player2,
-            current_turn: *players.at(generate_random_u8(battle_id.try_into().unwrap(), 0, 0, players.len().try_into().unwrap()).into()),
+            current_turn: *players
+                .at(
+                    generate_random_u8(
+                        battle_id.try_into().unwrap(), 0, 0, players.len().try_into().unwrap(),
+                    )
+                        .into(),
+                ),
             status: Into::<BattleStatus, u8>::into(BattleStatus::Waiting),
             winner_id: Zero::zero(),
             battle_type: battle.battle_type,
