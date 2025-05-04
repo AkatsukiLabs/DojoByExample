@@ -1,9 +1,10 @@
 use dojo::{model::ModelStorage, world::WorldStorage};
 use core::num::traits::zero::Zero;
 use combat_game::{
+    helpers::pseudo_random::PseudoRandom::generate_random_u8,
     constants::SECONDS_PER_DAY,
-    models::{player::Player, beast::Beast, beast_stats::BeastStats, battle::Battle},
-    types::{beast_type::BeastType, status_condition::StatusCondition, battle_status::BattleStatus},
+    models::{player::Player, beast::Beast, skill::Skill, beast_skill::BeastSkill, beast_stats::BeastStats, battle::Battle},
+    types::{beast_type::BeastType, skill::SkillType, status_condition::StatusCondition, battle_status::BattleStatus},
 };
 
 use starknet::ContractAddress;
@@ -21,7 +22,6 @@ impl StoreImpl of StoreTrait {
 
     // [ Initialization methods ]
     // TODO: add attacks based on beast type
-    // Blocked: Attacks are not implemented
     fn init_beast_attacks(ref self: Store, beast_type: BeastType) {
         match beast_type {
             BeastType::Light => {},
@@ -52,11 +52,17 @@ impl StoreImpl of StoreTrait {
         player
     }
 
-    // TODO: Not implemented
-    fn new_attack(ref self: Store) {}
+    fn new_skill(ref self: Store, id: u256, power: u16, skill_type: SkillType, min_level_required: u8) -> Skill {
+        let skill = Skill {
+            id,
+            power,
+            skill_type,
+            min_level_required
+        };
+        self.world.write_model(@skill);
+        skill
+    }
 
-    // TODO: Should the data for model initializations be sent as a parameter?
-    // Maybe consume `beast_id` from an entity like `BeastTracker` to set an autoincrement id?
     fn new_beast(ref self: Store, beast_id: u16, beast_type: BeastType) -> Beast {
         let beast = Beast {
             player: starknet::get_caller_address(),
@@ -69,8 +75,6 @@ impl StoreImpl of StoreTrait {
         beast
     }
 
-    // TODO: Should the data for model initializations be sent as a parameter?
-    // Is there a reason why `beast_id` in BeastStats is u256
     fn new_beast_stats(
         ref self: Store,
         beast_id: u16,
@@ -99,7 +103,6 @@ impl StoreImpl of StoreTrait {
         beast_stats
     }
 
-    // Maybe consume `battle_id` from an entity like `BattleTracker` to set an autoincrement id?
     // I think that BattleType enum is missing
     // TODO: Use pseudo-random for initial turn
     fn new_battle(
@@ -109,11 +112,12 @@ impl StoreImpl of StoreTrait {
         player2: ContractAddress,
         battle_type: u8,
     ) -> Battle {
+        let players = array![player1, player2];
         let battle = Battle {
             id: battle_id,
             player1,
             player2,
-            current_turn: player1,
+            current_turn: *players.at(generate_random_u8(battle_id.try_into().unwrap(), 0, 0, players.len().try_into().unwrap()).into()),,
             status: Into::<BattleStatus, u8>::into(BattleStatus::Waiting),
             winner_id: Zero::zero(),
             battle_type: battle_type,
@@ -122,14 +126,15 @@ impl StoreImpl of StoreTrait {
         battle
     }
 
-    // TODO: Use pseudo-random for initial turn
     fn create_rematch(ref self: Store, battle_id: u256) -> Battle {
         let battle = self.read_battle(battle_id);
+        let players = array![battle.player1, battle.player2];
+        
         let rematch = Battle {
             id: battle_id,
             player1: battle.player1,
             player2: battle.player2,
-            current_turn: battle.player1,
+            current_turn: *players.at(generate_random_u8(battle_id.try_into().unwrap(), 0, 0, players.len().try_into().unwrap()).into()),
             status: Into::<BattleStatus, u8>::into(BattleStatus::Waiting),
             winner_id: Zero::zero(),
             battle_type: battle.battle_type,
@@ -147,9 +152,12 @@ impl StoreImpl of StoreTrait {
         self.world.read_model((player_address))
     }
 
-    // Blocked: Attacks are not implemented
-    fn read_attack(self: @Store, beast_id: u16, attack_id: u16) {
-        // self.world.read_model((beast_id, attack_id))
+    fn read_skill(self: @Store, skill_id: u16) -> Skill {
+        self.world.read_model((skill_id))
+    }
+
+    fn read_beast_skill(self: @Store, beast_id: u16) -> BeastSkill {
+        self.world.read_model((beast_id))
     }
 
     fn read_beast(self: @Store, beast_id: u16) -> Beast {
@@ -159,7 +167,6 @@ impl StoreImpl of StoreTrait {
     // TODO: Ask about this one
     fn read_ai_beast(self: @Store) {}
 
-    // Is there a reason why `beast_id` in BeastStats is u256
     fn read_beast_stats(self: @Store, beast_id: u16) -> BeastStats {
         self.world.read_model((Into::<u16, u256>::into(beast_id)))
     }
@@ -169,14 +176,17 @@ impl StoreImpl of StoreTrait {
     }
 
     // [ Setter methods ]
-
     // Implementation includes setter methods:
     fn write_player(ref self: Store, player: Player) {
         self.world.write_model(@player)
     }
 
-    // Blocked: Attacks are not implemented
-    fn write_attack(ref self: Store, attack: u32) {// self.world.write_model(@attack)
+    fn write_skill(ref self: Store, skill: Skill) {
+        self.world.write_model(@skill)
+    }
+
+    fn write_beast_skills(ref self: Store, beast_skill: BeastSkill) {
+        self.world.write_model(@beast_skill)
     }
 
     fn write_beast(ref self: Store, beast: Beast) {
