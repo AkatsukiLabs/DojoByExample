@@ -448,6 +448,7 @@ impl StoreImpl of StoreTrait {
         if defender_stats.current_hp.is_zero() {
             // End battle
             battle.status = BattleStatus::Finished;
+            battle.winner_id = starknet::get_caller_address();
 
             // Update player stats
             self.update_player_battle_result(won: true);
