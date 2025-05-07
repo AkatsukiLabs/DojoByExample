@@ -1,4 +1,4 @@
-#[derive(Copy, Drop, Serde, Debug, PartialEq)]
+#[derive(Copy, Drop, Serde, Debug, Introspect, PartialEq)]
 pub enum BattleStatus {
     Waiting,
     Active,
@@ -44,6 +44,18 @@ pub impl Intou8BattleStatus of Into<u8, BattleStatus> {
     }
 }
 
+pub impl BattleStatusDisplay of core::fmt::Display<BattleStatus> {
+    fn fmt(self: @BattleStatus, ref f: core::fmt::Formatter) -> Result<(), core::fmt::Error> {
+        let s = match self {
+            BattleStatus::Waiting => "Waiting",
+            BattleStatus::Active => "Active",
+            BattleStatus::Finished => "Finished",
+            BattleStatus::None => "None",
+        };
+        f.buffer.append(@s);
+        Result::Ok(())
+    }
+}
 
 #[cfg(test)]
 mod tests {
