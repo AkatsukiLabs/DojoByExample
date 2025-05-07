@@ -20,12 +20,13 @@ pub const WAVE_SKILL_ID: u256 = 3;
 pub const PUNCH_SKILL_ID: u256 = 4;
 pub const KICK_SKILL_ID: u256 = 5;
 pub const BLAST_SKILL_ID: u256 = 6;
-pub const PIERCE_SKILL_ID: u256 = 7;
-pub const SMASH_SKILL_ID: u256 = 8;
-pub const BURN_SKILL_ID: u256 = 9;
-pub const FREEZE_SKILL_ID: u256 = 10;
-pub const SHOCK_SKILL_ID: u256 = 11;
-pub const DEFAULT_SKILL_ID: u256 = 12;
+pub const CRUSH_SKILL_ID: u256 = 7;
+pub const PIERCE_SKILL_ID: u256 = 8;
+pub const SMASH_SKILL_ID: u256 = 9;
+pub const BURN_SKILL_ID: u256 = 10;
+pub const FREEZE_SKILL_ID: u256 = 11;
+pub const SHOCK_SKILL_ID: u256 = 12;
+pub const DEFAULT_SKILL_ID: u256 = 13;
 
 #[derive(Copy, Drop, Serde, Debug, Introspect, PartialEq)]
 #[dojo::model]

@@ -1,10 +1,10 @@
 use dojo::{model::ModelStorage, world::WorldStorage};
 use core::num::traits::zero::Zero;
 use combat_game::{
-    helpers::pseudo_random::PseudoRandom::generate_random_u8, constants::SECONDS_PER_DAY,
+    helpers::{pseudo_random::PseudoRandom::generate_random_u8}, constants::SECONDS_PER_DAY,
     models::{
-        player::Player, beast::Beast, skill, skill::{Skill, SkillTrait}, beast_skill::BeastSkill,
-        beast_stats::BeastStats, battle::Battle,
+        player::Player, beast::{Beast, BeastTrait}, skill, skill::{Skill, SkillTrait},
+        beast_skill::BeastSkill, beast_stats::BeastStats, battle::Battle,
     },
     types::{
         beast_type::BeastType, skill::SkillType, status_condition::StatusCondition,
@@ -14,7 +14,7 @@ use combat_game::{
 
 use starknet::ContractAddress;
 
-#[derive(Drop)]
+#[derive(Drop, Copy)]
 struct Store {
     world: WorldStorage,
 }
@@ -26,17 +26,58 @@ impl StoreImpl of StoreTrait {
     }
 
     // [ Initialization methods ]
-    // TODO: add attacks based on beast type
-    fn init_beast_attacks(ref self: Store, beast_type: BeastType) {
-        match beast_type {
-            BeastType::Light => {},
-            BeastType::Magic => {},
-            BeastType::Shadow => {},
-            _ => { panic!("[Store] - BeastType `{}` cannot be initialize.", beast_type); },
+    fn init_beast_skills(ref self: Store, beast_id: u16) {
+        let beast = self.read_beast(beast_id);
+        match beast.beast_type {
+            BeastType::Light => {
+                self
+                    .write_beast_skills(
+                        BeastSkill {
+                            beast_id,
+                            skills_ids: array![
+                                skill::BEAM_SKILL_ID,
+                                skill::SLASH_SKILL_ID,
+                                skill::PIERCE_SKILL_ID,
+                                skill::WAVE_SKILL_ID,
+                            ]
+                                .span(),
+                        },
+                    );
+            },
+            BeastType::Magic => {
+                self
+                    .write_beast_skills(
+                        BeastSkill {
+                            beast_id,
+                            skills_ids: array![
+                                skill::BLAST_SKILL_ID,
+                                skill::FREEZE_SKILL_ID,
+                                skill::BURN_SKILL_ID,
+                                skill::PUNCH_SKILL_ID,
+                            ]
+                                .span(),
+                        },
+                    );
+            },
+            BeastType::Shadow => {
+                self
+                    .write_beast_skills(
+                        BeastSkill {
+                            beast_id,
+                            skills_ids: array![
+                                skill::SMASH_SKILL_ID,
+                                skill::CRUSH_SKILL_ID,
+                                skill::SHOCK_SKILL_ID,
+                                skill::KICK_SKILL_ID,
+                            ]
+                                .span(),
+                        },
+                    );
+            },
+            _ => { panic!("[Store] - BeastType `{}` has no skills defined.", beast.beast_type); },
         }
     }
 
-    // TODO: Define `min_level_required` for every skill
     fn init_skills(ref self: Store) {
         self
             .world
@@ -76,6 +117,12 @@ impl StoreImpl of StoreTrait {
                         id: skill::BLAST_SKILL_ID,
                         power: SkillTrait::base_damage(SkillType::Blast),
                         skill_type: SkillType::Blast,
+                        min_level_required: 1,
+                    },
+                    @Skill {
+                        id: skill::CRUSH_SKILL_ID,
+                        power: SkillTrait::base_damage(SkillType::Crush),
+                        skill_type: SkillType::Crush,
                         min_level_required: 1,
                     },
                     @Skill {
@@ -201,7 +248,7 @@ impl StoreImpl of StoreTrait {
                     )
                         .into(),
                 ),
-            status: Into::<BattleStatus, u8>::into(BattleStatus::Waiting),
+            status: BattleStatus::Waiting,
             winner_id: Zero::zero(),
             battle_type: battle_type,
         };
@@ -224,7 +271,7 @@ impl StoreImpl of StoreTrait {
                     )
                         .into(),
                 ),
-            status: Into::<BattleStatus, u8>::into(BattleStatus::Waiting),
+            status: BattleStatus::Waiting,
             winner_id: Zero::zero(),
             battle_type: battle.battle_type,
         };
@@ -241,7 +288,7 @@ impl StoreImpl of StoreTrait {
         self.world.read_model((player_address))
     }
 
-    fn read_skill(self: @Store, skill_id: u16) -> Skill {
+    fn read_skill(self: @Store, skill_id: u256) -> Skill {
         self.world.read_model((skill_id))
     }
 
@@ -252,9 +299,6 @@ impl StoreImpl of StoreTrait {
     fn read_beast(self: @Store, beast_id: u16) -> Beast {
         self.world.read_model((starknet::get_caller_address(), beast_id))
     }
-
-    // TODO: Ask about this one
-    fn read_ai_beast(self: @Store) {}
 
     fn read_beast_stats(self: @Store, beast_id: u16) -> BeastStats {
         self.world.read_model((Into::<u16, u256>::into(beast_id)))
@@ -291,9 +335,131 @@ impl StoreImpl of StoreTrait {
     }
 
     // [ Game logic methods]
+    fn award_battle_experience(ref self: Store, beast_id: u16, exp_amount: u16) -> bool {
+        // Read beast and its stats
+        let mut beast = self.read_beast(beast_id);
 
-    fn award_battle_experience(ref self: Store) {}
-    fn is_attack_usable(ref self: Store) {}
-    fn update_player_battle_result(ref self: Store) {}
-    fn process_attack(ref self: Store) {}
+        // Add experience
+        beast.experience += exp_amount;
+
+        // Check if level up is needed
+        // TODO: ExperienceCalculatorTrait is not implemented
+        // let exp_needed = ExperienceTrrait::calculate_exp_needed_for_level(beast.level);
+        let exp_needed = 10;
+        let level_up_occurred = beast.experience >= exp_needed;
+
+        if level_up_occurred {
+            // Calculate remaining exp
+            // TODO: ExperienceCalculatorTrait is not implemented
+            // beast.experience = ExperienceTrrait::remaining_exp_after_level_up(beast.level, beast.experience);
+            beast.experience = 5;
+
+            // Increase level
+            beast.level += 1;
+
+            // Update beast stats
+            // TODO: `beast_stats.level_up()` is not implemented
+            let mut beast_stats = self.read_beast_stats(beast_id);
+            // beast_stats.level_up(beast.beast_type);
+            self.write_beast_stats(beast_stats);
+        }
+
+        self.write_beast(beast);
+        level_up_occurred
+    }
+
+    fn is_skill_usable(ref self: Store, beast_id: u16, skill_id: u256) -> bool {
+        let beast_skills = self.read_beast_skill(beast_id);
+        let mut found = false;
+        for beast_skill in beast_skills.skills_ids {
+            if beast_skill == @skill_id {
+                found = true;
+                break;
+            }
+        };
+        found
+    }
+
+    fn update_player_battle_result(mut self: Store, won: bool) {
+        let mut player = self.read_player();
+        if won {
+            player.battles_won += 1;
+        } else {
+            player.battles_lost += 1;
+        }
+        player
+            .last_active_day = (starknet::get_block_timestamp() / SECONDS_PER_DAY)
+            .try_into()
+            .unwrap();
+        self.write_player(player);
+    }
+
+    // Process attack in battle
+    fn process_attack(
+        ref self: Store,
+        battle_id: u256,
+        attacker_beast_id: u16,
+        defender_beast_id: u16,
+        skill_id: u256,
+    ) -> (u16, bool, bool) {
+        // Read battle
+        let mut battle = self.read_battle(battle_id);
+        assert!(
+            battle.status == BattleStatus::Active,
+            "Battle should be in `Active` status (current `{}`)",
+            battle.status,
+        );
+
+        // Verify attack is usable
+        assert!(
+            self.is_skill_usable(attacker_beast_id, skill_id),
+            "Beast {} can't use skill {}",
+            attacker_beast_id,
+            skill_id,
+        );
+
+        // Read beast data
+        let mut attacker_beast = self.read_beast(attacker_beast_id);
+        let mut defender_beast = self.read_beast(defender_beast_id);
+
+        // Read beast stats
+        let mut attacker_stats = self.read_beast_stats(attacker_beast_id);
+        let mut defender_stats = self.read_beast_stats(defender_beast_id);
+
+        // Check if attacker can attack
+        // assert(attacker_stats.can_attack(), 'Beast cannot attack'); // No implemented
+
+        // Calculate damage
+        // TODO: Define `attack_factor` right now is hard coded to 1
+        let skill = self.read_skill(skill_id);
+        let (damage, is_favored, is_effective) = attacker_beast
+            .attack(defender_beast.beast_type, skill.skill_type, 1);
+
+        defender_stats
+            .current_hp =
+                if damage > defender_stats.current_hp {
+                    Zero::zero()
+                } else {
+                    defender_stats.current_hp - damage
+                };
+        // battle.update_timestamp(); // No implemented
+
+        // Check if battle is over
+        if defender_stats.current_hp.is_zero() {
+            // End battle
+            battle.status = BattleStatus::Finished;
+
+            // Update player stats
+            self.update_player_battle_result(won: true);
+
+            // TODO: Define base experience for winning a game
+            self.award_battle_experience(attacker_beast_id, 1);
+        }
+
+        // Save changes
+        self.write_battle(battle);
+        self.write_beast_stats(attacker_stats);
+        self.write_beast_stats(defender_stats);
+        (damage, is_favored, is_effective)
+    }
 }
