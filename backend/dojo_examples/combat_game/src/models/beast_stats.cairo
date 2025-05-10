@@ -4,7 +4,7 @@ use crate::{
 };
 use core::{poseidon::poseidon_hash_span, num::traits::Bounded};
 
-#[derive(Copy, Drop, Serde, Debug)]
+#[derive(Introspect, Copy, Drop, Serde, Debug, PartialEq)]
 #[dojo::model]
 pub struct BeastStats {
     #[key]
@@ -170,3 +170,157 @@ impl BeastStatsActions of BeastStatsActionTrait {
     }
 }
 
+#[cfg(test)]
+mod tests {
+    use super::{BeastStats, BeastStatsActionTrait, StatusCondition, BeastType};
+    
+    // take_damage() tests
+    #[test]
+    fn test_take_damage_normal_case() {
+        let mut stats = dummy_beast_stats();
+        stats.take_damage(30);
+        assert!(stats.current_hp == 70, "HP should decrease by damage");
+    }
+    
+    #[test]
+    fn test_take_damage_exact_zero() {
+        let mut stats = dummy_beast_stats();
+        stats.current_hp = 50;
+        stats.take_damage(50);
+        assert!(stats.current_hp == 0, "HP should be 0 if damage equals HP");
+    }
+    
+    #[test]
+    fn test_take_damage_overkill() {
+        let mut stats = dummy_beast_stats();
+        stats.current_hp = 50;
+        stats.take_damage(100);
+        assert!(stats.current_hp == 0, "HP should not go below 0");
+    }
+
+    // heal() tests
+    #[test]
+    fn test_heal_normal() {
+        let mut stats = dummy_beast_stats();
+        stats.current_hp = 50;
+        stats.heal(30);
+        assert!(stats.current_hp == 80, "HP should increase by heal amount");
+    }
+    
+    #[test]
+    fn test_heal_capped() {
+        let mut stats = dummy_beast_stats();
+        stats.current_hp = 90;
+        stats.heal(20);
+        assert!(stats.current_hp == 100, "HP should not exceed max_hp");
+    }
+    
+    #[test]
+    fn test_heal_when_full() {
+        let mut stats = dummy_beast_stats();
+        stats.heal(10);
+        assert!(stats.current_hp == 100, "HP stays at max if already full");
+    }
+
+    // level_up() tests
+    #[test]
+    fn test_level_up_light_type() {
+        let mut stats = dummy_beast_stats();
+        stats.current_hp = 50;
+
+        // Light: HP +3, ATK +2, DEF +1, SPD +2
+        stats.level_up(BeastType::Light);
+        assert!(stats.max_hp == 103, "Light: HP +3");
+        assert!(stats.attack == 102, "Light: ATK +2");
+        assert!(stats.defense == 101, "Light: DEF +1");
+        assert!(stats.speed == 52, "Light: SPD +2");
+        assert!(stats.current_hp == stats.max_hp, "Current hp should be max HP");
+    }
+
+    #[test]
+    fn test_level_up_sets_current_hp() {
+        let mut stats = dummy_beast_stats();
+        
+        // Magic: HP +2, ATK +3, DEF +1, SPD +2
+        stats.level_up(BeastType::Magic);
+        assert!(stats.max_hp == 102, "Magic: HP +3");
+        assert!(stats.attack == 103, "Magic: ATK +2");
+        assert!(stats.defense == 101, "Magic: DEF +1");
+        assert!(stats.speed == 52, "Magic: SPD +2");
+        assert!(stats.current_hp == stats.max_hp, "Current hp should be max HP");
+    }
+
+    #[test]
+    fn test_level_up_shadow_type() {
+        let mut stats = dummy_beast_stats();
+
+        // Shadow: HP +4, ATK +1, DEF +3, SPD +0
+        stats.level_up(BeastType::Shadow);
+        assert!(stats.max_hp == 104, "Shadow: HP +4");
+        assert!(stats.attack == 101, "Shadow: ATK +1");
+        assert!(stats.defense == 103, "Shadow: DEF +3");
+        assert!(stats.speed == 50, "Shadow: SPD +0");
+        assert!(stats.current_hp == stats.max_hp, "Current hp should be max HP");
+    }
+
+    // apply_status() tests
+    #[test]
+    fn test_apply_status_sets_status() {
+        let mut stats = dummy_beast_stats();
+        stats.apply_status(StatusCondition::Paralyzed);
+        assert!(stats.status_condition == StatusCondition::Paralyzed, "Status should be Paralyzed");
+    }
+
+    #[test]
+    fn test_apply_status_overwrites_existing() {
+        let mut stats = dummy_beast_stats();
+        stats.status_condition = StatusCondition::Poisoned;
+        stats.apply_status(StatusCondition::Paralyzed);
+        assert!(stats.status_condition == StatusCondition::Paralyzed, "Should overwrite previous status");
+    }
+
+    // clear_status() tests
+    #[test]
+    fn test_clear_status_sets_none() {
+        let mut stats = dummy_beast_stats();
+        stats.status_condition = StatusCondition::Paralyzed;
+        stats.clear_status();
+        assert!(stats.status_condition == StatusCondition::None, "Status should be cleared to None");
+    }
+
+    #[test]
+    fn test_clear_status_when_none() {
+        let mut stats = dummy_beast_stats();
+        stats.status_condition = StatusCondition::None;
+        stats.clear_status();
+        assert!(stats.status_condition == StatusCondition::None, "Status remains None");
+    }
+
+    // can_attack() tests
+    #[test]
+    fn test_can_attack_when_status_none() {
+        let stats = dummy_beast_stats();
+        assert!(stats.can_attack(), "Should attack when status is None");
+    }
+    
+    #[test]
+    fn test_can_attack_when_status_poisoned() {
+        let mut stats = dummy_beast_stats();
+        stats.status_condition = StatusCondition::Poisoned;
+        assert!(stats.can_attack(), "Should attack when poisoned");
+    }
+
+    // MOCKS
+    fn dummy_beast_stats() -> BeastStats {
+        BeastStats {
+            beast_id: 1,
+            max_hp: 100,
+            current_hp: 100,
+            attack: 100,
+            defense: 100,
+            speed: 50,
+            status_condition: StatusCondition::None,
+            last_timestamp: starknet::get_block_timestamp(),
+        }
+    }
+}
