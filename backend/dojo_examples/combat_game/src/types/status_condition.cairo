@@ -1,4 +1,4 @@
-#[derive(Copy, Drop, Serde, Debug, PartialEq)]
+#[derive(Introspect, Copy, Drop, Serde, Debug, PartialEq)]
 pub enum StatusCondition {
     None,
     Poisoned,
