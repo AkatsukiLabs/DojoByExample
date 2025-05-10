@@ -133,7 +133,7 @@ impl BeastStatsActions of BeastStatsActionTrait {
     fn adjust_damage_for_status(self: BeastStats, damage: u16) -> u16 {
         match self.status_condition {
             // StatusCondition::Weakness not implemented
-            _ => damage
+            _ => damage,
         }
     }
 
@@ -173,7 +173,7 @@ impl BeastStatsActions of BeastStatsActionTrait {
 #[cfg(test)]
 mod tests {
     use super::{BeastStats, BeastStatsActionTrait, StatusCondition, BeastType};
-    
+
     // take_damage() tests
     #[test]
     fn test_take_damage_normal_case() {
@@ -181,7 +181,7 @@ mod tests {
         stats.take_damage(30);
         assert!(stats.current_hp == 70, "HP should decrease by damage");
     }
-    
+
     #[test]
     fn test_take_damage_exact_zero() {
         let mut stats = dummy_beast_stats();
@@ -189,7 +189,7 @@ mod tests {
         stats.take_damage(50);
         assert!(stats.current_hp == 0, "HP should be 0 if damage equals HP");
     }
-    
+
     #[test]
     fn test_take_damage_overkill() {
         let mut stats = dummy_beast_stats();
@@ -206,7 +206,7 @@ mod tests {
         stats.heal(30);
         assert!(stats.current_hp == 80, "HP should increase by heal amount");
     }
-    
+
     #[test]
     fn test_heal_capped() {
         let mut stats = dummy_beast_stats();
@@ -214,7 +214,7 @@ mod tests {
         stats.heal(20);
         assert!(stats.current_hp == 100, "HP should not exceed max_hp");
     }
-    
+
     #[test]
     fn test_heal_when_full() {
         let mut stats = dummy_beast_stats();
@@ -240,7 +240,7 @@ mod tests {
     #[test]
     fn test_level_up_sets_current_hp() {
         let mut stats = dummy_beast_stats();
-        
+
         // Magic: HP +2, ATK +3, DEF +1, SPD +2
         stats.level_up(BeastType::Magic);
         assert!(stats.max_hp == 102, "Magic: HP +3");
@@ -276,7 +276,10 @@ mod tests {
         let mut stats = dummy_beast_stats();
         stats.status_condition = StatusCondition::Poisoned;
         stats.apply_status(StatusCondition::Paralyzed);
-        assert!(stats.status_condition == StatusCondition::Paralyzed, "Should overwrite previous status");
+        assert!(
+            stats.status_condition == StatusCondition::Paralyzed,
+            "Should overwrite previous status",
+        );
     }
 
     // clear_status() tests
@@ -285,7 +288,9 @@ mod tests {
         let mut stats = dummy_beast_stats();
         stats.status_condition = StatusCondition::Paralyzed;
         stats.clear_status();
-        assert!(stats.status_condition == StatusCondition::None, "Status should be cleared to None");
+        assert!(
+            stats.status_condition == StatusCondition::None, "Status should be cleared to None",
+        );
     }
 
     #[test]
@@ -302,7 +307,7 @@ mod tests {
         let stats = dummy_beast_stats();
         assert!(stats.can_attack(), "Should attack when status is None");
     }
-    
+
     #[test]
     fn test_can_attack_when_status_poisoned() {
         let mut stats = dummy_beast_stats();
