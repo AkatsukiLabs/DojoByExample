@@ -109,8 +109,7 @@ impl BeastStatsActions of BeastStatsActionTrait {
 
     fn can_attack(self: BeastStats) -> bool {
         match self.status_condition {
-            // StatusCondition::Stunned not implemented
-            StatusCondition::Paralyzed => {
+            StatusCondition::Stunned => {
                 let mut salt: u256 = poseidon_hash_span(
                     array![
                         self.beast_id.into(),
@@ -132,7 +131,10 @@ impl BeastStatsActions of BeastStatsActionTrait {
 
     fn adjust_damage_for_status(self: BeastStats, damage: u16) -> u16 {
         match self.status_condition {
-            // StatusCondition::Weakness not implemented
+            StatusCondition::Weakness => {
+                // Reduces damage to 70%
+                (damage * 70) / 100
+            },
             _ => damage,
         }
     }
