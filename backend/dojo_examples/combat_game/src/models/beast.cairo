@@ -4,7 +4,8 @@ use crate::constants::{
     BASE_LEVEL_BONUS, FAVORED_ATTACK_MULTIPLIER, NORMAL_ATTACK_MULTIPLIER, NORMAL_EFFECTIVENESS,
     NOT_VERY_EFFECTIVE, SUPER_EFFECTIVE,
 };
-use crate::types::attack_type::{AttackType, AttackTypeTrait};
+use crate::models::skill::SkillTrait;
+use crate::types::skill::SkillType;
 use crate::types::beast_type::BeastType;
 
 #[derive(Copy, Drop, Serde, Debug, PartialEq)]
@@ -25,14 +26,14 @@ pub impl BeastImpl of BeastTrait {
         Beast { player, beast_id, level: 0, experience: 0, beast_type }
     }
 
-    fn is_favored_attack(self: @Beast, attack_type: AttackType) -> bool {
-        match attack_type {
-            AttackType::Beam | AttackType::Slash | AttackType::Pierce |
-            AttackType::Wave => self.beast_type == @BeastType::Light,
-            AttackType::Blast | AttackType::Freeze | AttackType::Burn |
-            AttackType::Punch => self.beast_type == @BeastType::Magic,
-            AttackType::Smash | AttackType::Crush | AttackType::Shock |
-            AttackType::Kick => self.beast_type == @BeastType::Shadow,
+    fn is_favored_attack(self: @Beast, skill_type: SkillType) -> bool {
+        match skill_type {
+            SkillType::Beam | SkillType::Slash | SkillType::Pierce |
+            SkillType::Wave => self.beast_type == @BeastType::Light,
+            SkillType::Blast | SkillType::Freeze | SkillType::Burn |
+            SkillType::Punch => self.beast_type == @BeastType::Magic,
+            SkillType::Smash | SkillType::Crush | SkillType::Shock |
+            SkillType::Kick => self.beast_type == @BeastType::Shadow,
             _ => false,
         }
     }
@@ -48,16 +49,16 @@ pub impl BeastImpl of BeastTrait {
     }
 
     fn attack(
-        self: @Beast, target: BeastType, attack_type: AttackType, attack_factor: u16,
+        self: @Beast, target: BeastType, skill_type: SkillType, attack_factor: u16,
     ) -> (u16, bool, bool) {
         let effectiveness = Self::calculate_effectiveness(*self.beast_type, target);
-        let is_favored = self.is_favored_attack(attack_type);
+        let is_favored = self.is_favored_attack(skill_type);
         let favored_multiplier = if is_favored {
             FAVORED_ATTACK_MULTIPLIER
         } else {
             NORMAL_ATTACK_MULTIPLIER
         };
-        let base_damage = attack_type.base_damage();
+        let base_damage = SkillTrait::base_damage(skill_type);
         let level_bonus = BASE_LEVEL_BONUS.saturating_add(*self.level);
 
         let damage = (base_damage.saturating_mul(attack_factor) / 100)
@@ -89,54 +90,46 @@ mod tests {
     fn test_favored_attack() {
         let mut beast = BeastTrait::new(contract_address_const::<'bob'>(), 123, BeastType::Light);
 
-        assert_eq!(beast.is_favored_attack(AttackType::Beam), true, "Light - AttackType::Beam");
-        assert_eq!(beast.is_favored_attack(AttackType::Slash), true, "Light - AttackType::Slash");
-        assert_eq!(beast.is_favored_attack(AttackType::Pierce), true, "Light - AttackType::Pierce");
-        assert_eq!(beast.is_favored_attack(AttackType::Wave), true, "Light - AttackType::Wave");
-        assert_eq!(beast.is_favored_attack(AttackType::Blast), false, "Light - AttackType::Blast");
-        assert_eq!(
-            beast.is_favored_attack(AttackType::Freeze), false, "Light - AttackType::Freeze",
-        );
-        assert_eq!(beast.is_favored_attack(AttackType::Burn), false, "Light - AttackType::Burn");
-        assert_eq!(beast.is_favored_attack(AttackType::Smash), false, "Light - AttackType::Smash");
-        assert_eq!(beast.is_favored_attack(AttackType::Punch), false, "Light - AttackType::Punch");
-        assert_eq!(beast.is_favored_attack(AttackType::Crush), false, "Light - AttackType::Crush");
-        assert_eq!(beast.is_favored_attack(AttackType::Shock), false, "Light - AttackType::Shock");
-        assert_eq!(beast.is_favored_attack(AttackType::Kick), false, "Light - AttackType::Kick");
+        assert_eq!(beast.is_favored_attack(SkillType::Beam), true, "Light - SkillType::Beam");
+        assert_eq!(beast.is_favored_attack(SkillType::Slash), true, "Light - SkillType::Slash");
+        assert_eq!(beast.is_favored_attack(SkillType::Pierce), true, "Light - SkillType::Pierce");
+        assert_eq!(beast.is_favored_attack(SkillType::Wave), true, "Light - SkillType::Wave");
+        assert_eq!(beast.is_favored_attack(SkillType::Blast), false, "Light - SkillType::Blast");
+        assert_eq!(beast.is_favored_attack(SkillType::Freeze), false, "Light - SkillType::Freeze");
+        assert_eq!(beast.is_favored_attack(SkillType::Burn), false, "Light - SkillType::Burn");
+        assert_eq!(beast.is_favored_attack(SkillType::Smash), false, "Light - SkillType::Smash");
+        assert_eq!(beast.is_favored_attack(SkillType::Punch), false, "Light - SkillType::Punch");
+        assert_eq!(beast.is_favored_attack(SkillType::Crush), false, "Light - SkillType::Crush");
+        assert_eq!(beast.is_favored_attack(SkillType::Shock), false, "Light - SkillType::Shock");
+        assert_eq!(beast.is_favored_attack(SkillType::Kick), false, "Light - SkillType::Kick");
 
         beast.beast_type = BeastType::Magic;
-        assert_eq!(beast.is_favored_attack(AttackType::Beam), false, "Magic - AttackType::Beam");
-        assert_eq!(beast.is_favored_attack(AttackType::Slash), false, "Magic - AttackType::Slash");
-        assert_eq!(
-            beast.is_favored_attack(AttackType::Pierce), false, "Magic - AttackType::Pierce",
-        );
-        assert_eq!(beast.is_favored_attack(AttackType::Wave), false, "Magic - AttackType::Wave");
-        assert_eq!(beast.is_favored_attack(AttackType::Blast), true, "Magic - AttackType::Blast");
-        assert_eq!(beast.is_favored_attack(AttackType::Freeze), true, "Magic - AttackType::Freeze");
-        assert_eq!(beast.is_favored_attack(AttackType::Burn), true, "Magic - AttackType::Burn");
-        assert_eq!(beast.is_favored_attack(AttackType::Smash), false, "Magic - AttackType::Smash");
-        assert_eq!(beast.is_favored_attack(AttackType::Punch), true, "Magic - AttackType::Punch");
-        assert_eq!(beast.is_favored_attack(AttackType::Crush), false, "Magic - AttackType::Crush");
-        assert_eq!(beast.is_favored_attack(AttackType::Shock), false, "Magic - AttackType::Shock");
-        assert_eq!(beast.is_favored_attack(AttackType::Kick), false, "Magic - AttackType::Kick");
+        assert_eq!(beast.is_favored_attack(SkillType::Beam), false, "Magic - SkillType::Beam");
+        assert_eq!(beast.is_favored_attack(SkillType::Slash), false, "Magic - SkillType::Slash");
+        assert_eq!(beast.is_favored_attack(SkillType::Pierce), false, "Magic - SkillType::Pierce");
+        assert_eq!(beast.is_favored_attack(SkillType::Wave), false, "Magic - SkillType::Wave");
+        assert_eq!(beast.is_favored_attack(SkillType::Blast), true, "Magic - SkillType::Blast");
+        assert_eq!(beast.is_favored_attack(SkillType::Freeze), true, "Magic - SkillType::Freeze");
+        assert_eq!(beast.is_favored_attack(SkillType::Burn), true, "Magic - SkillType::Burn");
+        assert_eq!(beast.is_favored_attack(SkillType::Smash), false, "Magic - SkillType::Smash");
+        assert_eq!(beast.is_favored_attack(SkillType::Punch), true, "Magic - SkillType::Punch");
+        assert_eq!(beast.is_favored_attack(SkillType::Crush), false, "Magic - SkillType::Crush");
+        assert_eq!(beast.is_favored_attack(SkillType::Shock), false, "Magic - SkillType::Shock");
+        assert_eq!(beast.is_favored_attack(SkillType::Kick), false, "Magic - SkillType::Kick");
 
         beast.beast_type = BeastType::Shadow;
-        assert_eq!(beast.is_favored_attack(AttackType::Beam), false, "Shadow - AttackType::Beam");
-        assert_eq!(beast.is_favored_attack(AttackType::Slash), false, "Shadow - AttackType::Slash");
-        assert_eq!(
-            beast.is_favored_attack(AttackType::Pierce), false, "Shadow - AttackType::Pierce",
-        );
-        assert_eq!(beast.is_favored_attack(AttackType::Wave), false, "Shadow - AttackType::Wave");
-        assert_eq!(beast.is_favored_attack(AttackType::Blast), false, "Shadow - AttackType::Blast");
-        assert_eq!(
-            beast.is_favored_attack(AttackType::Freeze), false, "Shadow - AttackType::Freeze",
-        );
-        assert_eq!(beast.is_favored_attack(AttackType::Burn), false, "Shadow - AttackType::Burn");
-        assert_eq!(beast.is_favored_attack(AttackType::Smash), true, "Shadow - AttackType::Smash");
-        assert_eq!(beast.is_favored_attack(AttackType::Punch), false, "Shadow - AttackType::Punch");
-        assert_eq!(beast.is_favored_attack(AttackType::Crush), true, "Shadow - AttackType::Crush");
-        assert_eq!(beast.is_favored_attack(AttackType::Shock), true, "Shadow - AttackType::Shock");
-        assert_eq!(beast.is_favored_attack(AttackType::Kick), true, "Shadow - AttackType::Kick");
+        assert_eq!(beast.is_favored_attack(SkillType::Beam), false, "Shadow - SkillType::Beam");
+        assert_eq!(beast.is_favored_attack(SkillType::Slash), false, "Shadow - SkillType::Slash");
+        assert_eq!(beast.is_favored_attack(SkillType::Pierce), false, "Shadow - SkillType::Pierce");
+        assert_eq!(beast.is_favored_attack(SkillType::Wave), false, "Shadow - SkillType::Wave");
+        assert_eq!(beast.is_favored_attack(SkillType::Blast), false, "Shadow - SkillType::Blast");
+        assert_eq!(beast.is_favored_attack(SkillType::Freeze), false, "Shadow - SkillType::Freeze");
+        assert_eq!(beast.is_favored_attack(SkillType::Burn), false, "Shadow - SkillType::Burn");
+        assert_eq!(beast.is_favored_attack(SkillType::Smash), true, "Shadow - SkillType::Smash");
+        assert_eq!(beast.is_favored_attack(SkillType::Punch), false, "Shadow - SkillType::Punch");
+        assert_eq!(beast.is_favored_attack(SkillType::Crush), true, "Shadow - SkillType::Crush");
+        assert_eq!(beast.is_favored_attack(SkillType::Shock), true, "Shadow - SkillType::Shock");
+        assert_eq!(beast.is_favored_attack(SkillType::Kick), true, "Shadow - SkillType::Kick");
     }
 
     #[test]
@@ -169,13 +162,13 @@ mod tests {
     fn test_attack() {
         let player = contract_address_const::<'bob'>();
 
-        // (attackerType, defenderType, attackerLevel, attackType, attackFactor, expectedResult)
+        // (attackerType, defenderType, attackerLevel, SkillType, attackFactor, expectedResult)
         let dataset = [
             (
                 BeastType::Light,
                 BeastType::Light,
                 1_u8,
-                AttackType::Blast,
+                SkillType::Blast,
                 100_u16,
                 (61_u16, false, false),
             ),
@@ -183,7 +176,7 @@ mod tests {
                 BeastType::Light,
                 BeastType::Magic,
                 1_u8,
-                AttackType::Blast,
+                SkillType::Blast,
                 100_u16,
                 (30_u16, false, false),
             ),
@@ -191,7 +184,7 @@ mod tests {
                 BeastType::Light,
                 BeastType::Shadow,
                 1_u8,
-                AttackType::Blast,
+                SkillType::Blast,
                 100_u16,
                 (91_u16, false, true),
             ),
@@ -199,7 +192,7 @@ mod tests {
                 BeastType::Light,
                 BeastType::Light,
                 1_u8,
-                AttackType::Beam,
+                SkillType::Beam,
                 100_u16,
                 (67_u16, true, false),
             ),
@@ -207,7 +200,7 @@ mod tests {
                 BeastType::Light,
                 BeastType::Light,
                 1_u8,
-                AttackType::Blast,
+                SkillType::Blast,
                 200_u16,
                 (111_u16, false, false),
             ),
@@ -215,7 +208,7 @@ mod tests {
                 BeastType::Light,
                 BeastType::Shadow,
                 5_u8,
-                AttackType::Beam,
+                SkillType::Beam,
                 300_u16,
                 (270_u16, true, true),
             ),
@@ -226,7 +219,7 @@ mod tests {
             attackerType,
             defenderType,
             attackerLevel,
-            attackType,
+            SkillType,
             attackFactor,
             (expectedDamage, expectedFavored, expectedEffectiveness),
         ) in dataset {
@@ -238,7 +231,7 @@ mod tests {
                 beast_type: *attackerType,
             };
             let (damage, favored, effectiveness) = beast
-                .attack(*defenderType, *attackType, *attackFactor);
+                .attack(*defenderType, *SkillType, *attackFactor);
 
             assert!(
                 damage == *expectedDamage

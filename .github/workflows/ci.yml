@@ -1,0 +1,58 @@
+name: Cairo-Dojo CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install asdf
+        uses: asdf-vm/actions/setup@v2
+
+      - name: Verify asdf installation
+        run: asdf --version
+
+      - name: Install Dojo plugin
+        run: |
+          asdf plugin add dojo https://github.com/dojoengine/asdf-dojo
+          asdf install dojo 1.1.1 
+          asdf global dojo 1.1.1  
+          asdf list dojo
+          which sozo || echo "sozo not found"
+          ls -la /home/runner/.config/.dojo/bin/ || echo "Directory not found"
+
+      - name: Update PATH
+        run: echo "$HOME/.asdf/shims" >> $GITHUB_PATH
+
+      - name: Install Scarb plugin
+        run: |
+          asdf plugin add scarb
+          asdf install scarb 2.9.2  
+          asdf global scarb 2.9.2 
+
+      - name: Build contracts
+        working-directory: backend/dojo_examples/combat_game
+        run: |
+          sozo build
+          if [[ `git status --porcelain` ]]; then
+            echo "The git repo is dirty"
+            echo "Make sure to run 'sozo build' after changing Scarb.toml"
+            exit 1
+          fi
+
+      - name: Run tests
+        working-directory: backend/dojo_examples/combat_game
+        run: sozo test
+
+      - name: Check formatting
+        working-directory: backend/dojo_examples/combat_game
+        run: scarb fmt --check
