@@ -15,7 +15,6 @@ mod systems {
 }
 
 mod types {
-    pub mod attack_type;
     pub mod battle_status;
     pub mod beast;
     pub mod beast_type;
