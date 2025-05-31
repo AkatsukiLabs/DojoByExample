@@ -14,6 +14,20 @@ const FREEZE_SKILL_DAMAGE: u16 = 40;
 const SHOCK_SKILL_DAMAGE: u16 = 45;
 const DEFAULT_SKILL_DAMAGE: u16 = 30;
 
+pub const SLASH_SKILL_ID: u256 = 1;
+pub const BEAM_SKILL_ID: u256 = 2;
+pub const WAVE_SKILL_ID: u256 = 3;
+pub const PUNCH_SKILL_ID: u256 = 4;
+pub const KICK_SKILL_ID: u256 = 5;
+pub const BLAST_SKILL_ID: u256 = 6;
+pub const CRUSH_SKILL_ID: u256 = 7;
+pub const PIERCE_SKILL_ID: u256 = 8;
+pub const SMASH_SKILL_ID: u256 = 9;
+pub const BURN_SKILL_ID: u256 = 10;
+pub const FREEZE_SKILL_ID: u256 = 11;
+pub const SHOCK_SKILL_ID: u256 = 12;
+pub const DEFAULT_SKILL_ID: u256 = 13;
+
 #[derive(Copy, Drop, Serde, Debug, Introspect, PartialEq)]
 #[dojo::model]
 pub struct Skill {

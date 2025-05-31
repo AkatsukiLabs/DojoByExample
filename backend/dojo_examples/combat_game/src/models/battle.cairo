@@ -1,6 +1,7 @@
 use starknet::ContractAddress;
+use combat_game::types::battle_status::BattleStatus;
 
-#[derive(Copy, Drop, Serde, Debug, PartialEq)]
+#[derive(Copy, Drop, Serde, Debug, Introspect, PartialEq)]
 #[dojo::model]
 pub struct Battle {
     #[key]
@@ -8,7 +9,7 @@ pub struct Battle {
     pub player1: ContractAddress,
     pub player2: ContractAddress,
     pub current_turn: ContractAddress,
-    pub status: u8,
+    pub status: BattleStatus,
     pub winner_id: ContractAddress,
     pub battle_type: u8,
 }
