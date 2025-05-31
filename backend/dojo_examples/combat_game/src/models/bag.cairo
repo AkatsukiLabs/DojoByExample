@@ -33,7 +33,7 @@ impl BagActions of BagActionsTrait {
 
 #[cfg(test)]
 mod tests {
-    use super::{Bag, BagActions}; 
+    use super::{Bag, BagActions};
     use crate::types::potion::Potion;
     use starknet::contract_address_const;
     use core::result::ResultTrait;
@@ -44,11 +44,7 @@ mod tests {
         let bag_id = 1_u256;
         let player_id = contract_address_const::<0x0>();
 
-        let bag = Bag {
-            bag_id,
-            player: player_id,
-            item: Potion::Health,
-        };
+        let bag = Bag { bag_id, player: player_id, item: Potion::Health };
 
         assert_eq!(bag.bag_id, bag_id, "Bag ID should match");
         assert_eq!(bag.player, player_id, "Player ID should match");
