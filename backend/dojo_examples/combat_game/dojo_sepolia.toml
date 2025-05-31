@@ -1,0 +1,15 @@
+[world]
+name = "Combat Game"
+description = "Combat Game is an example game to show Dojo/Cairo capabilities/features to onboard new devs in the ecosystem in a smooth way. Built using Dojo Engine and Cartridge Controller on Starknet."
+seed = "combat_game"
+
+[namespace]
+default = "combat_game"
+
+[env]
+rpc_url = "https://api.cartridge.gg/x/starknet/sepolia"
+
+[writers]
+"combat_game" = ["combat_game-game"]
+"combat_game-TrophyCreation" = ["combat_game-game"]
+"combat_game-TrophyProgression" = ["combat_game-game"]

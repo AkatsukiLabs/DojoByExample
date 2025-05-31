@@ -13,7 +13,9 @@ mod models {
 }
 
 mod systems {
-    mod battle;
+    pub mod battle;
+    pub mod player;
+    pub mod beast;
 }
 
 mod types {
@@ -28,6 +30,7 @@ mod types {
 
 mod helpers {
     pub mod pseudo_random;
+    pub mod timestamp;
 }
 
 pub mod utils {

@@ -1,21 +1,28 @@
 [package]
-cairo-version = "=2.9.2"
+cairo-version = "2.9.2"
 name = "combat_game"
-version = "1.1.0"
-edition = "2024_07"
+version = "0.1.0"
+edition = "2023_11"
 
 [cairo]
 sierra-replace-ids = true
 
 [scripts]
-migrate = "sozo build && sozo migrate"                      # scarb run migrate
+sepolia = "sozo --profile sepolia clean && sozo --profile sepolia build && sozo --profile sepolia migrate --account-address $DEPLOYER_ACCOUNT_ADDRESS --private-key $DEPLOYER_PRIVATE_KEY --fee strk"
 
 [dependencies]
-dojo = { git = "https://github.com/dojoengine/dojo", tag = "v1.1.1" }
+dojo = { git = "https://github.com/dojoengine/dojo", tag = "v1.2.1" }
+achievement = { git = "https://github.com/cartridge-gg/arcade", tag = "v1.2.1" }
 
 [[target.starknet-contract]]
-build-external-contracts = ["dojo::world::world_contract::world"]
+build-external-contracts = [
+    "dojo::world::world_contract::world",
+    "achievement::events::index::e_TrophyCreation", 
+    "achievement::events::index::e_TrophyProgression", 
+]
 
 [dev-dependencies]
-cairo_test = "=2.9.2"
-dojo_cairo_test = { git = "https://github.com/dojoengine/dojo", tag = "v1.1.1" }
+cairo_test = "2.9.2"
+dojo_cairo_test = { git = "https://github.com/dojoengine/dojo", tag = "v1.2.1" }
+
+[profile.sepolia]
