@@ -16,10 +16,6 @@ Constants are fixed values used in game code to configure essential parameters s
 // Game Balance Constants
 // These constants control core gameplay mechanics and balance
 
-// Search range limits for player actions
-pub const MIN_SEARCH: u8 = 1;  // Minimum search range to prevent too easy gameplay
-pub const MAX_SEARCH: u8 = 3;  // Maximum search range to maintain challenge
-
 // Time-based constants for game progression
 pub const SECONDS_PER_DAY: u64 = 86400;  // Used for daily rewards and time-based events
 pub const GAME_TICK_RATE: u64 = 60;      // How often the game state updates
@@ -100,14 +96,16 @@ use constants::*;
 ### Example 1: Using Constants in Functions
 
 ```cairo
-// Function to check if a search range is valid
-// Uses MIN_SEARCH and MAX_SEARCH constants to enforce game rules
-func is_valid_search_range(value: u8) -> (valid: felt) {
-    // Check if the value is within the allowed range
-    if value >= MIN_SEARCH && value <= MAX_SEARCH {
-        return (valid=1);  // Valid range
-    } else {
-        return (valid=0);  // Invalid range
+// Function to calculate attack effectiveness based on type matchups
+fn calculate_effectiveness(attacker_type: BeastType, defender_type: BeastType) -> u8 {
+    match (attacker_type, defender_type) {
+        (BeastType::Light, BeastType::Shadow) | 
+        (BeastType::Magic, BeastType::Light) |
+        (BeastType::Shadow, BeastType::Magic) => SUPER_EFFECTIVE,
+        (BeastType::Light, BeastType::Magic) | 
+        (BeastType::Magic, BeastType::Shadow) |
+        (BeastType::Shadow, BeastType::Light) => NOT_VERY_EFFECTIVE,
+        _ => NORMAL_EFFECTIVENESS,
     }
 }
 ```
@@ -116,24 +114,24 @@ func is_valid_search_range(value: u8) -> (valid: felt) {
 
 ```cairo
 // Calculate daily bonus based on player level
-// Uses BASE_LEVEL_BONUS to scale rewards with progression
-func calculate_daily_bonus(level: u8) -> (bonus: u8) {
-    // Multiply level by base bonus to get total bonus
-    let bonus = level * BASE_LEVEL_BONUS;
-    return (bonus);
+fn calculate_daily_bonus(level: u8) -> u8 {
+    level * BASE_LEVEL_BONUS
 }  
 ```
 
 ### Example 3: Using Constants in Conditionals
 
 ```cairo
-// Determine attack effectiveness based on type matchups
-// Uses effectiveness constants to implement type advantages
-func attack_effectiveness(attack_type: u8, defender_type: u8) -> (effectiveness: u8) {
-    if attack_type == defender_type {
-        return (effectiveness=SUPER_EFFECTIVE);  // Same type = super effective
-    } else {
-        return (effectiveness=NORMAL_EFFECTIVENESS);  // Different type = normal
+// Determine if an attack is favored based on beast type
+fn is_favored_attack(beast_type: BeastType, skill_type: SkillType) -> bool {
+    match skill_type {
+        SkillType::Beam | SkillType::Slash | SkillType::Pierce |
+        SkillType::Wave => beast_type == BeastType::Light,
+        SkillType::Blast | SkillType::Freeze | SkillType::Burn |
+        SkillType::Punch => beast_type == BeastType::Magic,
+        SkillType::Smash | SkillType::Crush | SkillType::Shock |
+        SkillType::Kick => beast_type == BeastType::Shadow,
+        _ => false,
     }
 }
 ```
