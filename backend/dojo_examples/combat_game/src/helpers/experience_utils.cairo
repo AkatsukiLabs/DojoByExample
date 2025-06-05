@@ -61,6 +61,10 @@ mod test {
         let level_10: u8 = 10;
         let level_20: u8 = 20;
 
+
+        ///For each level instance test  there is an instance of the exact exp needed to level up, currentexp greater the exp needed to level up, 
+        ///currentexp is less than what is needed.
+
         assert_eq!(ExperienceCalculatorImpl::should_level_up(current_level: level_1, current_exp: 10), true, "Should pass, exp needed to level up is 10");
         assert_eq!(ExperienceCalculatorImpl::should_level_up(current_level: level_1, current_exp: 11), true, "Should pass, exp needed to level up is 10");
         assert_ne!(ExperienceCalculatorImpl::should_level_up(current_level: level_1, current_exp: 9), true, "Should pass, exp needed to level up is 10");
@@ -89,7 +93,8 @@ mod test {
         let level_5: u8 = 5;
         let level_10: u8 = 10;
         let level_20: u8 = 20;
-        
+
+    
 
         assert_eq!(ExperienceCalculatorImpl::remaining_exp_after_level_up(current_level: level_1, current_exp: 12), 2, "The remaining exp should be current_exp - exp_needed"); 
         assert_eq!(ExperienceCalculatorImpl::remaining_exp_after_level_up(current_level: level_1, current_exp: 17), 7, "The remaining exp should be current_exp - exp_needed");
