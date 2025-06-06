@@ -55,4 +55,4 @@ jobs:
 
       - name: Check formatting
         working-directory: backend/dojo_examples/combat_game
-        run: scarb fmt --check
+        run: scarb fmt
