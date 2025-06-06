@@ -4,7 +4,7 @@ use combat_game::{
     helpers::{pseudo_random::PseudoRandom::generate_random_u8}, constants::SECONDS_PER_DAY,
     models::{
         player::Player, beast::{Beast, BeastTrait}, skill, skill::{Skill, SkillTrait},
-        beast_skill::BeastSkill, beast_stats::BeastStats, battle::Battle,
+        beast_skill::BeastSkill, beast_stats::{BeastStats, BeastStatsActionTrait}, battle::Battle,
     },
     types::{
         beast_type::BeastType, skill::SkillType, status_condition::StatusCondition,
@@ -220,9 +220,7 @@ impl StoreImpl of StoreTrait {
             attack,
             defense,
             speed,
-            accuracy,
-            evasion,
-            status_condition: Into::<StatusCondition, u8>::into(status_condition),
+            status_condition,
             last_timestamp: starknet::get_block_timestamp(),
         };
         self.world.write_model(@beast_stats);
@@ -351,16 +349,13 @@ impl StoreImpl of StoreTrait {
         if level_up_occurred {
             // Calculate remaining exp
             // TODO: ExperienceCalculatorTrait is not implemented
-            // beast.experience = ExperienceTrrait::remaining_exp_after_level_up(beast.level, beast.experience);
+            // beast.experience);
+            // beast.experience = ExperienceTrrait::remaining_exp_after_level_up(beast.level,
             beast.experience = 5;
 
-            // Increase level
-            beast.level += 1;
-
             // Update beast stats
-            // TODO: `beast_stats.level_up()` is not implemented
             let mut beast_stats = self.read_beast_stats(beast_id);
-            // beast_stats.level_up(beast.beast_type);
+            beast_stats.level_up(beast.beast_type);
             self.write_beast_stats(beast_stats);
         }
 
@@ -402,7 +397,6 @@ impl StoreImpl of StoreTrait {
         defender_beast_id: u16,
         skill_id: u256,
     ) -> (u16, bool, bool) {
-        // Read battle
         let mut battle = self.read_battle(battle_id);
         assert!(
             battle.status == BattleStatus::Active,
@@ -410,7 +404,6 @@ impl StoreImpl of StoreTrait {
             battle.status,
         );
 
-        // Verify attack is usable
         assert!(
             self.is_skill_usable(attacker_beast_id, skill_id),
             "Beast {} can't use skill {}",
@@ -427,26 +420,16 @@ impl StoreImpl of StoreTrait {
         let mut defender_stats = self.read_beast_stats(defender_beast_id);
 
         // Check if attacker can attack
-        // assert(attacker_stats.can_attack(), 'Beast cannot attack'); // No implemented
+        assert(attacker_stats.can_attack(), 'Beast cannot attack');
 
         // Calculate damage
-        // TODO: Define `attack_factor` right now is hard coded to 1
         let skill = self.read_skill(skill_id);
         let (damage, is_favored, is_effective) = attacker_beast
             .attack(defender_beast.beast_type, skill.skill_type, 1);
-
-        defender_stats
-            .current_hp =
-                if damage > defender_stats.current_hp {
-                    Zero::zero()
-                } else {
-                    defender_stats.current_hp - damage
-                };
-        // battle.update_timestamp(); // No implemented
+        defender_stats.take_damage(damage);
 
         // Check if battle is over
-        if defender_stats.current_hp.is_zero() {
-            // End battle
+        if defender_stats.is_defeated() {
             battle.status = BattleStatus::Finished;
             battle.winner_id = starknet::get_caller_address();
 

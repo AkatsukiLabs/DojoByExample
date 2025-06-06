@@ -19,7 +19,7 @@ pub struct BeastStats {
 }
 
 #[generate_trait]
-impl BeastStatsActions of BeastStatsActionTrait {
+pub impl BeastStatsActions of BeastStatsActionTrait {
     fn generate_random_beast_stat(beast_id: u16, attribute_id: u16, min: u8, max: u8) -> u16 {
         let mut salt: u256 = poseidon_hash_span(
             array![beast_id.into(), attribute_id.into(), starknet::get_block_timestamp().into()]
