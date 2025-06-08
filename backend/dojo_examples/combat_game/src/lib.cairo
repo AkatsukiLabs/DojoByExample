@@ -37,4 +37,8 @@ pub mod utils {
     pub mod string;
 }
 
+pub mod achievements {
+    pub mod achievement;
+}
+
 pub mod tests {}
