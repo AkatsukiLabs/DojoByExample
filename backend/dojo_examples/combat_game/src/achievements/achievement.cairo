@@ -5,6 +5,7 @@ pub enum Achievement {
     Veteran,
     Champion,
     Legend,
+    None,
 }
 
 pub impl IntoAchievementU8 of Into<Achievement, u8> {
@@ -16,6 +17,7 @@ pub impl IntoAchievementU8 of Into<Achievement, u8> {
             Achievement::Veteran => 2,
             Achievement::Champion => 3,
             Achievement::Legend => 4,
+            Achievement::None => 5,
         }
     }
 }
@@ -29,6 +31,7 @@ pub impl IntoU8Achievement of Into<u8, Achievement> {
             2 => Achievement::Veteran,
             3 => Achievement::Champion,
             4 => Achievement::Legend,
+            5 => Achievement::None,
         }
     }
 }
