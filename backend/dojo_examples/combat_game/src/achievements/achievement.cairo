@@ -1,3 +1,9 @@
+// Dojo achievements import
+use achievement::types::task::{Task, TaskTrait};
+
+// Into trait import
+use core::traits::Into;
+
 #[derive(Copy, Drop, Serde, Debug, Introspect, PartialEq)]
 pub enum Achievement {
     FirstBlood,
