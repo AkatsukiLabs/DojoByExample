@@ -69,33 +69,29 @@ Converts the combined seed into a hashed value. Pedersen hash is deterministic a
 
 Ensures the final output is within the user-defined [min, max] range, inclusive.
 
-## Game System Example:
+## Test Function Example:
 
   ```cairo
-    use super::helpers::pseudo_random::PseudoRandom::generate_random_u8;
+    // Tests the `generate_random_u8` function to ensure it returns a value within the specified range.
 
-    #[system]
-    fn spawn_enemy(ctx: Context, entity_id: u32) {
-        // Generate a pseudo-random strength value between 10 and 20
-        let salt: u16 = 42; // this can vary (tick, position, etc.)
-        let unique_id: u16 = entity_id.try_into().unwrap();
+    // This test ensures that the random value generated is always between `min` and `max` inclusive.
 
-        let strength: u8 = generate_random_u8(unique_id, salt, 10, 20);
+    #[test]
+    #[available_gas(1000000)]
+    fn test_generate_random_u8() {
+        let min: u8 = 5;
+        let max: u8 = 10;
+        let unique_id: u16 = 12345;
+        let salt: u16 = 6789;
+        let result = generate_random_u8(unique_id, salt, min, max);
 
-        // Delegate spawning to another helper
-        spawn_enemy_with_strength(ctx.world, entity_id, strength);
-    }
-
-
-    pub fn spawn_enemy_with_strength(world: WorldDispatcher, entity_id: u32, strength: u8) {
-        // Logic to spawn an enemy entity and attach a Strength component
-        world.set_component::<components::Strength>(entity_id, strength.into());
-        world.set_component::<components::EnemyTag>(entity_id, ());
+        // Assert the result is within the specified range
+        assert!(result >= min && result <= max, "Random number out of range");
     }
   ```
 
-🔁 Result
-Every time the system is triggered, the enemy’s strength will be pseudo-randomly generated but still deterministic and provable due to the use of block values and input IDs.
+🔁 **Result**: 
+This test guarantees that your pseudo-random function behaves safely and deterministically, always producing values between min and max, even as inputs change. This is a great example of how pure helpers can be tested in isolation, without setting up an entire game system or world context.
 
 ## Recommendations 📚
 
