@@ -1,10 +1,10 @@
 use dojo::{model::ModelStorage, world::WorldStorage};
 use core::num::traits::zero::Zero;
 use combat_game::{
-    helpers::{pseudo_random::PseudoRandom::generate_random_u8}, constants::SECONDS_PER_DAY,
+    constants::SECONDS_PER_DAY,
     models::{
         player::Player, beast::{Beast, BeastTrait}, skill, skill::{Skill, SkillTrait},
-        beast_skill::BeastSkill, beast_stats::{BeastStats, BeastStatsActionTrait}, battle::Battle,
+        beast_skill::BeastSkill, beast_stats::{BeastStats, BeastStatsActionTrait}, battle::{Battle, BattleTrait},
     },
     types::{
         beast_type::BeastType, skill::SkillType, status_condition::StatusCondition,
@@ -234,45 +234,15 @@ impl StoreImpl of StoreTrait {
         player2: ContractAddress,
         battle_type: u8,
     ) -> Battle {
-        let players = array![player1, player2];
-        let battle = Battle {
-            id: battle_id,
-            player1,
-            player2,
-            current_turn: *players
-                .at(
-                    generate_random_u8(
-                        battle_id.try_into().unwrap(), 0, 0, players.len().try_into().unwrap(),
-                    )
-                        .into(),
-                ),
-            status: BattleStatus::Waiting,
-            winner_id: Zero::zero(),
-            battle_type: battle_type,
-        };
+        let battle = BattleTrait::new(battle_id, player1, player2, battle_type);
         self.world.write_model(@battle);
         battle
     }
 
     fn create_rematch(ref self: Store, battle_id: u256) -> Battle {
         let battle = self.read_battle(battle_id);
-        let players = array![battle.player1, battle.player2];
 
-        let rematch = Battle {
-            id: battle_id,
-            player1: battle.player1,
-            player2: battle.player2,
-            current_turn: *players
-                .at(
-                    generate_random_u8(
-                        battle_id.try_into().unwrap(), 0, 0, players.len().try_into().unwrap(),
-                    )
-                        .into(),
-                ),
-            status: BattleStatus::Waiting,
-            winner_id: Zero::zero(),
-            battle_type: battle.battle_type,
-        };
+        let rematch = BattleTrait::new(battle_id, battle.player1, battle.player2, battle.battle_type);
         self.world.write_model(@rematch);
         rematch
     }
