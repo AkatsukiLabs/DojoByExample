@@ -88,6 +88,16 @@ const config: Sidebar = [
     ],
   },
   {
+    text: "Starters & Templates",
+    collapsed: true,
+    items: [
+      {
+        text: "Full Starter React",
+        link: "/starters/full-react-starter",
+      },
+    ],
+  },
+  {
     text: "Applications",
     collapsed: true,
     items: [
