@@ -1,3 +1,0 @@
-# OpenIA Integration
-
-Under development...

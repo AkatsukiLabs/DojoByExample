@@ -1,3 +1,0 @@
-# Open Router Integration
-
-Under development...

@@ -128,14 +128,6 @@ const config: Sidebar = [
         link: "/integrations/react",
       },
       {
-        text: "Telegram",
-        link: "/integrations/telegram",
-      },
-      {
-        text: "Discord",
-        link: "/integrations/discord",
-      },
-      {
         text: "Unity",
         link: "/integrations/unity",
       },
@@ -149,14 +141,6 @@ const config: Sidebar = [
           {
             text: "Eliza",
             link: "/integrations/ai/eliza",
-          },
-          {
-            text: "OpenAI",
-            link: "/integrations/ai/openai",
-          },
-          {
-            text: "OpenRouter",
-            link: "/integrations/ai/openrouter",
           },
         ],
       },

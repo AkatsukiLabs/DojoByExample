@@ -1,3 +1,0 @@
-# Telegram Integration
-
-Under development...
