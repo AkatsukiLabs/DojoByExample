@@ -1,0 +1,3 @@
+# React Integration - Manifest
+
+Under development...
