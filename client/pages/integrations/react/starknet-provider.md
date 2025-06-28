@@ -11,9 +11,7 @@ The `StarknetProvider.tsx` file serves as the central configuration hub for Star
 - **Network Management**: Handles environment-based switching between different blockchain networks
 - **State Management**: Provides React context for blockchain state throughout your application
 
-:::note[Gaming-First Design]
-Unlike traditional DeFi applications, this provider is specifically optimized for gaming experiences, prioritizing fast transactions, session management, and user-friendly wallet interactions.
-:::
+> **Gaming-First Design**: Unlike traditional DeFi applications, this provider is specifically optimized for gaming experiences, prioritizing fast transactions, session management, and user-friendly wallet interactions.
 
 ## Complete Implementation
 
