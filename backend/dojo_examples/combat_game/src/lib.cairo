@@ -41,4 +41,6 @@ pub mod achievements {
     pub mod achievement;
 }
 
-pub mod tests {}
+pub mod tests {
+    mod test_battle;
+}

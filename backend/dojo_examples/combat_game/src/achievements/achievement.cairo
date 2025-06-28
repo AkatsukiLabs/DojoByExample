@@ -112,7 +112,8 @@ pub impl AchievementImpl of AchievementTrait {
     fn tasks(self: Achievement) -> Span<Task> {
         match self {
             Achievement::None => [].span(),
-            Achievement::FirstBlood => array![TaskTrait::new('First Blood', 1, "Win a game")].span(),
+            Achievement::FirstBlood => array![TaskTrait::new('First Blood', 1, "Win a game")]
+                .span(),
             Achievement::Warrior => array![TaskTrait::new('Warrior', 5, "Win 5 games")].span(),
             Achievement::Veteran => array![TaskTrait::new('Veteran', 15, "Win 15 games")].span(),
             Achievement::Champion => array![TaskTrait::new('Champion', 30, "Win 30 games")].span(),

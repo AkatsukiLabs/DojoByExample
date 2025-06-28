@@ -2,9 +2,7 @@ use starknet::{ContractAddress, get_block_timestamp};
 use core::num::traits::zero::Zero;
 use combat_game::{
     helpers::{pseudo_random::PseudoRandom::generate_random_u8},
-    types::{
-        battle_status::BattleStatus,
-    },
+    types::{battle_status::BattleStatus},
 };
 
 #[derive(Copy, Drop, Serde, Debug, Introspect, PartialEq)]
@@ -19,12 +17,14 @@ pub struct Battle {
     pub winner_id: ContractAddress,
     pub battle_type: u8,
     pub timestamp_start: u64,
-    pub timestamp_last_action: u64
+    pub timestamp_last_action: u64,
 }
 
 #[generate_trait]
 pub impl BattleImpl of BattleTrait {
-    fn new(id: u256, player1: ContractAddress, player2: ContractAddress, battle_type: u8) -> Battle {
+    fn new(
+        id: u256, player1: ContractAddress, player2: ContractAddress, battle_type: u8,
+    ) -> Battle {
         let current_timestamp = get_block_timestamp();
         let players = array![player1, player2];
         Battle {
@@ -39,14 +39,14 @@ pub impl BattleImpl of BattleTrait {
                         .into(),
                 ),
             status: BattleStatus::Waiting,
-            winner_id:  Zero::zero(),
+            winner_id: Zero::zero(),
             battle_type: battle_type,
             timestamp_start: current_timestamp,
-            timestamp_last_action: current_timestamp
+            timestamp_last_action: current_timestamp,
         }
     }
 
-    fn end(ref self: Battle, winner: ContractAddress ) {
+    fn end(ref self: Battle, winner: ContractAddress) {
         self.status = BattleStatus::Finished.into();
         self.winner_id = winner;
         self.timestamp_last_action = get_block_timestamp();
@@ -65,9 +65,14 @@ pub impl BattleImpl of BattleTrait {
     }
 
     fn switch_turn(ref self: Battle) {
-        self.current_turn = if self.current_turn == self.player1 { self.player2 } else { self.player1 };
+        self
+            .current_turn =
+                if self.current_turn == self.player1 {
+                    self.player2
+                } else {
+                    self.player1
+                };
     }
-
 }
 
 #[cfg(test)]
@@ -113,5 +118,4 @@ mod tests {
         BattleTrait::new(1, contract_address_const::<0x1>(), contract_address_const::<0x2>(), 1)
     }
 }
-
 

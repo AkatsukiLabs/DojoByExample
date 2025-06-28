@@ -4,7 +4,8 @@ use combat_game::{
     constants::SECONDS_PER_DAY,
     models::{
         player::Player, beast::{Beast, BeastTrait}, skill, skill::{Skill, SkillTrait},
-        beast_skill::BeastSkill, beast_stats::{BeastStats, BeastStatsActionTrait}, battle::{Battle, BattleTrait},
+        beast_skill::BeastSkill, beast_stats::{BeastStats, BeastStatsActionTrait},
+        battle::{Battle, BattleTrait},
     },
     types::{
         beast_type::BeastType, skill::SkillType, status_condition::StatusCondition,
@@ -20,7 +21,7 @@ struct Store {
 }
 
 #[generate_trait]
-impl StoreImpl of StoreTrait {
+pub impl StoreImpl of StoreTrait {
     fn new(world: WorldStorage) -> Store {
         Store { world: world }
     }
@@ -242,7 +243,9 @@ impl StoreImpl of StoreTrait {
     fn create_rematch(ref self: Store, battle_id: u256) -> Battle {
         let battle = self.read_battle(battle_id);
 
-        let rematch = BattleTrait::new(battle_id, battle.player1, battle.player2, battle.battle_type);
+        let rematch = BattleTrait::new(
+            battle_id, battle.player1, battle.player2, battle.battle_type,
+        );
         self.world.write_model(@rematch);
         rematch
     }
