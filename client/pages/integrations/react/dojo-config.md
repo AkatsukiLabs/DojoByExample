@@ -397,7 +397,7 @@ export function NetworkStatus() {
 
 The `dojoConfig.ts` file is your gateway to the Dojo ecosystem. By properly configuring this file, you ensure smooth communication between your React frontend and the blockchain infrastructure, enabling seamless onchain gaming experiences.
 
-**Next step**: Learn how to integrate this configuration with [Starknet Provider](/integrations/react/starknet-provider) for wallet connectivity.
+**Next step**: Learn how to integrate this configuration with [Starknet Provider](./starknet-provider.md) for wallet connectivity.
 
 ## 🚀 Quick Setup Guide
 
@@ -479,4 +479,4 @@ console.log('🔧 Dojo Config:', {
 
 ---
 
-🎯 **Ready to continue?** Now that your `dojoConfig` is set up, proceed to configure the [Starknet Provider](/integrations/react/starknet-provider) for wallet integration!
+🎯 **Ready to continue?** Now that your `dojoConfig` is set up, proceed to configure the [Starknet Provider](./starknet-provider.md) for wallet integration!
