@@ -24,8 +24,8 @@ jobs:
       - name: Install Dojo plugin
         run: |
           asdf plugin add dojo https://github.com/dojoengine/asdf-dojo
-          asdf install dojo 1.1.1 
-          asdf global dojo 1.1.1  
+          asdf install dojo 1.2.1 
+          asdf global dojo 1.2.1  
           asdf list dojo
           which sozo || echo "sozo not found"
           ls -la /home/runner/.config/.dojo/bin/ || echo "Directory not found"
