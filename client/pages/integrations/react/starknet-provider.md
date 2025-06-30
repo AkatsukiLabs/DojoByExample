@@ -6,16 +6,14 @@ The **StarknetProvider.tsx** file is a crucial configuration component that esta
 
 The `StarknetProvider.tsx` file serves as the central configuration hub for Starknet React integration in Dojo games. It wraps your entire application with the necessary context providers that enable:
 
-- **Blockchain Connectivity**: Establishes connections to Starknet networks (mainnet, sepolia, localhost)
-- **Wallet Integration**: Configures wallet connectors like Cartridge Controller for gaming-optimized UX
-- **Network Management**: Handles environment-based switching between different blockchain networks
-- **State Management**: Provides React context for blockchain state throughout your application
+- **Blockchain Connectivity**: Establishes connections to Starknet networks (mainnet, sepolia)
+- **Gaming-Optimized Wallet Integration**: Configures Cartridge Controller for frictionless gaming UX
+- **Environment-Based Network Management**: Handles automatic switching between different blockchain networks
+- **Session Continuity**: Provides React context for persistent blockchain state throughout your game
 
-> **Gaming-First Design**: Unlike traditional DeFi applications, this provider is specifically optimized for gaming experiences, prioritizing fast transactions, session management, and user-friendly wallet interactions.
+> **Gaming-First Design**: Unlike traditional DeFi applications, this provider is specifically optimized for gaming experiences, prioritizing fast transactions, session management, and user-friendly wallet interactions that don't interrupt gameplay flow.
 
 ## Complete Implementation
-
-Here's the complete `StarknetProvider.tsx` implementation with detailed explanations:
 
 ```typescript
 import type { PropsWithChildren } from "react";
@@ -28,10 +26,9 @@ import {
 import cartridgeConnector from "../config/cartridgeConnector";
 
 export default function StarknetProvider({ children }: PropsWithChildren) {
-    // Environment configuration for deployment targeting
     const { VITE_PUBLIC_DEPLOY_TYPE } = import.meta.env;
 
-    // Dynamic RPC URL selection based on deployment environment
+    // Get RPC URL based on environment
     const getRpcUrl = () => {
         switch (VITE_PUBLIC_DEPLOY_TYPE) {
             case "mainnet":
@@ -39,18 +36,18 @@ export default function StarknetProvider({ children }: PropsWithChildren) {
             case "sepolia":
                 return "https://api.cartridge.gg/x/starknet/sepolia";
             default:
-                return "https://api.cartridge.gg/x/starknet/sepolia";
+                return "https://api.cartridge.gg/x/starknet/sepolia"; 
         }
     };
 
-    // Configure JSON-RPC provider with environment-specific endpoint
+    // Create provider with the correct RPC URL
     const provider = jsonRpcProvider({
         rpc: () => ({ nodeUrl: getRpcUrl() }),
     });
 
-    // Dynamic chain selection based on deployment type
-    const chains = VITE_PUBLIC_DEPLOY_TYPE === "mainnet"
-        ? [mainnet]
+    // Determine which chain to use
+    const chains = VITE_PUBLIC_DEPLOY_TYPE === "mainnet" 
+        ? [mainnet] 
         : [sepolia];
 
     return (
@@ -76,19 +73,19 @@ import type { PropsWithChildren } from "react";
 
 **Purpose**: Provides TypeScript types for React components that accept children elements.
 
-**Usage**: Enables the provider to wrap any React component tree with proper type safety.
+**Gaming Context**: Enables the provider to wrap any React component tree with proper type safety, ensuring your entire game interface has access to blockchain functionality.
 
 ### Starknet React Chains
 ```typescript
 import { sepolia, mainnet } from "@starknet-react/chains";
 ```
 
-**Purpose**: Pre-configured chain objects containing network-specific settings.
+**Purpose**: Pre-configured chain objects containing network-specific settings for Starknet networks.
 
-**Details**:
-- `sepolia`: Starknet testnet configuration
-- `mainnet`: Starknet production network configuration
-- Each chain object includes RPC endpoints, block explorers, and network identifiers
+**Gaming Benefits**:
+- `sepolia`: Testnet perfect for game development and testing without real asset risk
+- `mainnet`: Production network where players interact with real assets and achievements
+- Each chain includes optimized RPC endpoints and network identifiers for gaming applications
 
 ### Starknet React Core
 ```typescript
@@ -100,18 +97,18 @@ import {
 ```
 
 **Component Breakdown**:
-- `jsonRpcProvider`: Creates RPC providers for blockchain communication
-- `StarknetConfig`: Main configuration wrapper for the entire Starknet integration
-- `starkscan`: Block explorer integration for transaction viewing
+- `jsonRpcProvider`: Creates RPC providers optimized for gaming transaction patterns
+- `StarknetConfig`: Main configuration wrapper that enables gaming-focused blockchain integration
+- `starkscan`: Block explorer integration for players to view their game transactions and achievements
 
-### Cartridge Connector Import
+### Gaming-Optimized Connector
 ```typescript
 import cartridgeConnector from "../config/cartridgeConnector";
 ```
 
-**Purpose**: Imports the gaming-optimized wallet connector configuration.
+**Purpose**: Imports the Cartridge Controller connector specifically designed for gaming applications.
 
-**Why Important**: Cartridge Controller provides session-based wallet management, eliminating the need for users to sign every transaction during gameplay.
+**Gaming Advantages**: Cartridge Controller provides session-based wallet management, eliminating the need for players to sign every transaction during gameplay, creating a smooth gaming experience similar to traditional games.
 
 ## Component Structure and Props
 
@@ -120,58 +117,42 @@ import cartridgeConnector from "../config/cartridgeConnector";
 export default function StarknetProvider({ children }: PropsWithChildren)
 ```
 
-**Pattern Explanation**:
-- **PropsWithChildren**: Standard React pattern for provider components
-- **children**: All child components that need access to Starknet functionality
-- **Provider Wrapper**: Enables any descendant component to use Starknet hooks
+**Gaming Pattern**: This follows the standard React provider pattern, allowing any game component (menus, gameplay interfaces, inventory systems) to access blockchain functionality seamlessly.
 
-### Usage in Component Tree
+**Typical Game Usage**:
 ```typescript
-// Typical application structure
-function App() {
-    return (
-        <StarknetProvider>
-            <DojoProvider>
-                <GameInterface />
-                <WalletConnection />
-            </DojoProvider>
-        </StarknetProvider>
-    );
-}
+<StarknetProvider>
+  <GameInterface />
+  <PlayerInventory />
+  <LeaderboardSystem />
+</StarknetProvider>
 ```
 
 ## Environment Configuration
 
-### Environment Variable Usage
+### Environment-Based Network Targeting
 ```typescript
 const { VITE_PUBLIC_DEPLOY_TYPE } = import.meta.env;
 ```
 
-**Environment Variables**:
-- `VITE_PUBLIC_DEPLOY_TYPE`: Controls which network the application targets
-- **Values**: "mainnet", "sepolia", or undefined (defaults to sepolia)
-- **Vite Integration**: Uses Vite's environment variable system for build-time configuration
+**Gaming Deployment Strategy**:
+- **Development**: Uses sepolia testnet for safe game testing
+- **Production**: Switches to mainnet for live gaming with real assets
+- **Automatic Detection**: No manual network switching required for players
 
-**Environment Setup Examples**:
+**Environment Setup for Game Development**:
 
-**.env.development**
 ```bash
+# .env.development - Safe testing environment
 VITE_PUBLIC_DEPLOY_TYPE=sepolia
-```
 
-**.env.production**
-```bash
+# .env.production - Live gaming environment  
 VITE_PUBLIC_DEPLOY_TYPE=mainnet
-```
-
-**.env.local** (for local development)
-```bash
-VITE_PUBLIC_DEPLOY_TYPE=sepolia
 ```
 
 ## RPC Provider Configuration
 
-### Dynamic RPC URL Selection
+### Gaming-Optimized RPC Selection
 ```typescript
 const getRpcUrl = () => {
     switch (VITE_PUBLIC_DEPLOY_TYPE) {
@@ -180,95 +161,45 @@ const getRpcUrl = () => {
         case "sepolia":
             return "https://api.cartridge.gg/x/starknet/sepolia";
         default:
-            return "https://api.cartridge.gg/x/starknet/sepolia";
+            return "https://api.cartridge.gg/x/starknet/sepolia"; 
     }
 };
 ```
 
-**RPC Endpoint Details**:
-
-| Network | Endpoint | Purpose |
-|---------|----------|---------|
-| Mainnet | `https://api.cartridge.gg/x/starknet/mainnet` | Production blockchain |
-| Sepolia | `https://api.cartridge.gg/x/starknet/sepolia` | Testnet for development |
-| Default | `https://api.cartridge.gg/x/starknet/sepolia` | Fallback to testnet |
-
 **Why Cartridge RPC Endpoints?**:
-- **Gaming Optimization**: Optimized for game-specific transaction patterns
-- **Reliability**: High uptime and performance for gaming applications
-- **Integration**: Seamless integration with Cartridge Controller wallet
+- **Gaming Optimization**: Specifically tuned for game transaction patterns and session management
+- **High Performance**: Reduced latency for real-time gaming interactions
+- **Reliability**: Built for gaming applications that require consistent uptime
+- **Safe Defaults**: Automatically falls back to testnet to prevent accidental mainnet usage during development
 
-### JSON-RPC Provider Setup
+### Provider Creation
 ```typescript
 const provider = jsonRpcProvider({
     rpc: () => ({ nodeUrl: getRpcUrl() }),
 });
 ```
 
-**Configuration Breakdown**:
-- **jsonRpcProvider**: Creates a provider instance for blockchain communication
-- **rpc function**: Returns configuration object with the node URL
-- **Dynamic URL**: Calls `getRpcUrl()` to determine the appropriate endpoint based on environment
-
-**Custom RPC Configuration Example**:
-```typescript
-// For local development with Katana
-const provider = jsonRpcProvider({
-    rpc: () => ({ 
-        nodeUrl: process.env.NODE_ENV === 'development' 
-            ? "http://localhost:5050" 
-            : getRpcUrl() 
-    }),
-});
-```
+**Gaming Implementation**: Creates a JSON-RPC provider that automatically connects to the appropriate gaming-optimized endpoint based on your deployment environment, ensuring players always connect to the right network.
 
 ## Chain Configuration
 
-### Dynamic Chain Selection
+### Dynamic Chain Selection for Gaming
 ```typescript
-const chains = VITE_PUBLIC_DEPLOY_TYPE === "mainnet"
-    ? [mainnet]
+const chains = VITE_PUBLIC_DEPLOY_TYPE === "mainnet" 
+    ? [mainnet] 
     : [sepolia];
 ```
 
-**Chain Selection Logic**:
-- **Mainnet**: Production environment with real assets
-- **Sepolia**: All other environments (development, testing, staging)
-- **Array Format**: StarknetConfig expects an array of chain configurations
+**Gaming Logic**:
+- **Mainnet**: Production gaming environment where players' actions have real value
+- **Sepolia**: Safe testing environment for game development and QA
+- **Automatic Switching**: Players never need to manually configure networks
 
-**Multi-Chain Configuration Example**:
-```typescript
-// Supporting multiple networks simultaneously
-const chains = VITE_PUBLIC_DEPLOY_TYPE === "mainnet"
-    ? [mainnet]
-    : [sepolia, localhost]; // Add localhost for development
-
-// Localhost chain configuration (for Katana)
-const localhost = {
-    id: "0x4b4154414e41", // "KATANA" in hex
-    name: "Katana",
-    network: "katana",
-    nativeCurrency: {
-        address: "0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7",
-        name: "Ether",
-        symbol: "ETH",
-        decimals: 18,
-    },
-    rpcUrls: {
-        default: {
-            http: ["http://localhost:5050"],
-        },
-        public: {
-            http: ["http://localhost:5050"],
-        },
-    },
-    testnet: true,
-};
-```
+**Player Experience**: The game automatically connects to the appropriate network, maintaining the seamless experience players expect from modern games.
 
 ## StarknetConfig Properties
 
-### Complete Configuration Breakdown
+### Gaming-Focused Configuration
 ```typescript
 <StarknetConfig
     autoConnect
@@ -281,250 +212,88 @@ const localhost = {
 </StarknetConfig>
 ```
 
-### Property Explanations
+### Property Breakdown for Gaming
 
 #### `autoConnect`
-**Purpose**: Automatically attempts to reconnect to previously connected wallets when the application loads.
+**Gaming Benefit**: Automatically reconnects players to their wallet when they return to the game, eliminating the frustration of having to reconnect every session.
 
-**Behavior**:
-- Checks for stored wallet connection data in browser storage
-- Attempts to restore the connection without user intervention
-- Improves UX by maintaining session continuity
-
-**Gaming Benefits**: Players don't need to reconnect their wallet every time they reload the game.
+**Player Experience**: Just like saving game progress, wallet connections persist between gaming sessions.
 
 #### `chains={chains}`
-**Purpose**: Defines which blockchain networks your application supports.
+**Gaming Purpose**: Defines which blockchain networks your game supports, automatically selecting the appropriate environment.
 
-**Configuration**:
-- Array of chain objects with network-specific settings
-- Each chain includes RPC endpoints, native currency info, and network identifiers
-- Allows wallet to switch between supported networks
+**Player Impact**: Players connect to the right network without technical configuration, maintaining the plug-and-play experience of traditional games.
 
 #### `connectors={[cartridgeConnector]}`
-**Purpose**: Defines available wallet connection methods.
+**Gaming Innovation**: Uses Cartridge Controller, designed specifically for gaming applications.
 
-**Cartridge Connector Benefits**:
-- **Session Management**: Enables gasless transactions during gameplay
-- **Gaming UX**: Eliminates transaction popups for pre-approved actions
-- **Account Abstraction**: Supports advanced account features for gaming
-
-**Multiple Connectors Example**:
-```typescript
-// Supporting multiple wallet types
-import { argentConnector, braavosConnector } from "@starknet-react/core";
-
-connectors={[
-    cartridgeConnector,
-    argentConnector(),
-    braavosConnector(),
-]}
-```
+**Unique Gaming Features**:
+- **Session Management**: Pre-approved transactions for uninterrupted gameplay
+- **Gas Optimization**: Efficient transaction batching for gaming actions
+- **User-Friendly Interface**: Gaming-focused wallet UI that doesn't feel like DeFi
 
 #### `explorer={starkscan}`
-**Purpose**: Integrates block explorer for transaction viewing and debugging.
+**Gaming Utility**: Integrates Starkscan block explorer for players to view their game transactions, achievements, and asset history.
 
-**Features**:
-- View transaction details and status
-- Explore contract interactions
-- Debug failed transactions
-
-**Custom Explorer Example**:
-```typescript
-// Using Voyager instead of Starkscan
-import { voyager } from "@starknet-react/core";
-
-explorer={voyager}
-```
+**Player Value**: Players can track their gaming history, verify rare item acquisitions, and share achievement transactions.
 
 #### `provider={provider}`
-**Purpose**: Configures the RPC provider for blockchain communication.
+**Gaming Infrastructure**: Provides the blockchain communication layer optimized for gaming transaction patterns.
 
-**Responsibilities**:
-- Handles all read operations (contract calls, balance queries)
-- Manages transaction broadcasting
-- Provides network connectivity
+**Technical Gaming Benefits**: Handles all game-to-blockchain communication efficiently, ensuring smooth gameplay without blockchain complexity exposure to players.
 
-## Integration Patterns
+## Integration in Gaming Applications
 
-### Provider Hierarchy
-
-The `StarknetProvider` should be placed high in your component tree to make Starknet functionality available throughout your application:
-
+### Provider Hierarchy for Games
 ```typescript
-// Recommended provider hierarchy for Dojo games
-function App() {
-    return (
-        <StarknetProvider>
-            <DojoProvider>
-                <QueryClient client={queryClient}>
-                    <Router>
-                        <GameLayout>
-                            <Routes>
-                                <Route path="/" element={<GameInterface />} />
-                                <Route path="/inventory" element={<Inventory />} />
-                            </Routes>
-                        </GameLayout>
-                    </Router>
-                </QueryClient>
-            </DojoProvider>
-        </StarknetProvider>
-    );
-}
+// main.tsx - Typical gaming application structure
+<DojoSdkProvider sdk={sdk} dojoConfig={dojoConfig} clientFn={setupWorld}>
+  <StarknetProvider>
+    <GameInterface />
+    <PlayerStats />
+    <InventorySystem />
+  </StarknetProvider>
+</DojoSdkProvider>
 ```
 
-### Using Starknet Hooks in Components
-
-Once wrapped by `StarknetProvider`, child components can use Starknet React hooks:
+### Using Gaming Hooks
+Once wrapped by `StarknetProvider`, game components can access blockchain functionality:
 
 ```typescript
-import { useAccount, useContract, useContractRead } from "@starknet-react/core";
+import { useAccount, useContract } from "@starknet-react/core";
 
-function GameInterface() {
-    // Access connected account
+function PlayerDashboard() {
     const { account, isConnected } = useAccount();
     
-    // Read game state from contract
-    const { data: playerStats } = useContractRead({
-        address: gameContractAddress,
-        abi: gameAbi,
-        functionName: "get_player_stats",
-        args: [account?.address],
-    });
-
-    // Contract interactions
-    const { contract } = useContract({
-        address: gameContractAddress,
-        abi: gameAbi,
-    });
-
     return (
         <div>
             {isConnected ? (
-                <PlayerDashboard stats={playerStats} contract={contract} />
+                <GameInterface playerAddress={account?.address} />
             ) : (
-                <ConnectWallet />
+                <ConnectWalletButton />
             )}
         </div>
     );
 }
 ```
 
-### Environment-Based Configuration Management
+## Gaming Benefits Summary
 
-For complex games with multiple deployment environments:
+**For Players**:
+- Seamless wallet connections that persist between gaming sessions
+- Automatic network selection without technical configuration
+- Gaming-optimized transaction flow that doesn't interrupt gameplay
 
-```typescript
-// config/networks.ts
-export const NETWORK_CONFIG = {
-    mainnet: {
-        rpc: "https://api.cartridge.gg/x/starknet/mainnet",
-        gameContract: "0x...", // mainnet contract address
-        explorerUrl: "https://starkscan.co",
-    },
-    sepolia: {
-        rpc: "https://api.cartridge.gg/x/starknet/sepolia",
-        gameContract: "0x...", // sepolia contract address
-        explorerUrl: "https://sepolia.starkscan.co",
-    },
-    localhost: {
-        rpc: "http://localhost:5050",
-        gameContract: "0x...", // local katana contract address
-        explorerUrl: null,
-    },
-};
+**For Developers**:
+- Environment-based deployment without code changes
+- Gaming-focused RPC endpoints optimized for game transaction patterns
+- Clean integration with Dojo's gaming infrastructure
 
-// Enhanced StarknetProvider with network config
-export default function StarknetProvider({ children }: PropsWithChildren) {
-    const deployType = import.meta.env.VITE_PUBLIC_DEPLOY_TYPE || 'sepolia';
-    const networkConfig = NETWORK_CONFIG[deployType];
-    
-    const provider = jsonRpcProvider({
-        rpc: () => ({ nodeUrl: networkConfig.rpc }),
-    });
-    
-    // ... rest of configuration
-}
-```
-
-## Debugging and Development
-
-### Debug Configuration
-
-For development and debugging, you can add additional logging and configuration:
-
-```typescript
-// Debug-enabled provider configuration
-export default function StarknetProvider({ children }: PropsWithChildren) {
-    const { VITE_PUBLIC_DEPLOY_TYPE, NODE_ENV } = import.meta.env;
-    
-    // Log configuration in development
-    if (NODE_ENV === 'development') {
-        console.log('Starknet Provider Configuration:', {
-            deployType: VITE_PUBLIC_DEPLOY_TYPE,
-            rpcUrl: getRpcUrl(),
-            isMainnet: VITE_PUBLIC_DEPLOY_TYPE === "mainnet",
-        });
-    }
-    
-    // ... rest of configuration
-}
-```
-
-### Common Issues and Solutions
-
-**Issue**: Provider not connecting to wallet
-**Solution**: Ensure `autoConnect` is enabled and cartridgeConnector is properly configured
-
-**Issue**: Wrong network selected
-**Solution**: Verify `VITE_PUBLIC_DEPLOY_TYPE` environment variable is set correctly
-
-**Issue**: RPC connection failures
-**Solution**: Check network connectivity and RPC endpoint availability
-
-## Production Considerations
-
-### Security Best Practices
-
-1. **Environment Variables**: Never expose private keys or sensitive data in environment variables
-2. **RPC Endpoints**: Use reliable, production-grade RPC providers
-3. **Network Validation**: Always validate the connected network matches your expectations
-
-### Performance Optimization
-
-1. **Provider Caching**: The provider instance is created once per component lifecycle
-2. **Connection Persistence**: `autoConnect` maintains user sessions
-3. **Error Handling**: Implement proper error boundaries around provider usage
-
-### Monitoring and Analytics
-
-```typescript
-// Enhanced provider with monitoring
-const provider = jsonRpcProvider({
-    rpc: () => {
-        const nodeUrl = getRpcUrl();
-        
-        // Log RPC usage for monitoring
-        if (import.meta.env.PROD) {
-            analytics.track('rpc_connection', { network: VITE_PUBLIC_DEPLOY_TYPE });
-        }
-        
-        return { nodeUrl };
-    },
-});
-```
-
-## Next Steps
-
-Once you have the `StarknetProvider` configured, you can:
-
-1. **Set up Cartridge Controller**: Configure session policies and gaming-specific wallet features
-2. **Implement Dojo Integration**: Connect to your Dojo world contracts
-3. **Add Transaction Management**: Handle game actions and state updates
-4. **Build Game UI**: Create components that interact with your onchain game logic
-
-The `StarknetProvider` serves as the foundation that makes all other Starknet and Dojo integrations possible, providing the essential blockchain connectivity that powers your onchain gaming experience.
+**For Game Operations**:
+- Reliable infrastructure designed for gaming applications
+- Built-in explorer integration for player transaction transparency
+- Session management that reduces transaction friction
 
 ---
 
-*Ready to integrate wallet connections? Check out [Controller Connector](/integrations/react/controller-connector) to set up gaming-optimized wallet functionality.*
+*Ready to configure gaming-specific wallet features? Check out [Controller Connector](/integrations/react/controller-connector) to set up Cartridge Controller for your game.*
