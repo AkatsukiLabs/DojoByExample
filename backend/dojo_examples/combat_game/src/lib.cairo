@@ -2,30 +2,30 @@ mod constants;
 mod store;
 
 mod models {
-    pub mod skill;
+    pub mod bag;
     pub mod battle;
     pub mod beast;
     pub mod beast_skill;
-    pub mod player;
-    pub mod bag;
     pub mod beast_stats;
+    pub mod player;
     pub mod potion;
+    pub mod skill;
 }
 
 mod systems {
     pub mod battle;
-    pub mod player;
     pub mod beast;
+    pub mod player;
 }
 
 mod types {
-    pub mod skill;
     pub mod battle_status;
     pub mod beast;
     pub mod beast_type;
-    pub mod rarity;
-    pub mod status_condition;
     pub mod potion;
+    pub mod rarity;
+    pub mod skill;
+    pub mod status_condition;
 }
 
 mod helpers {
@@ -43,4 +43,5 @@ pub mod achievements {
 
 pub mod tests {
     mod test_battle;
+    mod test_beast;
 }
