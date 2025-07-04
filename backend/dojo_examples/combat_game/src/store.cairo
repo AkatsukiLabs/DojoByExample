@@ -325,6 +325,7 @@ pub impl StoreImpl of StoreTrait {
             // beast.experience);
             // beast.experience = ExperienceTrrait::remaining_exp_after_level_up(beast.level,
             beast.experience = 5;
+            beast.level += 1;
 
             // Update beast stats
             let mut beast_stats = self.read_beast_stats(beast_id);
