@@ -11,8 +11,8 @@ pub struct Player {
     pub current_beast_id: u16,
     pub battles_won: u16,
     pub battles_lost: u16,
-    pub last_active_day: u32,
-    pub creation_day: u32,
+    pub last_active_day: u64,
+    pub creation_day: u64,
 }
 
 #[generate_trait]
