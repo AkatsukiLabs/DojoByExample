@@ -230,20 +230,3 @@ const sdk = await init<SchemaType>({
   },
 });
 ```
-
-
-Before deploying to mainnet:
-- [ ] Replace mainnet manifest placeholder with actual deployment data
-- [ ] Remove sepolia references from production manifests  
-- [ ] Verify all contracts deployed successfully to target network
-- [ ] Test complete game flow (spawn_player, train, mine, rest) on intended network
-- [ ] Confirm environment variables match deployment network
-- [ ] Validate Torii indexer is synced with production world
-- [ ] Test cartridge connector policies with production contract address
-- [ ] Verify setupWorld functions work with production manifest
-
----
-
-The manifest system provides automatic network switching without code changes, enabling smooth development-to-production workflows while maintaining type safety and preventing common deployment mistakes.
-
-*Ready to connect your contracts to React? Check out [Dojo Config](/integrations/react/dojo-config) to see how manifest data powers your game's blockchain connection.*
