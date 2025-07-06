@@ -231,56 +231,6 @@ const sdk = await init<SchemaType>({
 });
 ```
 
-## 🌐 Environment Setup
-
-### Local Development (.env.local)
-```bash
-VITE_PUBLIC_DEPLOY_TYPE=localhost
-VITE_PUBLIC_NODE_URL=http://localhost:5050
-VITE_PUBLIC_TORII=http://localhost:8080/graphql
-```
-
-### Testnet (.env.local)
-```bash
-VITE_PUBLIC_DEPLOY_TYPE=sepolia
-VITE_PUBLIC_NODE_URL=https://api.cartridge.gg/x/starknet/sepolia
-VITE_PUBLIC_TORII=https://api.cartridge.gg/x/your-game/torii/graphql
-```
-
-### Production (.env.production)
-```bash
-VITE_PUBLIC_DEPLOY_TYPE=mainnet
-VITE_PUBLIC_NODE_URL=https://api.cartridge.gg/x/starknet/mainnet
-VITE_PUBLIC_TORII=https://api.cartridge.gg/x/your-game/torii/graphql
-```
-
-## 🎯 Common Deployment Issues
-
-**"Game world not found"**
-- Check `VITE_PUBLIC_DEPLOY_TYPE` matches your intended network
-- Verify manifest file exists and contains valid addresses
-- Ensure contracts are deployed to the target network
-- Confirm world address exists: `manifest.world.address`
-
-**"Contract interactions failing"**
-- Confirm RPC network matches manifest deployment
-- Check that Torii is indexing the correct world address
-- Verify wallet is connected to same network as contracts
-- Validate contract address: `manifest.contracts[0].address`
-
-**"Environment switching not working"**
-- Clear local `.env.local` files before production builds
-- Ensure environment variables match manifest object keys exactly
-- Validate all environment variables target the same network
-- Check console logs for `VITE_PUBLIC_DEPLOY_TYPE` value
-
-**"Using wrong network accidentally"**
-- Sepolia fallback prevents accidental mainnet connections during development
-- Always verify network in wallet matches intended environment
-- Check block explorer to confirm contract addresses exist
-- Use `getGameContractAddress()` function to debug contract references
-
-## 🔒 Production Deployment Checklist
 
 Before deploying to mainnet:
 - [ ] Replace mainnet manifest placeholder with actual deployment data
