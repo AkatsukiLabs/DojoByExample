@@ -230,3 +230,8 @@ const sdk = await init<SchemaType>({
   },
 });
 ```
+The manifest system provides automatic network switching without code changes, enabling smooth development-to-production workflows while maintaining type safety and preventing common deployment mistakes.
+
+---
+
+*Ready to connect your contracts to React? Check out [Dojo Config](/integrations/react/dojo-config) to see how manifest data powers your game's blockchain connection*
