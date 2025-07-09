@@ -1,3 +1,0 @@
-# Cartridge Controller Integration
-
-Under development...

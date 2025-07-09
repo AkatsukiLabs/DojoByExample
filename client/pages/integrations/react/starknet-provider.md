@@ -296,4 +296,5 @@ function PlayerDashboard() {
 
 ---
 
-*Ready to configure gaming-specific wallet features? Check out [Controller Connector](/integrations/react/controller-connector) to set up Cartridge Controller for your game.*
+**Next**: While StarknetProvider handles the network infrastructure and RPC connections, the [Controller Connector](./controller-connector.md) 
+takes this foundation and transforms it into a gaming-optimized experience. 

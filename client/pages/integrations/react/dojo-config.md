@@ -119,4 +119,4 @@ export const dojoConfig = createDojoConfig({
 
 This configuration connects the React game client to the Dojo onchain gaming infrastructure, allowing real-time multiplayer gameplay with persistent blockchain state.
 
-**Next**: Set up [Starknet Provider](./starknet-provider.md) for player wallet connections.
+**Next**: While dojoConfig establishes how your React frontend connects to the Dojo infrastructure, the [Manifest](./manifest.md) handles the critical "where" question - determining which deployed contract addresses your app should use based on the current network environment.

@@ -234,4 +234,4 @@ The manifest system provides automatic network switching without code changes, e
 
 ---
 
-*Ready to connect your contracts to React? Check out [Dojo Config](/integrations/react/dojo-config) to see how manifest data powers your game's blockchain connection*
+**Next**: Once the manifest.ts configuration resolves the correct network deployments, the [Main](./main.md) file serves as the orchestration layer that brings everything together. This file takes the manifest's deployment information and dojoConfig settings to initialize the Dojo SDK, establish the React provider hierarchy, and bootstrap the entire onchain game application.
