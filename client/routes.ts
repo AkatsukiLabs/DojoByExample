@@ -154,7 +154,7 @@ const config: Sidebar = [
           ],
         },
         {
-          text: "Data Bindings",
+          text: "Bindings",
           items: [
             {
               text: "Models Bindings",

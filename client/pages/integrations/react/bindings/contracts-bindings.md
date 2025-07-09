@@ -366,4 +366,4 @@ const game_train = async (snAccount: Account) => {
 
 ---
 
-_The contracts.gen.ts file transforms blockchain complexity into simple game function calls, enabling developers to build engaging onchain games with traditional gaming development patterns._
+*The contracts.gen.ts file transforms complex blockchain transactions into simple game function calls, enabling developers to build engaging fully on-chain games with traditional gaming development patterns.*
