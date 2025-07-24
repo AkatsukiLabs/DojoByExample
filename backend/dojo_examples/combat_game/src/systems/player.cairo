@@ -18,7 +18,7 @@ pub mod player_system {
         player_counter: u256,
     }
 
-     // Constructor
+    // Constructor
     fn dojo_init(ref self: ContractState) {
         self.player_counter.write(1);
     }

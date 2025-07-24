@@ -38,7 +38,7 @@ pub mod beast_system {
             store.init_beast_skills(beast_id);
 
             let beast_stats = BeastStatsActionTrait::new_beast_stats(
-                beast_id, beast_type, beast.level, get_block_timestamp()
+                beast_id, beast_type, beast.level, get_block_timestamp(),
             );
             store.write_beast_stats(beast_stats);
             beast_id

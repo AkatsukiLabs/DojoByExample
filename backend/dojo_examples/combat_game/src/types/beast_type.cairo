@@ -35,7 +35,7 @@ pub impl Intou8BeastType of Into<u8, BeastType> {
             0 => BeastType::Light,
             1 => BeastType::Magic,
             2 => BeastType::Shadow,
-            _ => BeastType::Light, // Default fallback
+            _ => BeastType::Light // Default fallback
         }
     }
 }
