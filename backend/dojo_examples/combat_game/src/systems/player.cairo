@@ -9,6 +9,7 @@ pub mod player_system {
     use super::IPlayer;
 
     use combat_game::models::player::{Player, PlayerAssert};
+    use starknet::storage::{StoragePointerWriteAccess};
     use combat_game::store::{StoreTrait};
 
     use starknet::{get_caller_address, get_block_timestamp};
@@ -18,7 +19,7 @@ pub mod player_system {
         player_counter: u256,
     }
 
-     // Constructor
+    // Constructor
     fn dojo_init(ref self: ContractState) {
         self.player_counter.write(1);
     }

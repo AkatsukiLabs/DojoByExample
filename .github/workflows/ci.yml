@@ -2,57 +2,53 @@ name: Cairo-Dojo CI
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [main]
   pull_request:
-    branches: [ main, master ]
+    branches: [main]
+
+env:
+  DOJO_VERSION: 1.6.1
+  SCARB_VERSION: 2.10.1
+  WORKING_DIRECTORY: ./backend/dojo_examples/combat_game
 
 jobs:
   build-and-test:
     name: Build and Test
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Install asdf
-        uses: asdf-vm/actions/setup@v2
-
-      - name: Verify asdf installation
-        run: asdf --version
-
-      - name: Install Dojo plugin
+      - name: Download Dojo release artifact
         run: |
-          asdf plugin add dojo https://github.com/dojoengine/asdf-dojo
-          asdf install dojo 1.2.1 
-          asdf global dojo 1.2.1  
-          asdf list dojo
-          which sozo || echo "sozo not found"
-          ls -la /home/runner/.config/.dojo/bin/ || echo "Directory not found"
+          curl -L -o dojo-linux-x86_64.tar.gz https://github.com/dojoengine/dojo/releases/download/v${{ env.DOJO_VERSION }}/dojo_v${{ env.DOJO_VERSION }}_linux_amd64.tar.gz
+          tar -xzf dojo-linux-x86_64.tar.gz
+          sudo mv sozo /usr/local/bin/
 
-      - name: Update PATH
-        run: echo "$HOME/.asdf/shims" >> $GITHUB_PATH
-
-      - name: Install Scarb plugin
-        run: |
-          asdf plugin add scarb
-          asdf install scarb 2.9.2  
-          asdf global scarb 2.9.2 
+      - name: Setup Scarb
+        uses: software-mansion/setup-scarb@v1
+        with:
+          scarb-version: ${{ env.SCARB_VERSION }}
 
       - name: Build contracts
-        working-directory: backend/dojo_examples/combat_game
+        working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
           sozo build
-          if [[ `git status --porcelain` ]]; then
-            echo "The git repo is dirty"
-            echo "Make sure to run 'sozo build' after changing Scarb.toml"
-            exit 1
-          fi
 
       - name: Run tests
-        working-directory: backend/dojo_examples/combat_game
+        working-directory: ${{ env.WORKING_DIRECTORY }}
         run: sozo test
 
-      - name: Check formatting
-        working-directory: backend/dojo_examples/combat_game
-        run: scarb fmt
+  check:
+    runs-on: ubuntu-latest
+    name: Check format
+    steps:
+      - uses: actions/checkout@v4
+      - uses: software-mansion/setup-scarb@v1
+        with:
+          scarb-version: ${{ env.SCARB_VERSION }}
+      - name: Format
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: scarb fmt --check
+        shell: bash

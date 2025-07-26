@@ -67,14 +67,12 @@ pub impl SkillImpl of SkillTrait {
 #[cfg(test)]
 mod tests {
     use super::{
-        SkillImpl, SkillType,
-        SLASH_SKILL_ID, BEAM_SKILL_ID, WAVE_SKILL_ID, PUNCH_SKILL_ID, KICK_SKILL_ID,
-        BLAST_SKILL_ID, CRUSH_SKILL_ID, PIERCE_SKILL_ID, SMASH_SKILL_ID, BURN_SKILL_ID,
-        FREEZE_SKILL_ID, SHOCK_SKILL_ID, DEFAULT_SKILL_ID,
-        SLASH_SKILL_DAMAGE, BEAM_SKILL_DAMAGE, WAVE_SKILL_DAMAGE, PUNCH_SKILL_DAMAGE,
-        KICK_SKILL_DAMAGE, BLAST_SKILL_DAMAGE, CRUSH_SKILL_DAMAGE, PIERCE_SKILL_DAMAGE,
-        SMASH_SKILL_DAMAGE, BURN_SKILL_DAMAGE, FREEZE_SKILL_DAMAGE, SHOCK_SKILL_DAMAGE,
-        DEFAULT_SKILL_DAMAGE,
+        SkillImpl, SkillType, SLASH_SKILL_ID, BEAM_SKILL_ID, WAVE_SKILL_ID, PUNCH_SKILL_ID,
+        KICK_SKILL_ID, BLAST_SKILL_ID, CRUSH_SKILL_ID, PIERCE_SKILL_ID, SMASH_SKILL_ID,
+        BURN_SKILL_ID, FREEZE_SKILL_ID, SHOCK_SKILL_ID, DEFAULT_SKILL_ID, SLASH_SKILL_DAMAGE,
+        BEAM_SKILL_DAMAGE, WAVE_SKILL_DAMAGE, PUNCH_SKILL_DAMAGE, KICK_SKILL_DAMAGE,
+        BLAST_SKILL_DAMAGE, CRUSH_SKILL_DAMAGE, PIERCE_SKILL_DAMAGE, SMASH_SKILL_DAMAGE,
+        BURN_SKILL_DAMAGE, FREEZE_SKILL_DAMAGE, SHOCK_SKILL_DAMAGE, DEFAULT_SKILL_DAMAGE,
     };
 
     #[test]
@@ -248,10 +246,19 @@ mod tests {
     fn test_all_skill_constants() {
         // Test that all skill ID constants are unique
         let skill_ids = array![
-            SLASH_SKILL_ID, BEAM_SKILL_ID, WAVE_SKILL_ID, PUNCH_SKILL_ID,
-            KICK_SKILL_ID, BLAST_SKILL_ID, CRUSH_SKILL_ID, PIERCE_SKILL_ID,
-            SMASH_SKILL_ID, BURN_SKILL_ID, FREEZE_SKILL_ID, SHOCK_SKILL_ID,
-            DEFAULT_SKILL_ID
+            SLASH_SKILL_ID,
+            BEAM_SKILL_ID,
+            WAVE_SKILL_ID,
+            PUNCH_SKILL_ID,
+            KICK_SKILL_ID,
+            BLAST_SKILL_ID,
+            CRUSH_SKILL_ID,
+            PIERCE_SKILL_ID,
+            SMASH_SKILL_ID,
+            BURN_SKILL_ID,
+            FREEZE_SKILL_ID,
+            SHOCK_SKILL_ID,
+            DEFAULT_SKILL_ID,
         ];
 
         // Test that each ID is within expected range
@@ -262,12 +269,18 @@ mod tests {
         assert!(KICK_SKILL_ID >= 1 && KICK_SKILL_ID <= 13, "Kick skill ID should be in range");
         assert!(BLAST_SKILL_ID >= 1 && BLAST_SKILL_ID <= 13, "Blast skill ID should be in range");
         assert!(CRUSH_SKILL_ID >= 1 && CRUSH_SKILL_ID <= 13, "Crush skill ID should be in range");
-        assert!(PIERCE_SKILL_ID >= 1 && PIERCE_SKILL_ID <= 13, "Pierce skill ID should be in range");
+        assert!(
+            PIERCE_SKILL_ID >= 1 && PIERCE_SKILL_ID <= 13, "Pierce skill ID should be in range",
+        );
         assert!(SMASH_SKILL_ID >= 1 && SMASH_SKILL_ID <= 13, "Smash skill ID should be in range");
         assert!(BURN_SKILL_ID >= 1 && BURN_SKILL_ID <= 13, "Burn skill ID should be in range");
-        assert!(FREEZE_SKILL_ID >= 1 && FREEZE_SKILL_ID <= 13, "Freeze skill ID should be in range");
+        assert!(
+            FREEZE_SKILL_ID >= 1 && FREEZE_SKILL_ID <= 13, "Freeze skill ID should be in range",
+        );
         assert!(SHOCK_SKILL_ID >= 1 && SHOCK_SKILL_ID <= 13, "Shock skill ID should be in range");
-        assert!(DEFAULT_SKILL_ID >= 1 && DEFAULT_SKILL_ID <= 13, "Default skill ID should be in range");
+        assert!(
+            DEFAULT_SKILL_ID >= 1 && DEFAULT_SKILL_ID <= 13, "Default skill ID should be in range",
+        );
     }
 
     #[test]
@@ -276,7 +289,7 @@ mod tests {
         // Test that base damage matches what would be set when creating skills
         let slash_skill = SkillImpl::new(SLASH_SKILL_ID, SLASH_SKILL_DAMAGE, SkillType::Slash, 1);
         let calculated_damage = SkillImpl::base_damage(SkillType::Slash);
-        
+
         assert_eq!(slash_skill.power, calculated_damage, "Skill power should match base damage");
     }
 }
