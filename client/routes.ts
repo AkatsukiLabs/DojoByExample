@@ -95,6 +95,10 @@ const config: Sidebar = [
         text: "Full Starter React",
         link: "/starters/full-react-starter",
       },
+      {
+        text: "Full Bevy Starter",
+        link: "/starters/full-bevy-starter",
+      },
     ],
   },
   {
@@ -112,81 +116,81 @@ const config: Sidebar = [
     ],
   },
   {
-  text: "Dojo Integrations",
-  collapsed: true,
-  items: [
-    {
-      text: "React",
-      collapsed: true,
-      items: [
-        {
-          text: "Overview",
-          link: "/integrations/react/overview",
-        },
-        {
-          text: "Configuration",
-          items: [
-            {
-              text: "Dojo Config",
-              link: "/integrations/react/dojo-config",
-            },
-            {
-              text: "Manifest",
-              link: "/integrations/react/manifest",
-            },
-            {
-              text: "Main Setup",
-              link: "/integrations/react/main",
-            },
-          ],
-        },
-        {
-          text: "Providers",
-          items: [
-            {
-              text: "Starknet Provider",
-              link: "/integrations/react/starknet-provider",
-            },
-            {
-              text: "Controller Connector",
-              link: "/integrations/react/controller-connector",
-            },
-          ],
-        },
-        {
-          text: "Bindings",
-          items: [
-            {
-              text: "Models Bindings",
-              link: "/integrations/react/bindings/models-bindings",
-            },
-            {
-              text: "Contracts Bindings",
-              link: "/integrations/react/bindings/contracts-bindings",
-            },
-          ],
-        },
-      ],
-    },
-    {
-      text: "Unity",
-      link: "/integrations/unity",
-    },
-    {
-      text: "AI Agents",
-      items: [
-        {
-          text: "Daydreams",
-          link: "/integrations/ai/daydreams",
-        },
-        {
-          text: "Eliza",
-          link: "/integrations/ai/eliza",
-        },
-      ],
-    },
-  ],
-},
+    text: "Dojo Integrations",
+    collapsed: true,
+    items: [
+      {
+        text: "React",
+        collapsed: true,
+        items: [
+          {
+            text: "Overview",
+            link: "/integrations/react/overview",
+          },
+          {
+            text: "Configuration",
+            items: [
+              {
+                text: "Dojo Config",
+                link: "/integrations/react/dojo-config",
+              },
+              {
+                text: "Manifest",
+                link: "/integrations/react/manifest",
+              },
+              {
+                text: "Main Setup",
+                link: "/integrations/react/main",
+              },
+            ],
+          },
+          {
+            text: "Providers",
+            items: [
+              {
+                text: "Starknet Provider",
+                link: "/integrations/react/starknet-provider",
+              },
+              {
+                text: "Controller Connector",
+                link: "/integrations/react/controller-connector",
+              },
+            ],
+          },
+          {
+            text: "Bindings",
+            items: [
+              {
+                text: "Models Bindings",
+                link: "/integrations/react/bindings/models-bindings",
+              },
+              {
+                text: "Contracts Bindings",
+                link: "/integrations/react/bindings/contracts-bindings",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        text: "Unity",
+        link: "/integrations/unity",
+      },
+      {
+        text: "AI Agents",
+        items: [
+          {
+            text: "Daydreams",
+            link: "/integrations/ai/daydreams",
+          },
+          {
+            text: "Eliza",
+            link: "/integrations/ai/eliza",
+          },
+        ],
+      },
+    ],
+  },
   {
     text: "Dojo Use Cases",
     collapsed: true,
@@ -243,7 +247,7 @@ const generateSidebarConfig = (sidebar: SidebarItem[]): Sidebar => {
 const sidebarFocusOn = (
   sidebar: SidebarItem[],
   target: string,
-  closeOther: boolean = false
+  closeOther: boolean = false,
 ): SidebarItem[] =>
   sidebar.map((item) =>
     item.items && item.items.length > 0
@@ -255,7 +259,7 @@ const sidebarFocusOn = (
       : {
           ...item,
           collapsed: item.text === target ? item.collapsed : true,
-        }
+        },
   );
 
 export const routes = generateSidebarConfig(config);
