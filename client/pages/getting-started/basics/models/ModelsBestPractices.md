@@ -87,8 +87,6 @@ pub struct Beast {
     #[key]
     pub beast_id: u16,
     pub level: u8,
-    pub experience: u16,
-    pub beast_type: BeastType,
 }
 
 // Constant key for global settings
@@ -127,20 +125,12 @@ pub impl ZeroablePlayerTrait of Zero<Player> {
             address: constants::ZERO_ADDRESS(),
             current_beast_id: 0,
             battles_won: 0,
-            battles_lost: 0,
-            last_active_day: 0,
-            creation_day: 1,
         }
     }
 
     #[inline(always)]
     fn is_zero(self: @Player) -> bool {
         *self.address == constants::ZERO_ADDRESS()
-    }
-
-    #[inline(always)]
-    fn is_non_zero(self: @Player) -> bool {
-        !self.is_zero()
     }
 }
 ```
