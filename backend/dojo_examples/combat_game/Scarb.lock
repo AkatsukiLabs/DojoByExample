@@ -4,7 +4,7 @@ version = 1
 [[package]]
 name = "achievement"
 version = "0.0.0"
-source = "git+https://github.com/cartridge-gg/arcade?tag=v1.6.0-alpha.1#0378ed6d9d8188fa6532e66c8db8729a27eb8a5f"
+source = "git+https://github.com/cartridge-gg/arcade?tag=v1.6.1#6438a74b589c3cac19b9782709e3845215ec67d6"
 dependencies = [
  "dojo",
 ]
@@ -20,16 +20,16 @@ dependencies = [
 
 [[package]]
 name = "dojo"
-version = "1.6.0-alpha.0"
-source = "git+https://github.com/dojoengine/dojo?tag=v1.6.0-alpha.1#054623bbf939a3bf90786355bd9b081a2b1b3c3a"
+version = "1.6.1"
+source = "git+https://github.com/dojoengine/dojo?tag=v1.6.1#a4f9445cf925e999d97038f596806ec307981a9b"
 dependencies = [
  "dojo_plugin",
 ]
 
 [[package]]
 name = "dojo_cairo_test"
-version = "1.6.0-alpha.0"
-source = "git+https://github.com/dojoengine/dojo?tag=v1.6.0-alpha.1#054623bbf939a3bf90786355bd9b081a2b1b3c3a"
+version = "1.6.1"
+source = "git+https://github.com/dojoengine/dojo?tag=v1.6.1#a4f9445cf925e999d97038f596806ec307981a9b"
 dependencies = [
  "dojo",
 ]
@@ -37,4 +37,4 @@ dependencies = [
 [[package]]
 name = "dojo_plugin"
 version = "2.10.1"
-source = "git+https://github.com/dojoengine/dojo?tag=v1.6.0-alpha.1#054623bbf939a3bf90786355bd9b081a2b1b3c3a"
+source = "git+https://github.com/dojoengine/dojo?tag=v1.6.1#a4f9445cf925e999d97038f596806ec307981a9b"

@@ -12,6 +12,7 @@ pub trait IBeast<T> {
 pub mod beast_system {
     use super::{IBeast, BeastType, BeastStats};
     use starknet::get_block_timestamp;
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
     use combat_game::store::{StoreTrait};
     use combat_game::models::beast_stats::BeastStatsActionTrait;
 
