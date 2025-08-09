@@ -1,7 +1,7 @@
 use dojo::{model::ModelStorage, world::WorldStorage};
 use core::num::traits::zero::Zero;
 use combat_game::{
-    constants::SECONDS_PER_DAY,
+    constants::{BASE_BATTLE_EXPERIENCE, SECONDS_PER_DAY},
     models::{
         player::Player, beast::{Beast, BeastTrait}, skill, skill::{Skill, SkillTrait},
         beast_skill::BeastSkill, beast_stats::{BeastStats, BeastStatsActionTrait},
@@ -11,6 +11,7 @@ use combat_game::{
         beast_type::BeastType, skill::SkillType, status_condition::StatusCondition,
         battle_status::BattleStatus,
     },
+    helpers::experience_utils::ExperienceCalculatorImpl,
 };
 
 use starknet::ContractAddress;
@@ -314,17 +315,14 @@ pub impl StoreImpl of StoreTrait {
         beast.experience += exp_amount;
 
         // Check if level up is needed
-        // TODO: ExperienceCalculatorTrait is not implemented
-        // let exp_needed = ExperienceTrrait::calculate_exp_needed_for_level(beast.level);
-        let exp_needed = 10;
+        let exp_needed = ExperienceCalculatorImpl::calculate_exp_needed_for_level(beast.level);
         let level_up_occurred = beast.experience >= exp_needed;
 
         if level_up_occurred {
             // Calculate remaining exp
-            // TODO: ExperienceCalculatorTrait is not implemented
-            // beast.experience);
-            // beast.experience = ExperienceTrrait::remaining_exp_after_level_up(beast.level,
-            beast.experience = 5;
+            beast.experience = ExperienceCalculatorImpl::remaining_exp_after_level_up(
+                beast.level, beast.experience,
+            );
             beast.level += 1;
 
             // Update beast stats
@@ -410,8 +408,8 @@ pub impl StoreImpl of StoreTrait {
             // Update player stats
             self.update_player_battle_result(won: true);
 
-            // TODO: Define base experience for winning a game
-            self.award_battle_experience(attacker_beast_id, 1);
+            // Award experience for winning a game
+            self.award_battle_experience(attacker_beast_id, BASE_BATTLE_EXPERIENCE);
         }
 
         // Save changes

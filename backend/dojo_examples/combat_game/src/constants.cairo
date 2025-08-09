@@ -25,3 +25,5 @@ pub const NOT_VERY_EFFECTIVE: u8 = 50;
 pub const FAVORED_ATTACK_MULTIPLIER: u8 = 120;
 pub const NORMAL_ATTACK_MULTIPLIER: u8 = 100;
 
+// Base battle experience
+pub const BASE_BATTLE_EXPERIENCE: u16 = 10;
