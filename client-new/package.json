@@ -4,12 +4,31 @@
   "description": "Learn Dojo Engine through practical examples",
   "type": "module",
   "scripts": {
-    "dev": "vocs dev",
+    "dev": "vocs dev --port 4000",
     "build": "vocs build",
-    "preview": "vocs preview",
+    "preview": "vocs preview --port 4000",
     "type-check": "tsc --noEmit"
   },
-  "keywords": ["dojo", "starknet", "blockchain", "gaming", "documentation"],
+  "keywords": [
+    "dojo",
+    "starknet",
+    "blockchain",
+    "gaming",
+    "documentation"
+  ],
   "author": "Dojo by Example Team",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "vocs": "^1.0.13"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.10",
+    "@types/react-dom": "^19.1.7",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.12",
+    "typescript": "^5.9.2"
+  }
 }
