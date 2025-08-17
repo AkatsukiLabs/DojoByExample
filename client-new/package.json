@@ -1,0 +1,15 @@
+{
+  "name": "dojo-by-example",
+  "version": "2.0.0",
+  "description": "Learn Dojo Engine through practical examples",
+  "type": "module",
+  "scripts": {
+    "dev": "vocs dev",
+    "build": "vocs build",
+    "preview": "vocs preview",
+    "type-check": "tsc --noEmit"
+  },
+  "keywords": ["dojo", "starknet", "blockchain", "gaming", "documentation"],
+  "author": "Dojo by Example Team",
+  "license": "MIT"
+}
