@@ -1,0 +1,192 @@
+/* Global Styles for Dojo by Example */
+
+/* Import design tokens */
+@import './design-tokens.css';
+
+/* Tailwind base styles */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base styles */
+@layer base {
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Default body styles */
+  body {
+    @apply bg-background text-text-primary;
+    font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+    transition: background-color var(--transition-base);
+  }
+  
+  /* Heading styles */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold text-text-primary;
+  }
+  
+  h1 { @apply text-4xl md:text-5xl; }
+  h2 { @apply text-3xl md:text-4xl; }
+  h3 { @apply text-2xl md:text-3xl; }
+  h4 { @apply text-xl md:text-2xl; }
+  h5 { @apply text-lg md:text-xl; }
+  h6 { @apply text-base md:text-lg; }
+  
+  /* Link styles */
+  a {
+    @apply text-dojo-primary hover:text-dojo-hover;
+    transition: color var(--transition-fast);
+  }
+  
+  /* Code block styles */
+  code {
+    @apply px-1 py-0.5 rounded-md bg-surface-secondary text-sm;
+    font-family: 'JetBrains Mono', Consolas, monospace;
+  }
+  
+  pre {
+    @apply p-4 rounded-lg overflow-x-auto;
+    background-color: var(--color-background-tertiary);
+  }
+  
+  pre code {
+    @apply p-0 bg-transparent;
+  }
+  
+  /* Selection styles */
+  ::selection {
+    background-color: var(--dojo-primary);
+    color: white;
+    opacity: 0.2;
+  }
+}
+
+/* Component styles */
+@layer components {
+  /* Button styles */
+  .btn {
+    @apply px-4 py-2 rounded-lg font-medium transition-all duration-200;
+    @apply focus:outline-none focus:ring-2 focus:ring-dojo-primary focus:ring-offset-2;
+  }
+  
+  .btn-primary {
+    @apply bg-dojo-primary text-white hover:bg-dojo-hover;
+  }
+  
+  .btn-secondary {
+    @apply bg-surface border border-border hover:bg-surface-hover;
+  }
+  
+  /* Card styles */
+  .card {
+    @apply bg-surface rounded-xl border border-border p-6;
+    @apply hover:shadow-lg transition-shadow duration-300;
+  }
+  
+  /* Badge styles */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+  
+  .badge-dojo {
+    @apply bg-dojo-primary/10 text-dojo-primary;
+  }
+  
+  /* Feature card for homepage */
+  .feature-card {
+    @apply card hover:border-dojo-primary/50;
+    @apply hover:shadow-dojo-primary/10;
+  }
+}
+
+/* Utility styles */
+@layer utilities {
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-gradient-to-r from-dojo-primary to-dojo-light;
+    @apply bg-clip-text text-transparent;
+  }
+  
+  /* Glow effect */
+  .glow-dojo {
+    box-shadow: 0 0 20px rgba(255, 48, 0, 0.3);
+  }
+  
+  /* Backdrop blur for overlays */
+  .backdrop-blur-subtle {
+    backdrop-filter: blur(8px);
+  }
+}
+
+/* Animation keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.animate-slideIn {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Custom scrollbar styles */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-background-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-hover);
+}
+
+/* Responsive utilities */
+@media (max-width: 768px) {
+  .hide-mobile {
+    display: none;
+  }
+}
+
+@media (min-width: 769px) {
+  .hide-desktop {
+    display: none;
+  }
+}
