@@ -1,12 +1,12 @@
 /* Global Styles for Dojo by Example */
 
-/* Import design tokens */
-@import './design-tokens.css';
-
 /* Tailwind base styles */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Import design tokens */
+@import './design-tokens.css';
 
 /* Base styles */
 @layer base {
