@@ -1,0 +1,50 @@
+# React Integration Overview
+
+Learn how to integrate Dojo Engine with React applications.
+
+## Why React + Dojo?
+
+React provides an excellent frontend framework for building user interfaces that interact with Dojo's on-chain game logic:
+
+- **Reactive UI** - Updates automatically when game state changes
+- **Component Architecture** - Modular, reusable game components  
+- **Rich Ecosystem** - Leverage existing React libraries
+- **Developer Experience** - Great tooling and debugging
+
+## Architecture
+
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   React App     │    │   Dojo.js       │    │   Dojo Core     │
+│                 │    │                 │    │                 │
+│ ┌─────────────┐ │    │ ┌─────────────┐ │    │ ┌─────────────┐ │
+│ │ Components  │◄┼────┼►│   Hooks     │◄┼────┼►│   Models    │ │
+│ └─────────────┘ │    │ └─────────────┘ │    │ └─────────────┘ │
+│ ┌─────────────┐ │    │ ┌─────────────┐ │    │ ┌─────────────┐ │
+│ │    State    │◄┼────┼►│ Providers   │◄┼────┼►│  Systems    │ │
+│ └─────────────┘ │    │ └─────────────┘ │    │ └─────────────┘ │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+```
+
+## Key Concepts
+
+### State Management
+- **Global State** - Game world state from Dojo
+- **Local State** - UI-specific state in React
+- **Sync Strategy** - Keep frontend in sync with on-chain state
+
+### Real-time Updates
+- **Event Listening** - Subscribe to on-chain events
+- **Optimistic Updates** - Update UI before confirmation
+- **Error Handling** - Handle failed transactions gracefully
+
+## Getting Started
+
+1. [Setup your environment](/guides/react/setup)
+2. [Learn about hooks](/guides/react/hooks)
+3. [Build components](/guides/react/components)
+
+## Example Projects
+
+- [React Starter Template](/examples/starters/react)
+- [Production Game Example](/examples/games/simple)

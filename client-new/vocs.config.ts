@@ -1,4 +1,5 @@
 import { defineConfig } from 'vocs'
+import { sidebar } from './src/routes'
 
 export default defineConfig({
   // Basic configuration
@@ -122,13 +123,8 @@ export default defineConfig({
     },
   ],
   
-  // Sidebar configuration (basic for now)
-  sidebar: [
-    {
-      text: 'Introduction',
-      link: '/',
-    },
-  ],
+  // Sidebar configuration with dynamic sections
+  sidebar: sidebar,
   
   
   // Markdown configuration

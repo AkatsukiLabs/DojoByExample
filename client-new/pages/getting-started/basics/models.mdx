@@ -1,0 +1,67 @@
+# Models
+
+Models in Dojo define the structure of your game state and data.
+
+## What are Models?
+
+Models are Cairo structures that represent entities in your game world. They define:
+
+- **State structure** - How data is organized
+- **Permissions** - Who can read/write the data
+- **Relationships** - How entities connect
+
+## Basic Model Example
+
+```cairo
+#[derive(Model, Copy, Drop, Serde)]
+struct Player {
+    #[key]
+    id: u32,
+    name: felt252,
+    health: u32,
+    position: Position,
+}
+
+#[derive(Copy, Drop, Serde, Introspect)]
+struct Position {
+    x: u32,
+    y: u32,
+}
+```
+
+## Key Features
+
+### Primary Keys
+
+Use `#[key]` to mark fields as primary keys:
+
+```cairo
+#[derive(Model, Copy, Drop, Serde)]
+struct GameSession {
+    #[key]
+    session_id: u32,
+    #[key] 
+    player_id: u32,
+    score: u32,
+}
+```
+
+### Derived Traits
+
+Models must implement these traits:
+- `Model` - Core Dojo functionality
+- `Copy` - For copying values
+- `Drop` - For cleanup
+- `Serde` - For serialization
+
+## Best Practices
+
+1. **Keep models simple** - One responsibility per model
+2. **Use appropriate types** - Choose efficient Cairo types
+3. **Design for queries** - Consider how you'll access data
+4. **Plan relationships** - Think about entity connections
+
+## Next Steps
+
+- [Learn about Systems](/getting-started/basics/systems)
+- [Understand the World](/getting-started/basics/world)
