@@ -1,0 +1,197 @@
+# Troubleshooting
+
+Common issues and solutions when working with Dojo Engine.
+
+## Installation Issues
+
+### Dojo Command Not Found
+
+**Problem:** `dojo: command not found`
+
+**Solution:**
+```bash
+# Reinstall Dojo
+curl -L https://install.dojoengine.org | bash
+source ~/.bashrc  # or ~/.zshrc
+dojoup
+```
+
+### Permission Denied
+
+**Problem:** Permission denied when installing
+
+**Solution:**
+```bash
+# Use different installation directory
+export DOJO_HOME="$HOME/.dojo"
+curl -L https://install.dojoengine.org | bash
+```
+
+## Build Issues
+
+### Compilation Errors
+
+**Problem:** Cairo compilation fails
+
+**Solutions:**
+1. Check your Cairo syntax
+2. Ensure all dependencies are correct
+3. Update to latest Dojo version
+
+```bash
+dojoup
+dojo build --release
+```
+
+### Missing Dependencies
+
+**Problem:** Missing Dojo dependencies
+
+**Solution:**
+```toml
+[dependencies]
+dojo = { git = "https://github.com/dojoengine/dojo" }
+```
+
+## Deployment Issues
+
+### Network Connection
+
+**Problem:** Cannot connect to network
+
+**Solutions:**
+1. Check RPC URL is correct
+2. Ensure network is running
+3. Check firewall settings
+
+```bash
+# Test connection
+curl -X POST -H "Content-Type: application/json" \
+  --data '{"jsonrpc":"2.0","method":"starknet_chainId","params":[],"id":1}' \
+  http://localhost:5050
+```
+
+### Insufficient Funds
+
+**Problem:** Account has insufficient funds
+
+**Solution:**
+```bash
+# For testnet, use faucet
+# For local development, fund the account
+```
+
+### Transaction Reverted
+
+**Problem:** Deployment transaction fails
+
+**Common causes:**
+1. Insufficient gas
+2. Invalid contract code
+3. Permission issues
+
+**Debug steps:**
+```bash
+# Check transaction details
+starknet get_transaction_receipt --hash 0x123...
+
+# Verify account balance
+starknet get_balance --account my_account
+```
+
+## Runtime Issues
+
+### Model Not Found
+
+**Problem:** Model queries return empty results
+
+**Solutions:**
+1. Ensure model is properly registered
+2. Check entity exists
+3. Verify permissions
+
+```cairo
+// Check if model is registered
+let model_hash = world.model_hash(selector!("Position"));
+```
+
+### System Execution Fails
+
+**Problem:** System calls revert
+
+**Debug steps:**
+1. Check system permissions
+2. Verify input parameters
+3. Test with local network first
+
+```cairo
+// Add debug prints
+println!("Debug: executing system with params: {:?}", params);
+```
+
+## Performance Issues
+
+### Slow Queries
+
+**Problem:** Model queries are slow
+
+**Solutions:**
+1. Optimize query patterns
+2. Use appropriate indexes
+3. Batch operations when possible
+
+### High Gas Costs
+
+**Problem:** Transactions consume too much gas
+
+**Solutions:**
+1. Optimize Cairo code
+2. Reduce storage operations
+3. Use events instead of storage for logs
+
+## Common Patterns
+
+### Entity Not Found Pattern
+
+```cairo
+match world.entity(entity_id) {
+    Option::Some(entity) => {
+        // Process entity
+    },
+    Option::None => {
+        // Handle missing entity
+        panic!("Entity not found: {}", entity_id);
+    }
+}
+```
+
+### Safe System Execution
+
+```cairo
+fn safe_execute(world: IWorldDispatcher, system: felt252, calldata: Span<felt252>) {
+    match world.execute(system, calldata) {
+        Result::Ok(_) => {
+            // Success
+        },
+        Result::Err(err) => {
+            println!("System execution failed: {:?}", err);
+        }
+    }
+}
+```
+
+## Getting Help
+
+1. **Discord:** Join the Dojo Discord server
+2. **GitHub:** Check issues and discussions
+3. **Documentation:** Review the official docs
+4. **Examples:** Study working examples in this guide
+
+## Debug Mode
+
+Enable debug mode for more detailed error messages:
+
+```bash
+export DOJO_DEBUG=1
+dojo build
+```

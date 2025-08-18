@@ -1,0 +1,123 @@
+# Configuration
+
+How to configure your Dojo projects and deployments.
+
+## Project Configuration
+
+### Scarb.toml
+
+Your main project configuration file:
+
+```toml
+[package]
+name = "my-dojo-game"
+version = "0.1.0"
+edition = "2023_11"
+
+[dependencies]
+dojo = { git = "https://github.com/dojoengine/dojo" }
+
+[[target.dojo]]
+
+[tool.dojo]
+initializer_class_hash = "0x123..."
+```
+
+### Environment Variables
+
+Common environment variables for Dojo development:
+
+```bash
+# RPC URL for network connection
+export STARKNET_RPC_URL="http://localhost:5050"
+
+# Account configuration
+export DOJO_ACCOUNT_ADDRESS="0x123..."
+export DOJO_PRIVATE_KEY="0xabc..."
+
+# World configuration
+export DOJO_WORLD_ADDRESS="0x456..."
+```
+
+## Network Configuration
+
+### Local Development
+
+For local development with Katana:
+
+```bash
+# Start Katana
+katana --dev
+
+# Deploy to local network
+dojo build
+dojo migrate --rpc-url http://localhost:5050
+```
+
+### Testnet Configuration
+
+Deploy to Starknet Sepolia:
+
+```bash
+export STARKNET_RPC_URL="https://starknet-sepolia.public.blastapi.io"
+dojo migrate --rpc-url $STARKNET_RPC_URL
+```
+
+### Mainnet Configuration
+
+Deploy to Starknet Mainnet:
+
+```bash
+export STARKNET_RPC_URL="https://starknet-mainnet.public.blastapi.io"
+dojo migrate --rpc-url $STARKNET_RPC_URL
+```
+
+## World Configuration
+
+### Permissions
+
+Configure who can interact with your world:
+
+```cairo
+// In your initializer
+world.grant_writer(selector!("Position"), contract_address_const::<0x123>());
+```
+
+### Models Registration
+
+Register your models with the world:
+
+```cairo
+world.register_model(position::TEST_CLASS_HASH.try_into().unwrap());
+```
+
+## Frontend Configuration
+
+### Manifest.json
+
+Generated after deployment, contains addresses and ABIs:
+
+```json
+{
+  "world": {
+    "address": "0x123...",
+    "transaction_hash": "0xabc...",
+    "class_hash": "0x456..."
+  },
+  "models": [
+    {
+      "name": "Position",
+      "class_hash": "0x789..."
+    }
+  ]
+}
+```
+
+### Dojo Provider Setup
+
+```typescript
+import { DojoProvider } from "@dojoengine/core";
+import manifest from "./manifest.json";
+
+const provider = new DojoProvider(manifest, rpcUrl);
+```

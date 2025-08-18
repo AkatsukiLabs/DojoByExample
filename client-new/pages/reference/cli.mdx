@@ -1,0 +1,101 @@
+# CLI Commands
+
+Complete reference for Dojo CLI commands.
+
+## Installation
+
+```bash
+curl -L https://install.dojoengine.org | bash
+dojoup
+```
+
+## Project Commands
+
+### `dojo new`
+
+Create a new Dojo project.
+
+```bash
+dojo new my-game
+```
+
+**Options:**
+- `--template` - Use a specific template
+
+### `dojo build`
+
+Build your Dojo project.
+
+```bash
+dojo build
+```
+
+**Options:**
+- `--release` - Build in release mode
+- `--stats` - Show build statistics
+
+### `dojo deploy`
+
+Deploy your world to a network.
+
+```bash
+dojo deploy --rpc-url http://localhost:5050
+```
+
+**Options:**
+- `--rpc-url` - RPC endpoint URL
+- `--account` - Account to use for deployment
+- `--private-key` - Private key for deployment
+
+## Development Commands
+
+### `dojo test`
+
+Run tests for your project.
+
+```bash
+dojo test
+```
+
+**Options:**
+- `--filter` - Filter tests by name
+- `--exact` - Use exact name matching
+
+### `dojo migrate`
+
+Run migrations to set up your world.
+
+```bash
+dojo migrate
+```
+
+## Utility Commands
+
+### `dojo completions`
+
+Generate shell completions.
+
+```bash
+dojo completions bash > /etc/bash_completion.d/dojo
+```
+
+### `dojo --version`
+
+Show version information.
+
+```bash
+dojo --version
+```
+
+## Configuration
+
+Dojo uses `Scarb.toml` for project configuration:
+
+```toml
+[package]
+name = "my-game"
+version = "0.1.0"
+
+[dependencies]
+dojo = { git = "https://github.com/dojoengine/dojo" }
+```

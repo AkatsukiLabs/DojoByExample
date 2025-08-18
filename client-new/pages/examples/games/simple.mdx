@@ -1,0 +1,191 @@
+# Simple Battle Game
+
+A turn-based battle game to learn Dojo fundamentals.
+
+## Overview
+
+This example demonstrates:
+- Basic model definitions
+- Simple game logic in systems
+- Player interactions
+- Turn-based mechanics
+
+## Game Mechanics
+
+- Players create characters with health and attack power
+- Players can attack other players
+- Last player standing wins
+- Simple turn-based combat
+
+## Models
+
+### Player Model
+
+```cairo
+#[derive(Model, Copy, Drop, Serde)]
+struct Player {
+    #[key]
+    id: ContractAddress,
+    name: felt252,
+    health: u32,
+    attack: u32,
+    is_alive: bool,
+}
+```
+
+### Game Model
+
+```cairo
+#[derive(Model, Copy, Drop, Serde)]
+struct Game {
+    #[key]
+    id: u32,
+    players: Array<ContractAddress>,
+    current_turn: ContractAddress,
+    winner: Option<ContractAddress>,
+    is_active: bool,
+}
+```
+
+## Systems
+
+### Spawn System
+
+```cairo
+#[system]
+impl SpawnImpl of SpawnTrait {
+    fn execute(world: IWorldDispatcher, name: felt252) {
+        let player = get_caller_address();
+        
+        set!(
+            world,
+            Player {
+                id: player,
+                name,
+                health: 100,
+                attack: 20,
+                is_alive: true,
+            }
+        );
+    }
+}
+```
+
+### Attack System
+
+```cairo
+#[system]
+impl AttackImpl of AttackTrait {
+    fn execute(world: IWorldDispatcher, target: ContractAddress) {
+        let attacker = get_caller_address();
+        
+        let mut attacker_data = get!(world, attacker, Player);
+        let mut target_data = get!(world, target, Player);
+        
+        assert(attacker_data.is_alive, 'Attacker is dead');
+        assert(target_data.is_alive, 'Target is dead');
+        
+        // Apply damage
+        if target_data.health <= attacker_data.attack {
+            target_data.health = 0;
+            target_data.is_alive = false;
+        } else {
+            target_data.health -= attacker_data.attack;
+        }
+        
+        set!(world, target_data);
+        
+        // Emit attack event
+        emit!(world, AttackEvent {
+            attacker,
+            target,
+            damage: attacker_data.attack,
+        });
+    }
+}
+```
+
+## Events
+
+```cairo
+#[derive(Copy, Drop, Serde)]
+struct AttackEvent {
+    attacker: ContractAddress,
+    target: ContractAddress,
+    damage: u32,
+}
+```
+
+## Frontend Integration
+
+### React Component
+
+```typescript
+import { useComponentValue } from "@dojoengine/react";
+
+function PlayerStatus({ playerId }: { playerId: string }) {
+  const player = useComponentValue(Player, playerId);
+  
+  if (!player) return <div>Player not found</div>;
+  
+  return (
+    <div className="player-card">
+      <h3>{player.name}</h3>
+      <div>Health: {player.health}</div>
+      <div>Attack: {player.attack}</div>
+      <div>Status: {player.is_alive ? "Alive" : "Dead"}</div>
+    </div>
+  );
+}
+```
+
+### Attack Action
+
+```typescript
+import { useDojoCall } from "@dojoengine/react";
+
+function AttackButton({ targetId }: { targetId: string }) {
+  const { execute } = useDojoCall({
+    contract: "attack",
+    entrypoint: "execute",
+  });
+  
+  const handleAttack = () => {
+    execute([targetId]);
+  };
+  
+  return (
+    <button onClick={handleAttack}>
+      Attack Player
+    </button>
+  );
+}
+```
+
+## Running the Example
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/dojoengine/dojo-examples
+   cd simple-battle
+   ```
+
+2. **Build and deploy:**
+   ```bash
+   dojo build
+   katana --dev
+   dojo migrate
+   ```
+
+3. **Run the frontend:**
+   ```bash
+   cd client
+   npm install
+   npm run dev
+   ```
+
+## Next Steps
+
+- [Advanced Game Example](/examples/games/advanced)
+- [React Integration Guide](/guides/react/overview)
+- [Testing Your Game](/getting-started/basics/testing/unit)

@@ -1,0 +1,373 @@
+# Advanced Strategy Game
+
+A complex strategy game showcasing advanced Dojo patterns.
+
+## Overview
+
+This example demonstrates:
+- Complex entity relationships
+- Multiple interacting systems
+- Resource management
+- Advanced state management
+- Event-driven architecture
+
+## Game Mechanics
+
+- Players build and manage cities
+- Resource collection and trade
+- Unit production and combat
+- Territory control
+- Technology research
+
+## Advanced Models
+
+### City Model
+
+```cairo
+#[derive(Model, Copy, Drop, Serde)]
+struct City {
+    #[key]
+    id: u32,
+    #[key]
+    owner: ContractAddress,
+    position: Position,
+    population: u32,
+    resources: Resources,
+    buildings: Array<BuildingType>,
+    units: Array<UnitType>,
+}
+```
+
+### Resources Model
+
+```cairo
+#[derive(Copy, Drop, Serde)]
+struct Resources {
+    food: u32,
+    wood: u32,
+    stone: u32,
+    gold: u32,
+}
+```
+
+### Technology Model
+
+```cairo
+#[derive(Model, Copy, Drop, Serde)]
+struct Technology {
+    #[key]
+    player: ContractAddress,
+    #[key]
+    tech_type: TechType,
+    research_progress: u32,
+    is_completed: bool,
+}
+```
+
+## Complex Systems
+
+### Production System
+
+```cairo
+#[system]
+impl ProductionImpl of ProductionTrait {
+    fn execute(world: IWorldDispatcher, city_id: u32) {
+        let mut city = get!(world, (city_id, get_caller_address()), City);
+        
+        // Calculate production based on buildings
+        let mut production = Resources { food: 0, wood: 0, stone: 0, gold: 0 };
+        
+        let mut i = 0;
+        loop {
+            if i >= city.buildings.len() {
+                break;
+            }
+            
+            match city.buildings.at(i) {
+                BuildingType::Farm => production.food += 10,
+                BuildingType::Mine => production.gold += 5,
+                BuildingType::Quarry => production.stone += 8,
+                BuildingType::Sawmill => production.wood += 6,
+            };
+            
+            i += 1;
+        };
+        
+        // Apply population bonus
+        production.food += city.population / 10;
+        
+        // Update city resources
+        city.resources.food += production.food;
+        city.resources.wood += production.wood;
+        city.resources.stone += production.stone;
+        city.resources.gold += production.gold;
+        
+        set!(world, city);
+        
+        emit!(world, ProductionEvent {
+            city_id,
+            owner: get_caller_address(),
+            production,
+        });
+    }
+}
+```
+
+### Combat System
+
+```cairo
+#[system]
+impl CombatImpl of CombatTrait {
+    fn execute(
+        world: IWorldDispatcher,
+        attacker_city: u32,
+        defender_city: u32,
+        units: Array<UnitType>
+    ) {
+        let attacker = get_caller_address();
+        let mut attacker_city_data = get!(world, (attacker_city, attacker), City);
+        let mut defender_city_data = get!(world, defender_city, City);
+        
+        // Validate attack
+        assert(attacker != defender_city_data.owner, 'Cannot attack own city');
+        assert(calculate_distance(attacker_city_data.position, defender_city_data.position) <= MAX_ATTACK_RANGE, 'City too far');
+        
+        // Calculate battle outcome
+        let attacker_strength = calculate_army_strength(units);
+        let defender_strength = calculate_army_strength(defender_city_data.units);
+        
+        let (winner, casualties) = resolve_battle(attacker_strength, defender_strength);
+        
+        // Apply casualties
+        apply_casualties(world, attacker_city, defender_city, casualties);
+        
+        // Handle victory
+        if winner == BattleOutcome::Attacker {
+            // Transfer city ownership
+            defender_city_data.owner = attacker;
+            // Take resources
+            let loot = calculate_loot(defender_city_data.resources);
+            attacker_city_data.resources = add_resources(attacker_city_data.resources, loot);
+        }
+        
+        set!(world, (attacker_city_data, defender_city_data));
+        
+        emit!(world, BattleEvent {
+            attacker_city,
+            defender_city,
+            winner,
+            casualties,
+        });
+    }
+}
+```
+
+### Trade System
+
+```cairo
+#[system]
+impl TradeImpl of TradeTrait {
+    fn execute(
+        world: IWorldDispatcher,
+        offer: TradeOffer,
+        target_player: ContractAddress
+    ) {
+        let trader = get_caller_address();
+        
+        // Validate trade offer
+        validate_trade_offer(world, trader, offer);
+        
+        // Create trade proposal
+        let trade_id = world.uuid();
+        set!(world, Trade {
+            id: trade_id,
+            proposer: trader,
+            target: target_player,
+            offer,
+            status: TradeStatus::Pending,
+            expires_at: get_block_timestamp() + TRADE_EXPIRY_TIME,
+        });
+        
+        emit!(world, TradeProposedEvent {
+            trade_id,
+            proposer: trader,
+            target: target_player,
+            offer,
+        });
+    }
+}
+```
+
+## Advanced Patterns
+
+### Event Aggregation
+
+```cairo
+#[derive(Copy, Drop, Serde)]
+struct GameTurnEvent {
+    turn_number: u32,
+    active_players: u32,
+    total_cities: u32,
+    major_events: Array<MajorEventType>,
+}
+```
+
+### Resource Management
+
+```cairo
+fn calculate_upkeep(world: IWorldDispatcher, player: ContractAddress) -> Resources {
+    let cities = query_player_cities(world, player);
+    let mut total_upkeep = Resources::default();
+    
+    let mut i = 0;
+    loop {
+        if i >= cities.len() {
+            break;
+        }
+        
+        let city = cities.at(i);
+        total_upkeep = add_resources(total_upkeep, calculate_city_upkeep(city));
+        i += 1;
+    };
+    
+    total_upkeep
+}
+```
+
+### State Validation
+
+```cairo
+fn validate_game_state(world: IWorldDispatcher) -> bool {
+    // Validate all player resources are non-negative
+    // Validate all units are in valid positions
+    // Validate no resource duplication
+    // etc.
+    true
+}
+```
+
+## Frontend Architecture
+
+### State Management
+
+```typescript
+interface GameState {
+  players: Map<string, Player>;
+  cities: Map<string, City>;
+  trades: Map<string, Trade>;
+  technologies: Map<string, Technology>;
+  currentTurn: number;
+  gamePhase: GamePhase;
+}
+
+export function useGameState(): GameState {
+  const players = useEntityQuery([Has(Player)]);
+  const cities = useEntityQuery([Has(City)]);
+  // ... other queries
+  
+  return useMemo(() => ({
+    players: new Map(players.map(p => [p.id, p])),
+    cities: new Map(cities.map(c => [c.id, c])),
+    // ... other state
+  }), [players, cities]);
+}
+```
+
+### Complex UI Components
+
+```typescript
+function CityManagement({ cityId }: { cityId: string }) {
+  const city = useComponentValue(City, cityId);
+  const { execute: produceUnit } = useDojoCall("produce_unit");
+  const { execute: constructBuilding } = useDojoCall("construct_building");
+  
+  return (
+    <div className="city-management">
+      <CityOverview city={city} />
+      <ResourceDisplay resources={city.resources} />
+      <BuildingQueue 
+        city={city} 
+        onConstruct={constructBuilding}
+      />
+      <UnitProduction 
+        city={city} 
+        onProduce={produceUnit}
+      />
+      <TechnologyTree />
+    </div>
+  );
+}
+```
+
+## Performance Optimizations
+
+### Batch Operations
+
+```cairo
+#[system]
+impl BatchUpdateImpl of BatchUpdateTrait {
+    fn execute(world: IWorldDispatcher, updates: Array<CityUpdate>) {
+        let mut i = 0;
+        loop {
+            if i >= updates.len() {
+                break;
+            }
+            
+            let update = updates.at(i);
+            apply_city_update(world, update);
+            i += 1;
+        };
+        
+        emit!(world, BatchUpdateEvent { count: updates.len() });
+    }
+}
+```
+
+### Efficient Queries
+
+```typescript
+// Use specific queries instead of fetching all entities
+const playerCities = useEntityQuery([
+  Has(City),
+  HasValue(City, { owner: playerAddress })
+]);
+
+// Cache expensive calculations
+const cityStats = useMemo(() => 
+  calculateCityStats(cities), [cities]
+);
+```
+
+## Running the Example
+
+1. **Setup:**
+   ```bash
+   git clone https://github.com/dojoengine/advanced-strategy
+   cd advanced-strategy
+   ```
+
+2. **Deploy:**
+   ```bash
+   dojo build
+   dojo migrate
+   ```
+
+3. **Start the game:**
+   ```bash
+   cd client
+   npm run dev
+   ```
+
+## Key Learnings
+
+- **Complex State:** Managing interconnected game entities
+- **System Design:** Breaking complex logic into manageable systems
+- **Performance:** Optimizing for gas and query efficiency
+- **Events:** Using events for real-time updates
+- **Testing:** Comprehensive testing of game mechanics
+
+## Next Steps
+
+- [Production Deployment](/deployment/mainnet)
+- [Gas Optimization](/advanced/gas-optimization)
+- [Testing Strategies](/getting-started/basics/testing/integration)

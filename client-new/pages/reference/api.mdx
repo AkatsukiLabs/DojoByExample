@@ -1,0 +1,71 @@
+# API Reference
+
+Complete reference for Dojo Engine APIs and interfaces.
+
+## Core APIs
+
+### World API
+
+The World contract provides the central interface for all Dojo operations.
+
+```cairo
+#[starknet::interface]
+trait IWorld<T> {
+    fn register_model(ref self: T, class_hash: ClassHash);
+    fn register_system(ref self: T, class_hash: ClassHash);
+    fn execute(ref self: T, system: felt252, calldata: Span<felt252>);
+}
+```
+
+### Model API
+
+Models define the structure of your game state.
+
+```cairo
+#[derive(Model, Copy, Drop, Serde)]
+struct Position {
+    #[key]
+    player: ContractAddress,
+    x: u32,
+    y: u32,
+}
+```
+
+### System API
+
+Systems contain your game logic.
+
+```cairo
+#[system]
+impl MoveImpl of MoveTrait {
+    fn execute(world: IWorldDispatcher, direction: Direction) {
+        // System implementation
+    }
+}
+```
+
+## JavaScript APIs
+
+### DojoProvider
+
+Connect to a Dojo world from JavaScript.
+
+```typescript
+import { DojoProvider } from "@dojoengine/core";
+
+const provider = new DojoProvider(manifest, rpcUrl);
+```
+
+### useModel Hook
+
+React hook for accessing model data.
+
+```typescript
+import { useModel } from "@dojoengine/react";
+
+const player = useModel(Player, playerId);
+```
+
+## CLI Reference
+
+See [CLI Commands](/reference/cli) for complete command reference.
