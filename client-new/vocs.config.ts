@@ -137,9 +137,6 @@ export default defineConfig({
     },
   },
   
-  // Custom App component for styles
-  app: './src/app.tsx',
-  
   // Root directory
   rootDir: '.',
   

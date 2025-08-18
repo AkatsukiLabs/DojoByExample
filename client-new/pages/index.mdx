@@ -1,41 +1,196 @@
-# Welcome to Dojo by Example
+import { Hero, HeroButton, HeroBadge } from '../components/Hero'
+import { Features, FeatureHighlight } from '../components/Features'
+import { Stats, Timeline } from '../components/Stats'
+import { NavigationGrid, NavigationCard } from '../components/Navigation'
 
-Learn **Dojo Engine** through practical examples and comprehensive guides.
+<Hero
+  subtitle="Learn by Example"
+  title={<>Build <span className="gradient-text">On-Chain Games</span> with Dojo Engine</>}
+  description="The comprehensive guide to building fully on-chain games and autonomous worlds on Starknet. From basics to production-ready applications."
+>
+  <HeroButton href="/getting-started/setup">
+    Get Started
+  </HeroButton>
+  <HeroButton href="https://book.dojoengine.org" variant="secondary" external>
+    Read the Docs
+  </HeroButton>
+</Hero>
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 my-8">
-  <div class="card feature-card">
-    <h3 class="text-xl font-semibold text-dojo-primary mb-3">🚀 Getting Started</h3>
-    <p class="text-text-secondary">Set up your environment and learn the basics of Dojo Engine development.</p>
+<Features
+  subtitle="Why Dojo?"
+  title="Everything You Need for On-Chain Games"
+  features={[
+    {
+      icon: "⚡",
+      title: "Lightning Fast",
+      description: "Built on Starknet for blazing-fast transactions and low costs. Perfect for real-time gaming."
+    },
+    {
+      icon: "🎮",
+      title: "Game-First Design",
+      description: "Purpose-built for gaming with ECS architecture, optimized storage, and real-time events."
+    },
+    {
+      icon: "🔧",
+      title: "Developer Friendly",
+      description: "Comprehensive toolchain with CLI, testing framework, and integration libraries."
+    },
+    {
+      icon: "🌍",
+      title: "Autonomous Worlds",
+      description: "Create persistent, composable game worlds that run forever on the blockchain."
+    },
+    {
+      icon: "🔐",
+      title: "Provably Fair",
+      description: "Every game action is verifiable on-chain, ensuring transparency and fairness."
+    },
+    {
+      icon: "🚀",
+      title: "Production Ready",
+      description: "Battle-tested by real games in production with millions in TVL."
+    }
+  ]}
+/>
+
+## Quick Start Guides
+
+<NavigationGrid columns={3}>
+  <NavigationCard
+    icon="📦"
+    title="Installation"
+    description="Set up Dojo and create your first project in minutes"
+    href="/getting-started/setup"
+  />
+  <NavigationCard
+    icon="🎯"
+    title="First Game"
+    description="Build a simple on-chain game from scratch"
+    href="/getting-started/quickstart"
+  />
+  <NavigationCard
+    icon="⚛️"
+    title="React Integration"
+    description="Connect your Dojo game to a React frontend"
+    href="/guides/react/overview"
+  />
+</NavigationGrid>
+
+<FeatureHighlight
+  icon="🏗️"
+  title="Entity Component System"
+  description="Dojo uses ECS architecture for maximum flexibility and performance. Define your game entities as models, implement logic in systems, and let the world handle the rest."
+>
+  <div className="flex gap-4">
+    <a href="/getting-started/basics/models" className="btn btn-primary">
+      Learn Models →
+    </a>
+    <a href="/getting-started/basics/systems" className="btn btn-secondary">
+      Learn Systems →
+    </a>
   </div>
-  
-  <div class="card feature-card">
-    <h3 class="text-xl font-semibold text-dojo-primary mb-3">🎮 Game Examples</h3>
-    <p class="text-text-secondary">Explore fully on-chain games built with Dojo and learn from real implementations.</p>
-  </div>
-  
-  <div class="card feature-card">
-    <h3 class="text-xl font-semibold text-dojo-primary mb-3">🔧 Integration Guides</h3>
-    <p class="text-text-secondary">Connect Dojo with React, Unity, and other frameworks for complete applications.</p>
-  </div>
-</div>
+</FeatureHighlight>
 
-## What You'll Learn
+<Stats
+  subtitle="Growing Ecosystem"
+  title="Join the Revolution"
+  stats={[
+    { label: "Active Games", value: "50", suffix: "+" },
+    { label: "Developers", value: "1000", suffix: "+" },
+    { label: "Transactions", value: "1M", suffix: "+" },
+    { label: "Total Value", value: "$10M", suffix: "+" }
+  ]}
+/>
 
-The site is powered by a modern stack with:
-- ✅ **Latest Vocs** - Modern documentation framework
-- ✅ **React 19** - Latest React features
-- ✅ **Tailwind CSS** - Utility-first styling
-- ✅ **Dark/Light Theme** - Automatic theme switching
-- ✅ **TypeScript** - Type-safe development
+## Learning Path
 
-<div class="bg-surface border border-dojo-primary/20 rounded-lg p-6 my-8">
-  <h3 class="text-lg font-semibold text-dojo-primary mb-2">🎯 Ready to Build?</h3>
-  <p class="text-text-secondary mb-4">
-    Start your journey with Dojo Engine and build the next generation of on-chain games.
+<Timeline
+  subtitle="Your Journey"
+  title="From Zero to Dojo Master"
+  items={[
+    {
+      date: "Day 1",
+      title: "Environment Setup",
+      description: "Install Dojo, set up your development environment, and run your first commands.",
+      icon: "🛠️"
+    },
+    {
+      date: "Day 2-3",
+      title: "Core Concepts",
+      description: "Learn about models, systems, and the world architecture that powers Dojo.",
+      icon: "📚"
+    },
+    {
+      date: "Week 1",
+      title: "Build Your First Game",
+      description: "Create a simple on-chain game and deploy it to a local network.",
+      icon: "🎮"
+    },
+    {
+      date: "Week 2",
+      title: "Frontend Integration",
+      description: "Connect your game to React or Unity for a complete user experience.",
+      icon: "🎨"
+    },
+    {
+      date: "Month 1",
+      title: "Deploy to Production",
+      description: "Optimize, test, and deploy your game to Starknet mainnet.",
+      icon: "🚀"
+    }
+  ]}
+/>
+
+## Popular Examples
+
+<NavigationGrid columns={2}>
+  <NavigationCard
+    icon="⚔️"
+    title="Simple Battle Game"
+    description="Learn the basics with a turn-based battle system"
+    href="/examples/games/simple"
+  />
+  <NavigationCard
+    icon="🏰"
+    title="Strategy Game"
+    description="Build a complex strategy game with multiple systems"
+    href="/examples/games/advanced"
+  />
+  <NavigationCard
+    icon="⚛️"
+    title="React Starter"
+    description="Full-stack template with React and Dojo"
+    href="/examples/starters/react"
+  />
+  <NavigationCard
+    icon="🎯"
+    title="Unity Template"
+    description="3D game template with Unity integration"
+    href="/examples/starters/unity"
+  />
+</NavigationGrid>
+
+## Ready to Build?
+
+<div className="text-center py-12">
+  <h2 className="text-3xl font-bold text-text-primary mb-4">
+    Start Your Journey Today
+  </h2>
+  <p className="text-lg text-text-secondary mb-8 max-w-2xl mx-auto">
+    Join thousands of developers building the future of gaming on Starknet.
   </p>
-  <a href="/getting-started" class="btn btn-primary">Get Started →</a>
+  <div className="flex gap-4 justify-center">
+    <HeroButton href="/getting-started">
+      Start Learning
+    </HeroButton>
+    <HeroButton href="https://github.com/AkatsukiLabs/DojoByExample" variant="secondary" external>
+      View on GitHub
+    </HeroButton>
+  </div>
 </div>
 
 ---
 
-*Built with ❤️ by the Dojo community*
+<div className="text-center text-text-secondary">
+  Built with ❤️ by the <a href="https://dojoengine.org" className="text-dojo-primary hover:text-dojo-hover">Dojo Community</a>
+</div>
