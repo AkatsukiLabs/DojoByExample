@@ -47,6 +47,14 @@ export default defineConfig({
     },
   ],
   
+  // Top navigation configuration
+  topNav: [
+    { text: 'Home', link: '/' },
+    { text: 'Getting Started', link: '/getting-started' },
+    { text: 'Guides', link: '/guides' },
+    { text: 'Examples', link: '/examples' },
+  ],
+  
   // Edit link configuration
   editLink: {
     pattern: 'https://github.com/AkatsukiLabs/DojoByExample/edit/main/client-new/pages/:path',

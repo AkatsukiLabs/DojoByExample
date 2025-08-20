@@ -7,7 +7,9 @@
     "dev": "vocs dev --port 4000",
     "build": "vocs build",
     "preview": "vocs preview --port 4000",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "deploy": "vercel --prod",
+    "deploy:preview": "vercel"
   },
   "keywords": [
     "dojo",
