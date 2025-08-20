@@ -1,0 +1,60 @@
+---
+title: Page Not Found
+---
+
+import { Hero } from '../components/Hero'
+
+<div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
+  <div className="max-w-md mx-auto">
+    <div className="text-8xl font-bold text-[#ff3000] mb-4">404</div>
+    <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Page Not Found</h1>
+    <p className="text-lg text-gray-600 dark:text-gray-400 mb-8">
+      The page you're looking for doesn't exist or has been moved.
+    </p>
+    
+    <div className="space-y-4">
+      <a 
+        href="/" 
+        className="inline-flex items-center px-6 py-3 bg-[#ff3000] text-white font-semibold rounded-lg hover:bg-[#e02900] transition-colors"
+      >
+        ← Back to Home
+      </a>
+      
+      <div className="text-sm text-gray-500 dark:text-gray-400">
+        Or try searching for what you need using <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded text-xs">Cmd + K</kbd>
+      </div>
+    </div>
+  </div>
+  
+  <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-2xl mx-auto">
+    <a 
+      href="/getting-started" 
+      className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-[#ff3000] transition-colors"
+    >
+      <h3 className="font-semibold mb-2">Getting Started</h3>
+      <p className="text-sm text-gray-600 dark:text-gray-400">
+        Learn the basics of Dojo Engine
+      </p>
+    </a>
+    
+    <a 
+      href="/guides" 
+      className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-[#ff3000] transition-colors"
+    >
+      <h3 className="font-semibold mb-2">Guides</h3>
+      <p className="text-sm text-gray-600 dark:text-gray-400">
+        Integration guides and tutorials
+      </p>
+    </a>
+    
+    <a 
+      href="/examples" 
+      className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-[#ff3000] transition-colors"
+    >
+      <h3 className="font-semibold mb-2">Examples</h3>
+      <p className="text-sm text-gray-600 dark:text-gray-400">
+        Practical code examples
+      </p>
+    </a>
+  </div>
+</div>

@@ -15,6 +15,10 @@ import { Features, FeatureCard, FeatureHighlight } from '../Features'
 import { Stats, Timeline } from '../Stats'
 import { CTA, CTAButton } from '../CTA'
 
+// Import utility components
+import { ErrorBoundary } from '../ErrorBoundary'
+import { LoadingSpinner, LoadingDots, LoadingSkeleton, FullPageLoading, ContentLoading } from '../LoadingStates'
+
 // Export all components
 export {
   // MDX components
@@ -131,4 +135,12 @@ export const mdxComponents = {
   // CTA components
   CTA,
   CTAButton,
+  
+  // Utility components
+  ErrorBoundary,
+  LoadingSpinner,
+  LoadingDots,
+  LoadingSkeleton,
+  FullPageLoading,
+  ContentLoading,
 }

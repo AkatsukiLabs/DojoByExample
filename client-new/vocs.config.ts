@@ -127,7 +127,7 @@ export default defineConfig({
   sidebar: sidebar,
   
   
-  // Markdown configuration
+  // Markdown configuration with enhanced code highlighting
   markdown: {
     code: {
       themes: {
