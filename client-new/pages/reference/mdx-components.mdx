@@ -1,0 +1,278 @@
+import { 
+  CodeBlock, Tabs, Tab, Callout, Info, Warning, Error, Success, Tip,
+  Steps, Step, FileTree, Folder, File, CairoFile, TypeScriptFile, JsonFile,
+  Diff, BeforeAfter, Terminal, Command, Output, TerminalSession,
+  Demo, Playground
+} from '../../components/mdx'
+
+# MDX Components Reference
+
+This page demonstrates all the custom MDX components available in Dojo by Example.
+
+## Callout Components
+
+<Info title="Information">
+  This is an informational callout. Use it to provide additional context.
+</Info>
+
+<Warning title="Warning">
+  This is a warning callout. Use it to alert users about potential issues.
+</Warning>
+
+<Error title="Error">
+  This is an error callout. Use it to highlight critical problems.
+</Error>
+
+<Success title="Success">
+  This is a success callout. Use it to indicate successful operations.
+</Success>
+
+<Tip title="Pro Tip">
+  This is a tip callout. Use it to share helpful advice and best practices.
+</Tip>
+
+## Tabs Component
+
+<Tabs items={['Cairo', 'JavaScript', 'Bash']}>
+  <Tab value="Cairo">
+    ```cairo
+    #[derive(Model, Copy, Drop, Serde)]
+    struct Player {
+        #[key]
+        id: ContractAddress,
+        name: felt252,
+        health: u32,
+    }
+    ```
+  </Tab>
+  <Tab value="JavaScript">
+    ```javascript
+    const player = {
+      id: '0x123...',
+      name: 'Alice',
+      health: 100
+    }
+    ```
+  </Tab>
+  <Tab value="Bash">
+    ```bash
+    dojo build
+    dojo migrate
+    ```
+  </Tab>
+</Tabs>
+
+## Steps Component
+
+<Steps>
+  <Step title="Install Dojo">
+    First, install the Dojo CLI tool using the installation script.
+    
+    ```bash
+    curl -L https://install.dojoengine.org | bash
+    ```
+  </Step>
+  
+  <Step title="Create a New Project">
+    Create your first Dojo project with the CLI.
+    
+    ```bash
+    dojo new my-game
+    ```
+  </Step>
+  
+  <Step title="Build and Deploy" optional>
+    Build your project and deploy it to a local network.
+    
+    ```bash
+    dojo build
+    dojo migrate
+    ```
+  </Step>
+</Steps>
+
+## File Tree Component
+
+<FileTree>
+  <Folder name="src" defaultOpen>
+    <CairoFile name="models.cairo" badge="new" />
+    <CairoFile name="systems.cairo" />
+    <Folder name="tests">
+      <CairoFile name="test_models.cairo" />
+      <CairoFile name="test_systems.cairo" />
+    </Folder>
+  </Folder>
+  <Folder name="client">
+    <TypeScriptFile name="index.ts" />
+    <JsonFile name="package.json" />
+  </Folder>
+  <File name="Scarb.toml" icon="⚙️" />
+</FileTree>
+
+## Code Block with Features
+
+<CodeBlock 
+  language="cairo" 
+  filename="src/models.cairo" 
+  highlight="3-5,8"
+  showLineNumbers
+>
+{`#[derive(Model, Copy, Drop, Serde)]
+struct Position {
+    #[key]
+    player: ContractAddress,
+    vec: Vec2,
+}
+
+#[derive(Copy, Drop, Serde, Introspect)]
+struct Vec2 {
+    x: u32,
+    y: u32,
+}`}
+</CodeBlock>
+
+## Diff Component
+
+<Diff filename="src/systems.cairo" language="cairo">
+{`@@ -10,7 +10,7 @@
+ impl MoveImpl of MoveTrait {
+     fn execute(world: IWorldDispatcher, direction: Direction) {
+-        let player = get_caller_address();
++        let player = get_tx_info().unbox().account_contract_address;
+         
+         let mut position = get!(world, player, Position);
+         
++        // Apply movement based on direction
+         match direction {
+             Direction::Up => position.y += 1,
+             Direction::Down => position.y -= 1,`}
+</Diff>
+
+## Before/After Comparison
+
+<BeforeAfter
+  filename="models.cairo"
+  language="cairo"
+  before={`struct Player {
+    id: u32,
+    name: felt252,
+}`}
+  after={`#[derive(Model, Copy, Drop, Serde)]
+struct Player {
+    #[key]
+    id: ContractAddress,
+    name: felt252,
+    health: u32,
+    mana: u32,
+}`}
+/>
+
+## Terminal Component
+
+<Terminal title="Dojo CLI">
+  <Command>dojo new my-awesome-game</Command>
+  <Output type="success">✓ Created new Dojo project at ./my-awesome-game</Output>
+  
+  <Command>cd my-awesome-game</Command>
+  
+  <Command>dojo build</Command>
+  <Output>Compiling my-awesome-game...</Output>
+  <Output type="success">✓ Build successful!</Output>
+  
+  <Command>katana --dev</Command>
+  <Output>Starting local Katana instance...</Output>
+  <Output type="success">✓ Katana running on http://localhost:5050</Output>
+</Terminal>
+
+## Terminal Session
+
+<TerminalSession 
+  title="Quick Start"
+  commands={[
+    { 
+      input: "dojo --version",
+      output: "dojo 0.7.0",
+      outputType: "success"
+    },
+    {
+      input: "dojo build",
+      output: "Building project...\n✓ Build complete",
+      outputType: "success"
+    },
+    {
+      input: "dojo test",
+      output: "Running tests...\n✓ All tests passed (10/10)",
+      outputType: "success"
+    }
+  ]}
+/>
+
+## Demo Component
+
+<Demo 
+  title="Interactive Button Example"
+  description="This demo shows a simple interactive button component"
+  code={`function Button() {
+  const [count, setCount] = useState(0)
+  
+  return (
+    <button onClick={() => setCount(count + 1)}>
+      Clicked {count} times
+    </button>
+  )
+}`}
+>
+  <div className="flex justify-center">
+    <button className="btn btn-primary">
+      Click Me!
+    </button>
+  </div>
+</Demo>
+
+## Playground Component
+
+<Playground title="Color Picker">
+  <div className="grid grid-cols-4 gap-4">
+    <div className="h-20 bg-dojo-primary rounded-lg flex items-center justify-center text-white">
+      Primary
+    </div>
+    <div className="h-20 bg-success rounded-lg flex items-center justify-center text-white">
+      Success
+    </div>
+    <div className="h-20 bg-warning rounded-lg flex items-center justify-center text-white">
+      Warning
+    </div>
+    <div className="h-20 bg-error rounded-lg flex items-center justify-center text-white">
+      Error
+    </div>
+  </div>
+</Playground>
+
+## Usage in MDX Files
+
+All these components can be imported and used in any MDX file:
+
+```mdx
+import { Callout, Tabs, Tab } from '../components/mdx'
+
+<Callout type="info">
+  Your content here
+</Callout>
+
+<Tabs items={['Option 1', 'Option 2']}>
+  <Tab value="Option 1">
+    Content for option 1
+  </Tab>
+  <Tab value="Option 2">
+    Content for option 2
+  </Tab>
+</Tabs>
+```
+
+## Best Practices
+
+1. **Use semantic components** - Choose the right callout type for your message
+2. **Keep it simple** - Don't overuse components, plain markdown is often best
+3. **Be consistent** - Use the same patterns throughout your documentation
+4. **Test interactivity** - Ensure interactive components work as expected
+5. **Optimize for mobile** - All components are responsive by default

@@ -196,6 +196,10 @@ const sidebarConfig: SidebarItem[] = [
         link: '/reference/config',
       },
       {
+        text: 'MDX Components',
+        link: '/reference/mdx-components',
+      },
+      {
         text: 'Troubleshooting',
         link: '/reference/troubleshooting',
       },
