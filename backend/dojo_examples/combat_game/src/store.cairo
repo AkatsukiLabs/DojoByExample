@@ -1,19 +1,19 @@
-use dojo::{model::ModelStorage, world::WorldStorage};
+use combat_game::constants::{BASE_BATTLE_EXPERIENCE, SECONDS_PER_DAY};
+use combat_game::helpers::experience_utils::ExperienceCalculatorImpl;
+use combat_game::models::battle::{Battle, BattleTrait};
+use combat_game::models::beast::{Beast, BeastTrait};
+use combat_game::models::beast_skill::BeastSkill;
+use combat_game::models::beast_stats::{BeastStats, BeastStatsActionTrait};
+use combat_game::models::player::Player;
+use combat_game::models::skill;
+use combat_game::models::skill::{Skill, SkillTrait};
+use combat_game::types::battle_status::BattleStatus;
+use combat_game::types::beast_type::BeastType;
+use combat_game::types::skill::SkillType;
+use combat_game::types::status_condition::StatusCondition;
 use core::num::traits::zero::Zero;
-use combat_game::{
-    constants::{BASE_BATTLE_EXPERIENCE, SECONDS_PER_DAY},
-    models::{
-        player::Player, beast::{Beast, BeastTrait}, skill, skill::{Skill, SkillTrait},
-        beast_skill::BeastSkill, beast_stats::{BeastStats, BeastStatsActionTrait},
-        battle::{Battle, BattleTrait},
-    },
-    types::{
-        beast_type::BeastType, skill::SkillType, status_condition::StatusCondition,
-        battle_status::BattleStatus,
-    },
-    helpers::experience_utils::ExperienceCalculatorImpl,
-};
-
+use dojo::model::ModelStorage;
+use dojo::world::WorldStorage;
 use starknet::ContractAddress;
 
 #[derive(Drop, Copy)]
@@ -320,9 +320,11 @@ pub impl StoreImpl of StoreTrait {
 
         if level_up_occurred {
             // Calculate remaining exp
-            beast.experience = ExperienceCalculatorImpl::remaining_exp_after_level_up(
-                beast.level, beast.experience,
-            );
+            beast
+                .experience =
+                    ExperienceCalculatorImpl::remaining_exp_after_level_up(
+                        beast.level, beast.experience,
+                    );
             beast.level += 1;
 
             // Update beast stats

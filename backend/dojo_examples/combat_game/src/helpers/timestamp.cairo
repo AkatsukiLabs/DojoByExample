@@ -1,8 +1,8 @@
 // Core imports
-use core::traits::TryInto;
 
 // Constants imports
 use combat_game::constants;
+use core::traits::TryInto;
 
 #[generate_trait]
 pub impl Timestamp of TimestampTrait {

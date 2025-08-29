@@ -29,9 +29,9 @@ mod types {
 }
 
 mod helpers {
+    pub mod experience_utils;
     pub mod pseudo_random;
     pub mod timestamp;
-    pub mod experience_utils;
 }
 
 pub mod utils {

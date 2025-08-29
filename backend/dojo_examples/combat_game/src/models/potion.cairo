@@ -40,9 +40,9 @@ pub impl PotionImpl of PotionTrait {
 
 #[cfg(test)]
 mod tests {
-    use super::{Potion, PotionTrait};
-    use crate::types::rarity::Rarity;
     use core::num::traits::Bounded;
+    use crate::types::rarity::Rarity;
+    use super::{Potion, PotionTrait};
 
     #[test]
     #[available_gas(300000)]

@@ -1,10 +1,10 @@
 /// A module for generating pseudo-random numbers using block data for entropy.
 pub mod PseudoRandom {
-    use super::*;
-    use core::pedersen::PedersenTrait;
     use core::hash::HashStateTrait;
-    use core::starknet::{get_block_timestamp, get_block_number};
     use core::num::traits::{WrappingAdd, WrappingMul};
+    use core::pedersen::PedersenTrait;
+    use core::starknet::{get_block_number, get_block_timestamp};
+    use super::*;
 
     /// Generates a pseudo-random `u8` value within a specified range `[min, max]`.
     ///

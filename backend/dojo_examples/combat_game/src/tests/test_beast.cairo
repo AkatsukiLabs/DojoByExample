@@ -1,10 +1,11 @@
 #[cfg(test)]
 mod beast_integration_tests {
-    use combat_game::{
-        models::{beast::{BeastTrait}, beast_stats::{BeastStatsActionTrait}},
-        types::{beast_type::BeastType, skill::SkillType, status_condition::StatusCondition},
-    };
-    use starknet::{contract_address_const, ContractAddress};
+    use combat_game::models::beast::BeastTrait;
+    use combat_game::models::beast_stats::BeastStatsActionTrait;
+    use combat_game::types::beast_type::BeastType;
+    use combat_game::types::skill::SkillType;
+    use combat_game::types::status_condition::StatusCondition;
+    use starknet::{ContractAddress, contract_address_const};
 
     const PLAYER1_ADDRESS: felt252 = 0x1234;
 

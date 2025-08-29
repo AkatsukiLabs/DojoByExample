@@ -5,8 +5,8 @@ use crate::constants::{
     NOT_VERY_EFFECTIVE, SUPER_EFFECTIVE,
 };
 use crate::models::skill::SkillTrait;
-use crate::types::skill::SkillType;
 use crate::types::beast_type::BeastType;
+use crate::types::skill::SkillType;
 
 #[derive(Copy, Drop, Serde, Debug, PartialEq)]
 #[dojo::model]

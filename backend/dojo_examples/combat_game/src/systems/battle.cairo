@@ -8,21 +8,19 @@ pub trait IBattle<T> {
 
 #[dojo::contract]
 pub mod battle_system {
-    use super::IBattle;
-    use combat_game::store::{StoreTrait};
-    use combat_game::models::{battle::{BattleTrait}, player::{AssertTrait}};
-    use combat_game::types::battle_status::BattleStatus;
-    use combat_game::achievements::achievement::{Achievement, AchievementTrait};
-
-    use starknet::{get_caller_address, get_block_timestamp, ContractAddress};
-    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
-    use core::num::traits::zero::Zero;
-
     use achievement::components::achievable::AchievableComponent;
-    use achievement::store::{StoreTrait as AchievementStoreTrait, Store as AchievementStore};
+    use achievement::store::{Store as AchievementStore, StoreTrait as AchievementStoreTrait};
+    use combat_game::achievements::achievement::{Achievement, AchievementTrait};
+    use combat_game::models::battle::BattleTrait;
+    use combat_game::models::player::AssertTrait;
+    use combat_game::store::StoreTrait;
+    use combat_game::types::battle_status::BattleStatus;
+    use core::num::traits::zero::Zero;
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
+    use starknet::{ContractAddress, get_block_timestamp, get_caller_address};
+    use super::IBattle;
     component!(path: AchievableComponent, storage: achievable, event: AchievableEvent);
     impl AchievableInternalImpl = AchievableComponent::InternalImpl<ContractState>;
-
     use dojo::event::EventStorage;
 
     #[storage]

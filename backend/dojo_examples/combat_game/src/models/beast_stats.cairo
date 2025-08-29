@@ -1,8 +1,8 @@
-use crate::{
-    types::{status_condition::StatusCondition, beast_type::BeastType},
-    helpers::pseudo_random::PseudoRandom,
-};
-use core::{poseidon::poseidon_hash_span, num::traits::Bounded};
+use core::num::traits::Bounded;
+use core::poseidon::poseidon_hash_span;
+use crate::helpers::pseudo_random::PseudoRandom;
+use crate::types::beast_type::BeastType;
+use crate::types::status_condition::StatusCondition;
 
 #[derive(Introspect, Copy, Drop, Serde, Debug, PartialEq)]
 #[dojo::model]
@@ -174,7 +174,7 @@ pub impl BeastStatsActions of BeastStatsActionTrait {
 
 #[cfg(test)]
 mod tests {
-    use super::{BeastStats, BeastStatsActionTrait, StatusCondition, BeastType};
+    use super::{BeastStats, BeastStatsActionTrait, BeastType, StatusCondition};
 
     // take_damage() tests
     #[test]
