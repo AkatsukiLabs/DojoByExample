@@ -1,31 +1,27 @@
 #[cfg(test)]
 mod player_integration_tests {
+    use combat_game::constants::SECONDS_PER_DAY;
+    use combat_game::models::battle::{Battle, BattleTrait, m_Battle};
+    use combat_game::models::beast::{Beast, m_Beast};
+    use combat_game::models::beast_skill::{BeastSkill, m_BeastSkill};
+    use combat_game::models::beast_stats::{BeastStats, BeastStatsActionTrait, m_BeastStats};
+    use combat_game::models::player::{Player, PlayerAssert, m_Player};
+    use combat_game::models::skill::{Skill, m_Skill};
+    use combat_game::store::StoreTrait;
+    use combat_game::systems::battle::{IBattleDispatcher, IBattleDispatcherTrait, battle_system};
+    use combat_game::systems::beast::{IBeastDispatcher, IBeastDispatcherTrait, beast_system};
+    use combat_game::systems::player::{IPlayerDispatcher, IPlayerDispatcherTrait, player_system};
+    use combat_game::types::battle_status::BattleStatus;
+    use combat_game::types::beast_type::BeastType;
+    use combat_game::types::status_condition::StatusCondition;
+    use core::num::traits::zero::Zero;
+    use dojo::model::ModelStorage;
+    use dojo::world::{WorldStorage, WorldStorageTrait};
     use dojo_cairo_test::{
         ContractDef, ContractDefTrait, NamespaceDef, TestResource, WorldStorageTestTrait,
         spawn_test_world,
     };
-    use dojo::world::{WorldStorage, WorldStorageTrait};
-    use dojo::model::{ModelStorage};
-    use combat_game::systems::{
-        player::{player_system, IPlayerDispatcher, IPlayerDispatcherTrait},
-        beast::{beast_system, IBeastDispatcher, IBeastDispatcherTrait},
-        battle::{battle_system, IBattleDispatcher, IBattleDispatcherTrait},
-    };
-    use combat_game::models::{
-        player::{Player, m_Player, PlayerAssert}, beast::{Beast, m_Beast},
-        beast_stats::{BeastStats, m_BeastStats, BeastStatsActionTrait},
-        beast_skill::{BeastSkill, m_BeastSkill}, skill::{Skill, m_Skill},
-        battle::{Battle, m_Battle, BattleTrait},
-    };
-    use combat_game::types::{
-        beast_type::BeastType, battle_status::BattleStatus, status_condition::StatusCondition,
-    };
-    use combat_game::store::{StoreTrait};
-    use combat_game::constants::{SECONDS_PER_DAY};
-
-    use starknet::{contract_address_const, ContractAddress, get_block_timestamp};
-    use starknet::{testing};
-    use core::num::traits::zero::Zero;
+    use starknet::{ContractAddress, contract_address_const, get_block_timestamp, testing};
 
     // Test constants
     const INITIAL_BEAST_ID: u16 = 1;
@@ -629,7 +625,7 @@ mod player_integration_tests {
         while i < 100 {
             player_system.update_profile(true, beast_id);
             i += 1;
-        };
+        }
 
         let store = StoreTrait::new(world);
         let player = store.read_player_from_address(PLAYER1());

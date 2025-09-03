@@ -1,24 +1,25 @@
 #[cfg(test)]
 mod battle_system {
+    use combat_game::models::battle::{Battle, BattleTrait, m_Battle};
+    use combat_game::models::beast::m_Beast;
+    use combat_game::models::beast_skill::m_BeastSkill;
+    use combat_game::models::beast_stats::m_BeastStats;
+    use combat_game::models::player::{Player, m_Player};
+    use combat_game::models::skill;
+    use combat_game::models::skill::m_Skill;
+    use combat_game::store::StoreTrait;
+    use combat_game::systems::battle::{IBattleDispatcher, IBattleDispatcherTrait, battle_system};
+    use combat_game::types::battle_status::BattleStatus;
+    use combat_game::types::beast_type::BeastType;
+    use combat_game::types::status_condition::StatusCondition;
+    use core::num::traits::zero::Zero;
+    use dojo::model::ModelStorage;
+    use dojo::world::{WorldStorage, WorldStorageTrait};
     use dojo_cairo_test::{
         ContractDef, ContractDefTrait, NamespaceDef, TestResource, WorldStorageTestTrait,
         spawn_test_world,
     };
-    use dojo::world::{WorldStorage, WorldStorageTrait};
-    use dojo::model::{ModelStorage};
-    use combat_game::systems::battle::{battle_system, IBattleDispatcher, IBattleDispatcherTrait};
-    use combat_game::models::{
-        player::{Player, m_Player}, battle::{Battle, m_Battle, BattleTrait}, beast::{m_Beast},
-        beast_stats::{m_BeastStats}, beast_skill::{m_BeastSkill}, skill::{m_Skill}, skill,
-    };
-    use combat_game::types::{
-        battle_status::BattleStatus, beast_type::BeastType, status_condition::StatusCondition,
-    };
-    use combat_game::store::{StoreTrait};
-
-    use starknet::{contract_address_const, ContractAddress};
-    use starknet::{testing};
-    use core::num::traits::zero::Zero;
+    use starknet::{ContractAddress, contract_address_const, testing};
 
     // Constants for testing
     const BATTLE_TYPE: u8 = 0;

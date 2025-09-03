@@ -1,5 +1,5 @@
-use combat_game::types::beast_type::BeastType;
 use combat_game::models::beast_stats::BeastStats;
+use combat_game::types::beast_type::BeastType;
 
 #[starknet::interface]
 pub trait IBeast<T> {
@@ -10,11 +10,11 @@ pub trait IBeast<T> {
 
 #[dojo::contract]
 pub mod beast_system {
-    use super::{IBeast, BeastType, BeastStats};
+    use combat_game::models::beast_stats::BeastStatsActionTrait;
+    use combat_game::store::StoreTrait;
     use starknet::get_block_timestamp;
     use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
-    use combat_game::store::{StoreTrait};
-    use combat_game::models::beast_stats::BeastStatsActionTrait;
+    use super::{BeastStats, BeastType, IBeast};
 
     #[storage]
     struct Storage {

@@ -1,9 +1,7 @@
-use starknet::{ContractAddress, get_block_timestamp};
+use combat_game::helpers::pseudo_random::PseudoRandom::generate_random_u8;
+use combat_game::types::battle_status::BattleStatus;
 use core::num::traits::zero::Zero;
-use combat_game::{
-    helpers::{pseudo_random::PseudoRandom::generate_random_u8},
-    types::{battle_status::BattleStatus},
-};
+use starknet::{ContractAddress, get_block_timestamp};
 
 #[derive(Copy, Drop, Serde, Debug, Introspect, PartialEq)]
 #[dojo::model]
@@ -77,10 +75,10 @@ pub impl BattleImpl of BattleTrait {
 
 #[cfg(test)]
 mod tests {
-    use core::num::traits::zero::Zero;
-    use starknet::{contract_address_const};
-    use super::{Battle, BattleTrait};
     use combat_game::types::battle_status::BattleStatus;
+    use core::num::traits::zero::Zero;
+    use starknet::contract_address_const;
+    use super::{Battle, BattleTrait};
 
     #[test]
     fn test_end() {

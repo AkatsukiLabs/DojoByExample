@@ -33,10 +33,10 @@ impl BagActions of BagActionsTrait {
 
 #[cfg(test)]
 mod tests {
-    use super::{Bag, BagActions};
-    use crate::types::potion::Potion;
-    use starknet::contract_address_const;
     use core::result::ResultTrait;
+    use starknet::contract_address_const;
+    use crate::types::potion::Potion;
+    use super::{Bag, BagActions};
 
     #[test]
     #[available_gas(300000)]
