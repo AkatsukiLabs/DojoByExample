@@ -4,45 +4,21 @@ This guide provides step-by-step instructions for deploying Torii indexer on bot
 
 ## Prerequisites
 
-Before deploying Torii, ensure you have completed the following requirements:
+Before deploying Torii, ensure you have:
 
-### 1. Deployed Contracts
-- Your Dojo world contracts must be deployed first using the appropriate deployment guide:
-  - [Sepolia Deployment](/deployments/sepolia)
-  - [Slot Deployment](/deployments/slot) (for Mainnet)
-- Have your deployed world address ready
+### Deployed Contracts
+- Your Dojo world contracts must be deployed and ready to index
+- Have your deployed world address available
 
-### 2. Funded Deployer Account
-- Ensure your deployer account has sufficient funds for the target network
-- **Sepolia**: Get testnet ETH from [Starknet Sepolia Faucet](https://starknet-faucet.vercel.app/)
-- **Mainnet**: Ensure your account has real ETH for transaction fees
-
-### 3. Build and Test
-Before deployment, build and test your project:
-
-```bash
-sozo build
-sozo test
-```
+*Note: This guide focuses on Torii deployment. Refer to the appropriate contract deployment guides if you haven't deployed your world contracts yet.*
 
 ## Environment Setup
 
-Configure the required environment variables for your target network:
+No special funding is required for Torii deployment itself, as Torii runs as an indexing service that reads blockchain data.
 
-```bash
-# Network-specific RPC URL (see Network Configuration section)
-export STARKNET_RPC_URL=""
+## World Configuration
 
-# Your deployer account details
-export DEPLOYER_ACCOUNT_ADDRESS=""
-export DEPLOYER_PRIVATE_KEY=""
-```
-
-> ⚠️ **Important**: Always verify your deployer account has sufficient funds before proceeding with deployment.
-
-## World Deployment Configuration
-
-Configure your world deployment settings in the appropriate configuration file:
+Ensure your world is properly configured in the appropriate configuration file:
 
 ### Sepolia Configuration (`dojo_sepolia.toml`)
 ```toml
@@ -56,7 +32,7 @@ seed = "tamagotchi1"  # Change to "tamagotchi2", etc. for new world
 seed = "tamagotchi1"  # Change to "tamagotchi2", etc. for new world
 ```
 
-> 💡 **Tip**: Change the seed value to create a new world instance. Each unique seed generates a different world address.
+> 💡 **Tip**: Each unique seed generates a different world address when contracts are deployed.
 
 ## Network-Specific Configuration
 
@@ -69,7 +45,7 @@ export STARKNET_RPC_URL="https://starknet-sepolia.public.blastapi.io/rpc/v0_8"
 
 ### Mainnet
 ```bash
-export STARKNET_RPC_URL="https://starknet-mainnet.g.alchemy.com/<api-key>"
+export STARKNET_RPC_URL="https://api.cartridge.gg/x/starknet/mainnet"
 ```
 
 ## Torii Configuration File
@@ -162,16 +138,11 @@ slot d update torii --config "./torii-config.toml"
 ### Complete Sepolia Example
 
 ```bash
-# 1. Set environment variables
-export STARKNET_RPC_URL="https://starknet-sepolia.public.blastapi.io/rpc/v0_8"
-export DEPLOYER_ACCOUNT_ADDRESS="0x..."
-export DEPLOYER_PRIVATE_KEY="0x..."
-
-# 2. Create torii-config.toml with Sepolia RPC
+# 1. Create torii-config.toml with Sepolia RPC
 # world_address = "0x..." # Your deployed world address
 # rpc = "https://starknet-sepolia.public.blastapi.io/rpc/v0_8"
 
-# 3. Deploy Torii
+# 2. Deploy Torii
 slot auth login
 slot d create torii \
   --sql.historical "tamagotchi-TrophyProgression" \
@@ -182,16 +153,11 @@ slot d create torii \
 ### Complete Mainnet Example
 
 ```bash
-# 1. Set environment variables
-export STARKNET_RPC_URL="https://starknet-mainnet.g.alchemy.com/<api-key>"
-export DEPLOYER_ACCOUNT_ADDRESS="0x..."
-export DEPLOYER_PRIVATE_KEY="0x..."
-
-# 2. Create torii-config.toml with Mainnet RPC
+# 1. Create torii-config.toml with Mainnet RPC
 # world_address = "0x..." # Your deployed world address
-# rpc = "https://starknet-mainnet.g.alchemy.com/<api-key>"
+# rpc = "https://api.cartridge.gg/x/starknet/mainnet"
 
-# 3. Deploy Torii
+# 2. Deploy Torii
 slot auth login
 slot d create torii \
   --sql.historical "tamagotchi-TrophyProgression" \
@@ -200,11 +166,6 @@ slot d create torii \
 ```
 
 ## Common Troubleshooting
-
-### Issue: "Insufficient funds" error
-**Solution**: Ensure your deployer account has sufficient ETH:
-- **Sepolia**: Use [Starknet Sepolia Faucet](https://starknet-faucet.vercel.app/)
-- **Mainnet**: Fund your account with real ETH
 
 ### Issue: "World address not found"
 **Solution**: 
@@ -223,6 +184,12 @@ slot d create torii \
 1. Verify your world address is correct
 2. Check that transactions are being sent to the world
 3. Review Torii logs using `slot d logs torii`
+
+### Issue: Configuration file not found
+**Solution**:
+1. Ensure `torii-config.toml` is in the correct directory
+2. Verify the file path in the deployment command
+3. Check file permissions
 
 ## Version Management
 
