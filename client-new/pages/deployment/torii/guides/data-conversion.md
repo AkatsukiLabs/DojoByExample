@@ -39,10 +39,12 @@ export const safeHexToNumber = (hexValue: string | number, fallback: number = 0)
   }
 };
 
-// Usage
-const position = {
-  x: safeHexToNumber(rawPosition.x, 0),
-  y: safeHexToNumber(rawPosition.y, 0)
+// Usage with player data
+const player = {
+  experience: safeHexToNumber(rawPlayer.experience, 0),
+  health: safeHexToNumber(rawPlayer.health, 100),
+  coins: safeHexToNumber(rawPlayer.coins, 0),
+  creation_day: safeHexToNumber(rawPlayer.creation_day, 0)
 };
 ```
 
@@ -141,15 +143,17 @@ export const convertHexValues = (obj: any) => {
   return converted;
 };
 
-// Usage
-const rawPosition = {
-  player: '0x1234567890abcdef',
-  x: '0xa',
-  y: '0xb'
+// Usage with player data
+const rawPlayer = {
+  owner: '0x1234567890abcdef',
+  experience: '0x64',
+  health: '0x32',
+  coins: '0x1e',
+  creation_day: '0x5'
 };
 
-const position = convertHexValues(rawPosition);
-// Result: { player: '0x1234567890abcdef', x: 10, y: 11 }
+const player = convertHexValues(rawPlayer);
+// Result: { owner: '0x1234567890abcdef', experience: 100, health: 50, coins: 30, creation_day: 5 }
 ```
 
 ### Convert Array of Objects
@@ -160,14 +164,14 @@ export const convertArrayHexValues = (array: any[]) => {
   return array.map(item => convertHexValues(item));
 };
 
-// Usage
+// Usage with player data
 const rawPlayers = [
-  { player: '0x123...', remaining: '0x64' },
-  { player: '0x456...', remaining: '0x32' }
+  { owner: '0x123...', experience: '0x64', health: '0x32', coins: '0x1e', creation_day: '0x5' },
+  { owner: '0x456...', experience: '0x32', health: '0x64', coins: '0x14', creation_day: '0x3' }
 ];
 
 const players = convertArrayHexValues(rawPlayers);
-// Result: [{ player: '0x123...', remaining: 100 }, { player: '0x456...', remaining: 50 }]
+// Result: [{ owner: '0x123...', experience: 100, health: 50, coins: 30, creation_day: 5 }, { owner: '0x456...', experience: 50, health: 100, coins: 20, creation_day: 3 }]
 ```
 
 ## 🎯 Type-Safe Conversion
@@ -176,35 +180,43 @@ const players = convertArrayHexValues(rawPlayers);
 
 ```typescript
 // Define types for Cairo model data
-interface RawPosition {
-  player: string;
-  x: string;
-  y: string;
+interface RawPlayer {
+  owner: string;
+  experience: string;
+  health: string;
+  coins: string;
+  creation_day: string;
 }
 
-interface ConvertedPosition {
-  player: string;
-  x: number;
-  y: number;
+interface ConvertedPlayer {
+  owner: string;
+  experience: number;
+  health: number;
+  coins: number;
+  creation_day: number;
 }
 
 // Type-safe conversion function
-export const convertPosition = (raw: RawPosition): ConvertedPosition => {
+export const convertPlayer = (raw: RawPlayer): ConvertedPlayer => {
   return {
-    player: formatAddress(raw.player),
-    x: hexToNumber(raw.x),
-    y: hexToNumber(raw.y)
+    owner: formatAddress(raw.owner),
+    experience: hexToNumber(raw.experience),
+    health: hexToNumber(raw.health),
+    coins: hexToNumber(raw.coins),
+    creation_day: hexToNumber(raw.creation_day)
   };
 };
 
 // Usage
-const rawPosition: RawPosition = {
-  player: '0x1234567890abcdef',
-  x: '0xa',
-  y: '0xb'
+const rawPlayer: RawPlayer = {
+  owner: '0x1234567890abcdef',
+  experience: '0x64',
+  health: '0x32',
+  coins: '0x1e',
+  creation_day: '0x5'
 };
 
-const position: ConvertedPosition = convertPosition(rawPosition);
+const player: ConvertedPlayer = convertPlayer(rawPlayer);
 ```
 
 ### Generic Type Converter
@@ -224,13 +236,15 @@ export const createConverter = <T extends Record<string, any>, U extends Record<
 };
 
 // Usage
-const positionConverter = createConverter<RawPosition, ConvertedPosition>({
-  player: formatAddress,
-  x: hexToNumber,
-  y: hexToNumber
+const playerConverter = createConverter<RawPlayer, ConvertedPlayer>({
+  owner: formatAddress,
+  experience: hexToNumber,
+  health: hexToNumber,
+  coins: hexToNumber,
+  creation_day: hexToNumber
 });
 
-const position = positionConverter(rawPosition);
+const player = playerConverter(rawPlayer);
 ```
 
 ## 🛡️ Error Handling
