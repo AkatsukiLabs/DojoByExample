@@ -8,7 +8,7 @@ Before you begin, ensure you have:
 
 - **Torii indexer running** with your deployed Dojo world
 - **React application** with `@starknet-react/core` installed
-- **Deployed Cairo models and systems** (e.g., Position, Moves models)
+- **Deployed Cairo models and systems** (e.g., Player model with experience, health, coins, creation_day)
 - **Environment variables** configured for your network
 - **Dojo world address** and contract manifest
 
@@ -142,14 +142,17 @@ const testConnection = async () => {
 // Debug query to check if models exist
 const DEBUG_QUERY = `
   query DebugModels {
-    fullStarterReactPositionModels(first: 1) {
+    fullStarterReactPlayerModels(first: 1) {
       edges {
         node {
-          player
-          x
-          y
+          owner
+          experience
+          health
+          coins
+          creation_day
         }
       }
+      totalCount
     }
   }
 `;
