@@ -36,9 +36,21 @@ No manual intervention—Torii runs in the background when you deploy or migrate
 ## API Interfaces
 
 - **GraphQL**: Flexible for custom queries and real-time subscriptions
-  - Default Endpoint: `http://localhost:8080/graphql`
+  - Local Development: `http://localhost:8080/graphql`
+  - Production (Cartridge): `https://api.cartridge.gg/x/YOUR_INSTANCE_NAME/torii/graphql`
 - **gRPC**: Fast binary protocol for high-performance apps
-  - Default Endpoint: `http://localhost:8080`
+  - Local Development: `http://localhost:8080`
+  - Production (Cartridge): `https://api.cartridge.gg/x/YOUR_INSTANCE_NAME/torii`
+
+### URL Configuration
+
+For production deployments, you'll typically configure your Torii URL in your client:
+
+```javascript
+// Example configuration
+const TORII_URL = dojoConfig.toriiUrl + "/graphql";
+// Results in: https://api.cartridge.gg/x/YOUR_INSTANCE_NAME/torii/graphql
+```
 
 ## When to Use Torii
 
