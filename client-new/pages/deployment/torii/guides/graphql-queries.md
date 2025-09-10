@@ -23,35 +23,42 @@ query QueryName($variable: Type!) {
 
 ## 📊 Cairo Model Query Examples
 
-### Position Model Query
+### Player Model Query
 
 ```graphql
-# Query for Position model (Cairo struct with #[key] player field)
-query GetPlayerPosition($playerOwner: ContractAddress!) {
-  fullStarterReactPositionModels(where: { player: $playerOwner }) {
+# Query for Player model (Cairo struct with #[key] owner field)
+query GetPlayer($playerOwner: ContractAddress!) {
+  fullStarterReactPlayerModels(where: { owner: $playerOwner }) {
     edges {
       node {
-        player
-        x
-        y
+        owner
+        experience
+        health
+        coins
+        creation_day
       }
     }
+    totalCount
   }
 }
 ```
 
-### Moves Model Query
+### Player Model Query with Multiple Fields
 
 ```graphql
-# Query for Moves model (Cairo struct with #[key] player field)
-query GetPlayerMoves($playerOwner: ContractAddress!) {
-  fullStarterReactMovesModels(where: { player: $playerOwner }) {
+# Query for Player model with specific field filtering
+query GetPlayerByExperience($minExperience: u32!) {
+  fullStarterReactPlayerModels(where: { experience: { gte: $minExperience } }) {
     edges {
       node {
-        player
-        remaining
+        owner
+        experience
+        health
+        coins
+        creation_day
       }
     }
+    totalCount
   }
 }
 ```
@@ -61,23 +68,27 @@ query GetPlayerMoves($playerOwner: ContractAddress!) {
 ```graphql
 # Query multiple Cairo models for a player
 query GetPlayerState($playerOwner: ContractAddress!) {
-  position: fullStarterReactPositionModels(where: { player: $playerOwner }) {
+  player: fullStarterReactPlayerModels(where: { owner: $playerOwner }) {
     edges {
       node {
-        player
-        x
-        y
+        owner
+        experience
+        health
+        coins
+        creation_day
       }
     }
   }
-  moves: fullStarterReactMovesModels(where: { player: $playerOwner }) {
-    edges {
-      node {
-        player
-        remaining
-      }
-    }
-  }
+  # Add other model queries here as needed
+  # achievements: fullStarterReactAchievementModels(where: { player: $playerOwner }) {
+  #   edges {
+  #     node {
+  #       player
+  #       achievement_type
+  #       unlocked_at
+  #     }
+  #   }
+  # }
 }
 ```
 
@@ -86,19 +97,23 @@ query GetPlayerState($playerOwner: ContractAddress!) {
 ### Leaderboard Query
 
 ```graphql
-# Query top players by remaining moves
+# Query top players by experience
 query GetTopPlayers {
-  fullStarterReactMovesModels(
+  fullStarterReactPlayerModels(
     first: 10,
-    orderBy: "remaining",
+    orderBy: "experience",
     orderDirection: "desc"
   ) {
     edges {
       node {
-        player
-        remaining
+        owner
+        experience
+        health
+        coins
+        creation_day
       }
     }
+    totalCount
   }
 }
 ```
@@ -108,18 +123,22 @@ query GetTopPlayers {
 ```graphql
 # Query players with specific conditions
 query GetActivePlayers {
-  fullStarterReactMovesModels(
-    where: { remaining: { gt: "0" } },
+  fullStarterReactPlayerModels(
+    where: { health: { gt: "0" } },
     first: 50,
-    orderBy: "remaining",
+    orderBy: "experience",
     orderDirection: "desc"
   ) {
     edges {
       node {
-        player
-        remaining
+        owner
+        experience
+        health
+        coins
+        creation_day
       }
     }
+    totalCount
   }
 }
 ```
@@ -129,16 +148,19 @@ query GetActivePlayers {
 ```graphql
 # Query with pagination
 query GetPlayersPage($first: Int!, $after: String) {
-  fullStarterReactMovesModels(
+  fullStarterReactPlayerModels(
     first: $first,
     after: $after,
-    orderBy: "remaining",
+    orderBy: "experience",
     orderDirection: "desc"
   ) {
     edges {
       node {
-        player
-        remaining
+        owner
+        experience
+        health
+        coins
+        creation_day
       }
       cursor
     }
@@ -148,6 +170,7 @@ query GetPlayersPage($first: Int!, $after: String) {
       startCursor
       endCursor
     }
+    totalCount
   }
 }
 ```
