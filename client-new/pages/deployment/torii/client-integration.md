@@ -7,7 +7,7 @@ Learn how to consume Torii data from your React application using GraphQL querie
 ### Prerequisites
 - Torii indexer running with your deployed Dojo world
 - React application with `@starknet-react/core` installed
-- Deployed Cairo models and systems (e.g., Position, Moves models)
+- Deployed Cairo models and systems (e.g., Player model with experience, health, coins, creation_day)
 
 ### Basic Setup
 
@@ -36,49 +36,110 @@ export const dojoConfig = createDojoConfig({
 4. **Create a basic hook**:
 ```typescript
 // src/hooks/usePlayer.ts
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useAccount } from "@starknet-react/core";
+import { addAddressPadding } from "starknet";
+import { dojoConfig } from "../dojoConfig";
+
+interface Player {
+  owner: string;
+  experience: number;
+  health: number;
+  coins: number;
+  creation_day: number;
+}
+
+const TORII_URL = dojoConfig.toriiUrl + "/graphql";
+const PLAYER_QUERY = `
+  query GetPlayer($playerOwner: ContractAddress!) {
+    fullStarterReactPlayerModels(where: { owner: $playerOwner }) {
+      edges {
+        node {
+          owner
+          experience
+          health
+          coins
+          creation_day
+        }
+      }
+      totalCount
+    }
+  }
+`;
+
+// Helper to convert hex values to numbers
+const hexToNumber = (hexValue: string | number): number => {
+  if (typeof hexValue === 'number') return hexValue;
+  if (typeof hexValue === 'string' && hexValue.startsWith('0x')) {
+    return parseInt(hexValue, 16);
+  }
+  if (typeof hexValue === 'string') {
+    return parseInt(hexValue, 10);
+  }
+  return 0;
+};
 
 export const usePlayer = () => {
-  const [position, setPosition] = useState(null);
+  const [player, setPlayer] = useState<Player | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
   const { account } = useAccount();
 
-  // Fetch data from Torii
+  const userAddress = useMemo(() =>
+    account ? addAddressPadding(account.address).toLowerCase() : '',
+    [account]
+  );
+
   const fetchData = async () => {
-    if (!account?.address) return;
-    
-    const response = await fetch(`${dojoConfig.toriiUrl}/graphql`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        query: `
-          query GetPlayerPosition($playerOwner: ContractAddress!) {
-            fullStarterReactPositionModels(where: { player: $playerOwner }) {
-              edges {
-                node {
-                  player
-                  x
-                  y
-                }
-              }
-            }
-          }
-        `,
-        variables: { playerOwner: account.address }
-      })
-    });
-    
-    const result = await response.json();
-    setPosition(result.data?.fullStarterReactPositionModels?.edges[0]?.node);
-    setIsLoading(false);
+    if (!userAddress) {
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const response = await fetch(TORII_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          query: PLAYER_QUERY,
+          variables: { playerOwner: userAddress }
+        })
+      });
+
+      const result = await response.json();
+      
+      if (!result.data?.fullStarterReactPlayerModels?.edges?.length) {
+        setPlayer(null);
+        return;
+      }
+
+      const rawPlayerData = result.data.fullStarterReactPlayerModels.edges[0].node;
+      const playerData: Player = {
+        owner: rawPlayerData.owner,
+        experience: hexToNumber(rawPlayerData.experience),
+        health: hexToNumber(rawPlayerData.health),
+        coins: hexToNumber(rawPlayerData.coins),
+        creation_day: hexToNumber(rawPlayerData.creation_day)
+      };
+
+      setPlayer(playerData);
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('Unknown error occurred'));
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
-    fetchData();
-  }, [account?.address]);
+    if (userAddress) {
+      fetchData();
+    }
+  }, [userAddress]);
 
-  return { position, isLoading, refetch: fetchData };
+  return { player, isLoading, error, refetch: fetchData };
 };
 ```
 
@@ -111,18 +172,24 @@ For comprehensive implementation details, explore these focused guides:
 import { usePlayer } from '../hooks/usePlayer';
 
 export const PlayerInfo = () => {
-  const { position, isLoading, refetch } = usePlayer();
+  const { player, isLoading, error, refetch } = usePlayer();
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <div>Loading player data...</div>;
+  if (error) return <div>Error: {error.message}</div>;
 
   return (
     <div>
-      <h2>Player Position</h2>
-      {position && (
+      <h2>Player Stats</h2>
+      {player ? (
         <div>
-          <p>X: {position.x}</p>
-          <p>Y: {position.y}</p>
+          <p>Owner: {player.owner}</p>
+          <p>Experience: {player.experience}</p>
+          <p>Health: {player.health}</p>
+          <p>Coins: {player.coins}</p>
+          <p>Creation Day: {player.creation_day}</p>
         </div>
+      ) : (
+        <p>No player data found</p>
       )}
       <button onClick={refetch}>Refresh</button>
     </div>
@@ -133,18 +200,24 @@ export const PlayerInfo = () => {
 ### Data Conversion
 ```typescript
 // Convert hex values from Cairo models
-const hexToNumber = (hexValue) => {
+const hexToNumber = (hexValue: string | number): number => {
+  if (typeof hexValue === 'number') return hexValue;
   if (typeof hexValue === 'string' && hexValue.startsWith('0x')) {
     return parseInt(hexValue, 16);
   }
-  return hexValue;
+  if (typeof hexValue === 'string') {
+    return parseInt(hexValue, 10);
+  }
+  return 0;
 };
 
-// Usage
-const position = {
-  ...rawPosition,
-  x: hexToNumber(rawPosition.x),
-  y: hexToNumber(rawPosition.y)
+// Usage with player data
+const player = {
+  ...rawPlayerData,
+  experience: hexToNumber(rawPlayerData.experience),
+  health: hexToNumber(rawPlayerData.health),
+  coins: hexToNumber(rawPlayerData.coins),
+  creation_day: hexToNumber(rawPlayerData.creation_day)
 };
 ```
 
