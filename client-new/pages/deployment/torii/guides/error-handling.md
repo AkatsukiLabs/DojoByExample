@@ -220,7 +220,7 @@ import { useAccount } from "@starknet-react/core";
 import { toriiFetch, retryWithBackoff, ToriiError } from "../utils/errorHandling";
 
 export const usePlayerWithErrorHandling = () => {
-  const [position, setPosition] = useState(null);
+  const [player, setPlayer] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [retryCount, setRetryCount] = useState(0);
@@ -237,13 +237,13 @@ export const usePlayerWithErrorHandling = () => {
 
     try {
       const data = await retryWithBackoff(
-        () => toriiFetch(POSITION_QUERY, { playerOwner: account.address }),
+        () => toriiFetch(PLAYER_QUERY, { playerOwner: account.address }),
         3, // max attempts
         1000 // base delay
       );
 
-      const positionData = data?.fullStarterReactPositionModels?.edges[0]?.node;
-      setPosition(positionData);
+      const playerData = data?.fullStarterReactPlayerModels?.edges[0]?.node;
+      setPlayer(playerData);
       setRetryCount(0);
     } catch (err) {
       setError(err);
@@ -263,7 +263,7 @@ export const usePlayerWithErrorHandling = () => {
   };
 
   return { 
-    position, 
+    player, 
     isLoading, 
     error, 
     retryCount,
@@ -331,7 +331,7 @@ import { usePlayerWithErrorHandling } from '../hooks/usePlayerWithErrorHandling'
 import { ToriiError } from '../utils/errorHandling';
 
 export const PlayerInfoWithErrors: React.FC = () => {
-  const { position, isLoading, error, retryCount, refetch } = usePlayerWithErrorHandling();
+  const { player, isLoading, error, retryCount, refetch } = usePlayerWithErrorHandling();
 
   if (isLoading) {
     return (
@@ -372,11 +372,14 @@ export const PlayerInfoWithErrors: React.FC = () => {
   return (
     <div>
       <h2>Player Information</h2>
-      {position && (
+      {player && (
         <div>
-          <h3>Position</h3>
-          <p>X: {position.x}</p>
-          <p>Y: {position.y}</p>
+          <h3>Player Stats</h3>
+          <p>Owner: {player.owner}</p>
+          <p>Experience: {player.experience}</p>
+          <p>Health: {player.health}</p>
+          <p>Coins: {player.coins}</p>
+          <p>Creation Day: {player.creation_day}</p>
         </div>
       )}
       <button onClick={refetch}>Refresh Data</button>
@@ -449,7 +452,7 @@ export const useErrorTracking = (error: ToriiError | null, context?: any) => {
 ```typescript
 // Hook with graceful degradation
 export const usePlayerWithFallback = () => {
-  const [position, setPosition] = useState(null);
+  const [player, setPlayer] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [useFallback, setUseFallback] = useState(false);
@@ -465,17 +468,17 @@ export const usePlayerWithFallback = () => {
     setError(null);
 
     try {
-      const data = await toriiFetch(POSITION_QUERY, { playerOwner: account.address });
-      const positionData = data?.fullStarterReactPositionModels?.edges[0]?.node;
-      setPosition(positionData);
+      const data = await toriiFetch(PLAYER_QUERY, { playerOwner: account.address });
+      const playerData = data?.fullStarterReactPlayerModels?.edges[0]?.node;
+      setPlayer(playerData);
       setUseFallback(false);
     } catch (err) {
       setError(err);
       
       // Use fallback data if available
-      if (localStorage.getItem('playerPosition')) {
-        const fallbackData = JSON.parse(localStorage.getItem('playerPosition')!);
-        setPosition(fallbackData);
+      if (localStorage.getItem('playerData')) {
+        const fallbackData = JSON.parse(localStorage.getItem('playerData')!);
+        setPlayer(fallbackData);
         setUseFallback(true);
       }
     } finally {
@@ -485,12 +488,12 @@ export const usePlayerWithFallback = () => {
 
   // Save successful data for fallback
   useEffect(() => {
-    if (position && !useFallback) {
-      localStorage.setItem('playerPosition', JSON.stringify(position));
+    if (player && !useFallback) {
+      localStorage.setItem('playerData', JSON.stringify(player));
     }
-  }, [position, useFallback]);
+  }, [player, useFallback]);
 
-  return { position, isLoading, error, useFallback, refetch: fetchData };
+  return { player, isLoading, error, useFallback, refetch: fetchData };
 };
 ```
 
