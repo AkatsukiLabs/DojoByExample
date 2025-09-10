@@ -170,30 +170,24 @@ import { useCallback } from 'react';
 import { cachedToriiFetch } from '../utils/cache';
 
 export const usePlayerOptimized = () => {
-  const [position, setPosition] = useState(null);
-  const [moves, setMoves] = useState(null);
+  const [player, setPlayer] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const { account } = useAccount();
 
-  const PLAYER_STATE_QUERY = `
-    query GetPlayerState($playerOwner: ContractAddress!) {
-      position: fullStarterReactPositionModels(where: { player: $playerOwner }) {
+  const PLAYER_QUERY = `
+    query GetPlayer($playerOwner: ContractAddress!) {
+      fullStarterReactPlayerModels(where: { owner: $playerOwner }) {
         edges {
           node {
-            player
-            x
-            y
+            owner
+            experience
+            health
+            coins
+            creation_day
           }
         }
-      }
-      moves: fullStarterReactMovesModels(where: { player: $playerOwner }) {
-        edges {
-          node {
-            player
-            remaining
-          }
-        }
+        totalCount
       }
     }
   `;
@@ -211,18 +205,14 @@ export const usePlayerOptimized = () => {
       const cacheKey = `player-${account.address}`;
       
       const data = await cachedToriiFetch(
-        PLAYER_STATE_QUERY,
+        PLAYER_QUERY,
         { playerOwner: account.address },
         cacheKey,
         15000 // 15 second cache
       );
 
-      if (data.position?.edges?.[0]?.node) {
-        setPosition(convertHexValues(data.position.edges[0].node));
-      }
-      
-      if (data.moves?.edges?.[0]?.node) {
-        setMoves(convertHexValues(data.moves.edges[0].node));
+      if (data.fullStarterReactPlayerModels?.edges?.[0]?.node) {
+        setPlayer(convertHexValues(data.fullStarterReactPlayerModels.edges[0].node));
       }
     } catch (err) {
       setError(err.message);
@@ -235,7 +225,7 @@ export const usePlayerOptimized = () => {
     fetchData();
   }, [fetchData]);
 
-  return { position, moves, isLoading, error, refetch: fetchData };
+  return { player, isLoading, error, refetch: fetchData };
 };
 ```
 
@@ -314,22 +304,16 @@ export const usePlayerBatch = () => {
     try {
       const queries = [
         {
-          query: POSITION_QUERY,
+          query: PLAYER_QUERY,
           variables: { playerOwner: account.address },
-          cacheKey: `position-${account.address}`
-        },
-        {
-          query: MOVES_QUERY,
-          variables: { playerOwner: account.address },
-          cacheKey: `moves-${account.address}`
+          cacheKey: `player-${account.address}`
         }
       ];
 
-      const [positionData, movesData] = await batchToriiQueries(queries);
+      const [playerData] = await batchToriiQueries(queries);
       
       setPlayerData({
-        position: positionData?.fullStarterReactPositionModels?.edges[0]?.node,
-        moves: movesData?.fullStarterReactMovesModels?.edges[0]?.node
+        player: playerData?.fullStarterReactPlayerModels?.edges[0]?.node
       });
     } catch (err) {
       setError(err.message);
@@ -480,16 +464,19 @@ const OPTIMIZED_POSITION_QUERY = `
 // Use pagination for large datasets
 const PAGINATED_PLAYERS_QUERY = `
   query GetPlayers($first: Int!, $after: String) {
-    fullStarterReactMovesModels(
+    fullStarterReactPlayerModels(
       first: $first,
       after: $after,
-      orderBy: "remaining",
+      orderBy: "experience",
       orderDirection: "desc"
     ) {
       edges {
         node {
-          player
-          remaining
+          owner
+          experience
+          health
+          coins
+          creation_day
         }
         cursor
       }
@@ -497,6 +484,7 @@ const PAGINATED_PLAYERS_QUERY = `
         hasNextPage
         endCursor
       }
+      totalCount
     }
   }
 `;
@@ -628,14 +616,12 @@ const CACHE_TTL = 30000; // Same for everything
 
 ```typescript
 // ✅ Good: Batch multiple queries
-const [position, moves] = await batchToriiQueries([
-  { query: POSITION_QUERY, variables: { playerOwner }, cacheKey: `pos-${playerOwner}` },
-  { query: MOVES_QUERY, variables: { playerOwner }, cacheKey: `moves-${playerOwner}` }
+const [player] = await batchToriiQueries([
+  { query: PLAYER_QUERY, variables: { playerOwner }, cacheKey: `player-${playerOwner}` }
 ]);
 
 // ❌ Avoid: Separate requests
-const position = await toriiFetch(POSITION_QUERY, { playerOwner });
-const moves = await toriiFetch(MOVES_QUERY, { playerOwner });
+const player = await toriiFetch(PLAYER_QUERY, { playerOwner });
 ```
 
 ### 3. Monitor Performance
