@@ -8,34 +8,63 @@ Learn how to create custom React hooks for fetching and managing Cairo model dat
 
 ```typescript
 // src/hooks/usePlayer.ts
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useAccount } from "@starknet-react/core";
+import { addAddressPadding } from "starknet";
 import { dojoConfig } from "../dojo/dojoConfig";
+
+interface Player {
+  owner: string;
+  experience: number;
+  health: number;
+  coins: number;
+  creation_day: number;
+}
 
 const TORII_URL = dojoConfig.toriiUrl + "/graphql";
 
-const POSITION_QUERY = `
-  query GetPlayerPosition($playerOwner: ContractAddress!) {
-    fullStarterReactPositionModels(where: { player: $playerOwner }) {
+const PLAYER_QUERY = `
+  query GetPlayer($playerOwner: ContractAddress!) {
+    fullStarterReactPlayerModels(where: { owner: $playerOwner }) {
       edges {
         node {
-          player
-          x
-          y
+          owner
+          experience
+          health
+          coins
+          creation_day
         }
       }
+      totalCount
     }
   }
 `;
 
+// Helper to convert hex values to numbers
+const hexToNumber = (hexValue: string | number): number => {
+  if (typeof hexValue === 'number') return hexValue;
+  if (typeof hexValue === 'string' && hexValue.startsWith('0x')) {
+    return parseInt(hexValue, 16);
+  }
+  if (typeof hexValue === 'string') {
+    return parseInt(hexValue, 10);
+  }
+  return 0;
+};
+
 export const usePlayer = () => {
-  const [position, setPosition] = useState(null);
+  const [player, setPlayer] = useState<Player | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<Error | null>(null);
   const { account } = useAccount();
 
+  const userAddress = useMemo(() =>
+    account ? addAddressPadding(account.address).toLowerCase() : '',
+    [account]
+  );
+
   const fetchData = async () => {
-    if (!account?.address) {
+    if (!userAddress) {
       setIsLoading(false);
       return;
     }
@@ -48,30 +77,46 @@ export const usePlayer = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          query: POSITION_QUERY,
-          variables: { playerOwner: account.address }
+          query: PLAYER_QUERY,
+          variables: { playerOwner: userAddress }
         })
       });
 
       const result = await response.json();
-      const positionData = result.data?.fullStarterReactPositionModels?.edges[0]?.node;
-      setPosition(positionData);
+      
+      if (!result.data?.fullStarterReactPlayerModels?.edges?.length) {
+        setPlayer(null);
+        return;
+      }
+
+      const rawPlayerData = result.data.fullStarterReactPlayerModels.edges[0].node;
+      const playerData: Player = {
+        owner: rawPlayerData.owner,
+        experience: hexToNumber(rawPlayerData.experience),
+        health: hexToNumber(rawPlayerData.health),
+        coins: hexToNumber(rawPlayerData.coins),
+        creation_day: hexToNumber(rawPlayerData.creation_day)
+      };
+
+      setPlayer(playerData);
     } catch (err) {
-      setError(err.message);
+      setError(err instanceof Error ? err : new Error('Unknown error occurred'));
     } finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchData();
-  }, [account?.address]);
+    if (userAddress) {
+      fetchData();
+    }
+  }, [userAddress]);
 
   const refetch = () => {
     fetchData();
   };
 
-  return { position, isLoading, error, refetch };
+  return { player, isLoading, error, refetch };
 };
 ```
 
@@ -86,31 +131,38 @@ import { useAccount } from "@starknet-react/core";
 
 const PLAYER_STATE_QUERY = `
   query GetPlayerState($playerOwner: ContractAddress!) {
-    position: fullStarterReactPositionModels(where: { player: $playerOwner }) {
+    player: fullStarterReactPlayerModels(where: { owner: $playerOwner }) {
       edges {
         node {
-          player
-          x
-          y
+          owner
+          experience
+          health
+          coins
+          creation_day
         }
       }
     }
-    moves: fullStarterReactMovesModels(where: { player: $playerOwner }) {
-      edges {
-        node {
-          player
-          remaining
-        }
-      }
-    }
+    # Add other model queries here as needed
   }
 `;
 
 export const usePlayerState = () => {
-  const [playerState, setPlayerState] = useState(null);
+  const [playerState, setPlayerState] = useState({ player: null });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const { account } = useAccount();
+
+  // Helper to convert hex values to numbers
+  const hexToNumber = (hexValue: string | number) => {
+    if (typeof hexValue === 'number') return hexValue;
+    if (typeof hexValue === 'string' && hexValue.startsWith('0x')) {
+      return parseInt(hexValue, 16);
+    }
+    if (typeof hexValue === 'string') {
+      return parseInt(hexValue, 10);
+    }
+    return 0;
+  };
 
   const fetchPlayerState = async () => {
     if (!account?.address) {
@@ -132,7 +184,17 @@ export const usePlayerState = () => {
       });
 
       const result = await response.json();
-      setPlayerState(result.data);
+      
+      const rawPlayerData = result.data?.player?.edges[0]?.node;
+      const playerData = rawPlayerData ? {
+        owner: rawPlayerData.owner,
+        experience: hexToNumber(rawPlayerData.experience),
+        health: hexToNumber(rawPlayerData.health),
+        coins: hexToNumber(rawPlayerData.coins),
+        creation_day: hexToNumber(rawPlayerData.creation_day)
+      } : null;
+
+      setPlayerState({ player: playerData });
     } catch (err) {
       setError(err.message);
     } finally {
@@ -154,30 +216,65 @@ export const usePlayerState = () => {
 
 ```typescript
 // src/hooks/usePlayerEnhanced.ts
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useAccount } from "@starknet-react/core";
+import { addAddressPadding } from "starknet";
+import { dojoConfig } from "../dojo/dojoConfig";
+
+interface Player {
+  owner: string;
+  experience: number;
+  health: number;
+  coins: number;
+  creation_day: number;
+}
 
 // Data conversion utilities
-const hexToNumber = (hexValue: string | number) => {
+const hexToNumber = (hexValue: string | number): number => {
+  if (typeof hexValue === 'number') return hexValue;
   if (typeof hexValue === 'string' && hexValue.startsWith('0x')) {
     return parseInt(hexValue, 16);
   }
-  return Number(hexValue);
+  if (typeof hexValue === 'string') {
+    return parseInt(hexValue, 10);
+  }
+  return 0;
 };
 
 const formatAddress = (address: string) => {
   return address.toLowerCase();
 };
 
+const TORII_URL = dojoConfig.toriiUrl + "/graphql";
+const PLAYER_QUERY = `
+  query GetPlayer($playerOwner: ContractAddress!) {
+    fullStarterReactPlayerModels(where: { owner: $playerOwner }) {
+      edges {
+        node {
+          owner
+          experience
+          health
+          coins
+          creation_day
+        }
+      }
+    }
+  }
+`;
+
 export const usePlayerEnhanced = () => {
-  const [position, setPosition] = useState(null);
-  const [moves, setMoves] = useState(null);
+  const [player, setPlayer] = useState<Player | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<Error | null>(null);
   const { account } = useAccount();
 
+  const userAddress = useMemo(() =>
+    account ? addAddressPadding(account.address).toLowerCase() : '',
+    [account]
+  );
+
   const fetchData = async () => {
-    if (!account?.address) {
+    if (!userAddress) {
       setIsLoading(false);
       return;
     }
@@ -186,44 +283,52 @@ export const usePlayerEnhanced = () => {
     setError(null);
 
     try {
-      const [positionData, movesData] = await Promise.all([
-        fetchPlayerPosition(account.address),
-        fetchPlayerMoves(account.address)
-      ]);
+      const response = await fetch(TORII_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          query: PLAYER_QUERY,
+          variables: { playerOwner: userAddress }
+        })
+      });
 
-      // Convert hex values to numbers
-      if (positionData) {
-        setPosition({
-          ...positionData,
-          x: hexToNumber(positionData.x),
-          y: hexToNumber(positionData.y),
-          player: formatAddress(positionData.player)
-        });
+      const result = await response.json();
+      
+      if (!result.data?.fullStarterReactPlayerModels?.edges?.length) {
+        setPlayer(null);
+        return;
       }
 
-      if (movesData) {
-        setMoves({
-          ...movesData,
-          remaining: hexToNumber(movesData.remaining),
-          player: formatAddress(movesData.player)
-        });
-      }
+      const rawPlayerData = result.data.fullStarterReactPlayerModels.edges[0].node;
+      
+      // Convert hex values to numbers and format data
+      const playerData: Player = {
+        owner: formatAddress(rawPlayerData.owner),
+        experience: hexToNumber(rawPlayerData.experience),
+        health: hexToNumber(rawPlayerData.health),
+        coins: hexToNumber(rawPlayerData.coins),
+        creation_day: hexToNumber(rawPlayerData.creation_day)
+      };
+
+      setPlayer(playerData);
     } catch (err) {
-      setError(err.message);
+      setError(err instanceof Error ? err : new Error('Unknown error occurred'));
     } finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchData();
-  }, [account?.address]);
+    if (userAddress) {
+      fetchData();
+    }
+  }, [userAddress]);
 
   const refetch = () => {
     fetchData();
   };
 
-  return { position, moves, isLoading, error, refetch };
+  return { player, isLoading, error, refetch };
 };
 ```
 
